@@ -1,0 +1,73 @@
+-- This script enables all gems for all weapons (including those that normally can't use gems).
+-- Exception: Shields and torches.
+print('loading gems.lua...')
+
+local epwTable = Params.EquipParamWeapon()
+for i = 0, epwTable.count - 1 do
+    local entry = epwTable[i]
+    entry.gemMountType = 2   -- enable AoW attaching
+    entry.disableGemAttr = 0 -- enable AoW affinity changing
+    entry.isEnhance = 1      -- can be buffed with greases/magics/incantations
+end
+
+local epgTable = Params.EquipParamGem()
+for i = 0, epgTable.count - 1 do
+    local entry = epgTable[i]
+    entry.configurableWepAttr00 = 1  -- can apply Standard affinity
+    entry.configurableWepAttr01 = 1  -- can apply Heavy affinity
+    entry.configurableWepAttr02 = 1  -- can apply Keen affinity
+    entry.configurableWepAttr03 = 1  -- can apply Quality affinity
+    entry.configurableWepAttr04 = 1  -- can apply Fire affinity
+    entry.configurableWepAttr05 = 1  -- can apply Flame Art affinity
+    entry.configurableWepAttr06 = 1  -- can apply Lightning affinity
+    entry.configurableWepAttr07 = 1  -- can apply Sacred affinity
+    entry.configurableWepAttr08 = 1  -- can apply Magic affinity
+    entry.configurableWepAttr09 = 1  -- can apply Cold affinity
+    entry.configurableWepAttr10 = 1  -- can apply Poison affinity
+    entry.configurableWepAttr11 = 1  -- can apply Blood affinity
+    entry.configurableWepAttr12 = 1  -- can apply Occult affinity
+    entry.canMountWep_Dagger = 1
+    entry.canMountWep_SwordNormal = 1
+    entry.canMountWep_SwordLarge = 1
+    entry.canMountWep_SwordGigantic = 1
+    entry.canMountWep_SaberNormal = 1
+    entry.canMountWep_SaberLarge = 1
+    entry.canMountWep_katana = 1
+    entry.canMountWep_SwordDoubleEdge = 1
+    entry.canMountWep_SwordPierce = 1
+    entry.canMountWep_RapierHeavy = 1
+    entry.canMountWep_AxeNormal = 1
+    entry.canMountWep_AxeLarge = 1
+    entry.canMountWep_HammerNormal = 1
+    entry.canMountWep_HammerLarge = 1
+    entry.canMountWep_Flail = 1
+    entry.canMountWep_SpearNormal = 1
+    entry.canMountWep_SpearLarge = 1
+    entry.canMountWep_SpearHeavy = 1
+    entry.canMountWep_SpearAxe = 1
+    entry.canMountWep_Sickle = 1
+    entry.canMountWep_Knuckle = 1
+    entry.canMountWep_Claw = 1
+    entry.canMountWep_Whip = 1
+    entry.canMountWep_AxhammerLarge = 1
+    entry.canMountWep_BowSmall = 1
+    entry.canMountWep_BowNormal = 1
+    entry.canMountWep_BowLarge = 1
+    entry.canMountWep_ClossBow = 1
+    entry.canMountWep_Ballista = 1
+    entry.canMountWep_Staff = 1
+    entry.canMountWep_Talisman = 1
+    -- Do not allow applying all AoWs to shields or torches
+    -- entry.canMountWep_ShieldSmall = 1
+    -- entry.canMountWep_ShieldNormal = 1
+    -- entry.canMountWep_ShieldLarge = 1
+    -- entry.canMountWep_Torch = 1
+    entry.canMountWep_HandToHand = 1
+    entry.canMountWep_PerfumeBottle = 1
+    entry.canMountWep_ThrustingShield = 1
+    entry.canMountWep_ThrowingWeapon = 1
+    entry.canMountWep_ReverseHandSword = 1
+    entry.canMountWep_LightGreatsword = 1
+    entry.canMountWep_GreatKatana = 1
+    entry.canMountWep_BeastClaw = 1
+end

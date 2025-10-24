@@ -1,0 +1,2 @@
+add_subdirectory(dllproxy)
+add_subdirectory(paramadjuster)

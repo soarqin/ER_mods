@@ -1,0 +1,117 @@
+#include "../luabindings.h"
+#include "../defs/NpcThinkParam.h"
+
+namespace paramadjuster::params {
+
+void registerNpcThinkParam(sol::state *state, sol::table &paramsTable) {
+    auto delayInit = [state, &paramsTable]() {
+        if (sol::optional<sol::table> usertype = (*state)["NpcThinkParam"]; usertype) return;
+        auto indexerNpcThinkParam = state->new_usertype<ParamTableIndexer<NpcThinkParam>>("NpcThinkParamTableIndexer");
+        indexerNpcThinkParam["count"] = sol::property(&ParamTableIndexer<NpcThinkParam>::count);
+        indexerNpcThinkParam["__index"] = &ParamTableIndexer<NpcThinkParam>::at;
+        indexerNpcThinkParam["id"] = &ParamTableIndexer<NpcThinkParam>::paramId;
+        indexerNpcThinkParam["get"] = &ParamTableIndexer<NpcThinkParam>::get;
+        auto utNpcThinkParam = state->new_usertype<NpcThinkParam>("NpcThinkParam");
+        utNpcThinkParam["disableParam_NT"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.disableParam_NT; }, [](NpcThinkParam &param, uint8_t value) { param.disableParam_NT = value; });
+        utNpcThinkParam["logicId"] = &NpcThinkParam::logicId;
+        utNpcThinkParam["battleGoalID"] = &NpcThinkParam::battleGoalID;
+        utNpcThinkParam["searchEye_dist"] = &NpcThinkParam::searchEye_dist;
+        utNpcThinkParam["searchEye_angY"] = &NpcThinkParam::searchEye_angY;
+        utNpcThinkParam["isNoAvoidHugeEnemy"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.isNoAvoidHugeEnemy; }, [](NpcThinkParam &param, uint8_t value) { param.isNoAvoidHugeEnemy = value; });
+        utNpcThinkParam["enableWeaponOnOff"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableWeaponOnOff; }, [](NpcThinkParam &param, uint8_t value) { param.enableWeaponOnOff = value; });
+        utNpcThinkParam["targetAILockDmyPoly"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.targetAILockDmyPoly; }, [](NpcThinkParam &param, uint8_t value) { param.targetAILockDmyPoly = value; });
+        utNpcThinkParam["spEffectId_RangedAttack"] = &NpcThinkParam::spEffectId_RangedAttack;
+        utNpcThinkParam["searchTargetLv1ForgetTime"] = &NpcThinkParam::searchTargetLv1ForgetTime;
+        utNpcThinkParam["searchTargetLv2ForgetTime"] = &NpcThinkParam::searchTargetLv2ForgetTime;
+        utNpcThinkParam["BackHomeLife_OnHitEneWal"] = &NpcThinkParam::BackHomeLife_OnHitEneWal;
+        utNpcThinkParam["SightTargetForgetTime"] = &NpcThinkParam::SightTargetForgetTime;
+        utNpcThinkParam["idAttackCannotMove"] = &NpcThinkParam::idAttackCannotMove;
+        utNpcThinkParam["ear_dist"] = &NpcThinkParam::ear_dist;
+        utNpcThinkParam["callHelp_ActionAnimId"] = &NpcThinkParam::callHelp_ActionAnimId;
+        utNpcThinkParam["callHelp_CallActionId"] = &NpcThinkParam::callHelp_CallActionId;
+        utNpcThinkParam["eye_dist"] = &NpcThinkParam::eye_dist;
+        utNpcThinkParam["isGuard_Act"] = &NpcThinkParam::isGuard_Act;
+        utNpcThinkParam["ear_soundcut_dist"] = &NpcThinkParam::ear_soundcut_dist;
+        utNpcThinkParam["nose_dist"] = &NpcThinkParam::nose_dist;
+        utNpcThinkParam["maxBackhomeDist"] = &NpcThinkParam::maxBackhomeDist;
+        utNpcThinkParam["backhomeDist"] = &NpcThinkParam::backhomeDist;
+        utNpcThinkParam["backhomeBattleDist"] = &NpcThinkParam::backhomeBattleDist;
+        utNpcThinkParam["nonBattleActLife"] = &NpcThinkParam::nonBattleActLife;
+        utNpcThinkParam["BackHome_LookTargetTime"] = &NpcThinkParam::BackHome_LookTargetTime;
+        utNpcThinkParam["BackHome_LookTargetDist"] = &NpcThinkParam::BackHome_LookTargetDist;
+        utNpcThinkParam["SoundTargetForgetTime"] = &NpcThinkParam::SoundTargetForgetTime;
+        utNpcThinkParam["BattleStartDist"] = &NpcThinkParam::BattleStartDist;
+        utNpcThinkParam["callHelp_MyPeerId"] = &NpcThinkParam::callHelp_MyPeerId;
+        utNpcThinkParam["callHelp_CallPeerId"] = &NpcThinkParam::callHelp_CallPeerId;
+        utNpcThinkParam["targetSys_DmgEffectRate"] = &NpcThinkParam::targetSys_DmgEffectRate;
+        utNpcThinkParam["TeamAttackEffectivity"] = &NpcThinkParam::TeamAttackEffectivity;
+        utNpcThinkParam["eye_angX"] = &NpcThinkParam::eye_angX;
+        utNpcThinkParam["eye_angY"] = &NpcThinkParam::eye_angY;
+        utNpcThinkParam["disableDark"] = &NpcThinkParam::disableDark;
+        utNpcThinkParam["caravanRole"] = &NpcThinkParam::caravanRole;
+        utNpcThinkParam["callHelp_CallValidMinDistTarget"] = &NpcThinkParam::callHelp_CallValidMinDistTarget;
+        utNpcThinkParam["callHelp_CallValidRange"] = &NpcThinkParam::callHelp_CallValidRange;
+        utNpcThinkParam["callHelp_ForgetTimeByArrival"] = &NpcThinkParam::callHelp_ForgetTimeByArrival;
+        utNpcThinkParam["callHelp_MinWaitTime"] = &NpcThinkParam::callHelp_MinWaitTime;
+        utNpcThinkParam["callHelp_MaxWaitTime"] = &NpcThinkParam::callHelp_MaxWaitTime;
+        utNpcThinkParam["goalAction_ToCaution"] = &NpcThinkParam::goalAction_ToCaution;
+        utNpcThinkParam["ear_listenLevel"] = &NpcThinkParam::ear_listenLevel;
+        utNpcThinkParam["callHelp_ReplyBehaviorType"] = &NpcThinkParam::callHelp_ReplyBehaviorType;
+        utNpcThinkParam["disablePathMove"] = &NpcThinkParam::disablePathMove;
+        utNpcThinkParam["skipArrivalVisibleCheck"] = &NpcThinkParam::skipArrivalVisibleCheck;
+        utNpcThinkParam["thinkAttr_doAdmirer"] = &NpcThinkParam::thinkAttr_doAdmirer;
+        utNpcThinkParam["enableNaviFlg_Edge"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Edge; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Edge = value; });
+        utNpcThinkParam["enableNaviFlg_LargeSpace"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_LargeSpace; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_LargeSpace = value; });
+        utNpcThinkParam["enableNaviFlg_Ladder"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Ladder; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Ladder = value; });
+        utNpcThinkParam["enableNaviFlg_Hole"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Hole; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Hole = value; });
+        utNpcThinkParam["enableNaviFlg_Door"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Door; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Door = value; });
+        utNpcThinkParam["enableNaviFlg_InSideWall"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_InSideWall; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_InSideWall = value; });
+        utNpcThinkParam["enableNaviFlg_Lava"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Lava; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Lava = value; });
+        utNpcThinkParam["enableNaviFlg_Edge_Ordinary"] = sol::property([](NpcThinkParam &param) -> uint8_t { return param.enableNaviFlg_Edge_Ordinary; }, [](NpcThinkParam &param, uint8_t value) { param.enableNaviFlg_Edge_Ordinary = value; });
+        utNpcThinkParam["searchThreshold_Lv0toLv1"] = &NpcThinkParam::searchThreshold_Lv0toLv1;
+        utNpcThinkParam["searchThreshold_Lv1toLv2"] = &NpcThinkParam::searchThreshold_Lv1toLv2;
+        utNpcThinkParam["platoonReplyTime"] = &NpcThinkParam::platoonReplyTime;
+        utNpcThinkParam["platoonReplyAddRandomTime"] = &NpcThinkParam::platoonReplyAddRandomTime;
+        utNpcThinkParam["searchEye_angX"] = &NpcThinkParam::searchEye_angX;
+        utNpcThinkParam["isUpdateBattleSight"] = &NpcThinkParam::isUpdateBattleSight;
+        utNpcThinkParam["battleEye_updateDist"] = &NpcThinkParam::battleEye_updateDist;
+        utNpcThinkParam["battleEye_updateAngX"] = &NpcThinkParam::battleEye_updateAngX;
+        utNpcThinkParam["battleEye_updateAngY"] = &NpcThinkParam::battleEye_updateAngY;
+        utNpcThinkParam["eye_BackOffsetDist"] = &NpcThinkParam::eye_BackOffsetDist;
+        utNpcThinkParam["eye_BeginDist"] = &NpcThinkParam::eye_BeginDist;
+        utNpcThinkParam["actTypeOnFailedPath"] = &NpcThinkParam::actTypeOnFailedPath;
+        utNpcThinkParam["goalAction_ToCautionImportant"] = &NpcThinkParam::goalAction_ToCautionImportant;
+        utNpcThinkParam["shiftAnimeId_RangedAttack"] = &NpcThinkParam::shiftAnimeId_RangedAttack;
+        utNpcThinkParam["actTypeOnNonBtlFailedPath"] = &NpcThinkParam::actTypeOnNonBtlFailedPath;
+        utNpcThinkParam["isBuddyAI"] = &NpcThinkParam::isBuddyAI;
+        utNpcThinkParam["goalAction_ToSearchLv1"] = &NpcThinkParam::goalAction_ToSearchLv1;
+        utNpcThinkParam["goalAction_ToSearchLv2"] = &NpcThinkParam::goalAction_ToSearchLv2;
+        utNpcThinkParam["enableJumpMove"] = &NpcThinkParam::enableJumpMove;
+        utNpcThinkParam["disableLocalSteering"] = &NpcThinkParam::disableLocalSteering;
+        utNpcThinkParam["goalAction_ToDisappear"] = &NpcThinkParam::goalAction_ToDisappear;
+        utNpcThinkParam["changeStateAction_ToNormal"] = &NpcThinkParam::changeStateAction_ToNormal;
+        utNpcThinkParam["MemoryTargetForgetTime"] = &NpcThinkParam::MemoryTargetForgetTime;
+        utNpcThinkParam["rangedAttackId"] = &NpcThinkParam::rangedAttackId;
+        utNpcThinkParam["useFall_onNormalCaution"] = &NpcThinkParam::useFall_onNormalCaution;
+        utNpcThinkParam["useFall_onSearchBattle"] = &NpcThinkParam::useFall_onSearchBattle;
+        utNpcThinkParam["enableJumpMove_onBattle"] = &NpcThinkParam::enableJumpMove_onBattle;
+        utNpcThinkParam["backToHomeStuckAct"] = &NpcThinkParam::backToHomeStuckAct;
+        utNpcThinkParam["soundBehaviorId01"] = &NpcThinkParam::soundBehaviorId01;
+        utNpcThinkParam["soundBehaviorId02"] = &NpcThinkParam::soundBehaviorId02;
+        utNpcThinkParam["soundBehaviorId03"] = &NpcThinkParam::soundBehaviorId03;
+        utNpcThinkParam["soundBehaviorId04"] = &NpcThinkParam::soundBehaviorId04;
+        utNpcThinkParam["soundBehaviorId05"] = &NpcThinkParam::soundBehaviorId05;
+        utNpcThinkParam["soundBehaviorId06"] = &NpcThinkParam::soundBehaviorId06;
+        utNpcThinkParam["soundBehaviorId07"] = &NpcThinkParam::soundBehaviorId07;
+        utNpcThinkParam["soundBehaviorId08"] = &NpcThinkParam::soundBehaviorId08;
+        utNpcThinkParam["weaponOffSpecialEffectId"] = &NpcThinkParam::weaponOffSpecialEffectId;
+        utNpcThinkParam["weaponOnSpecialEffectId"] = &NpcThinkParam::weaponOnSpecialEffectId;
+        utNpcThinkParam["weaponOffAnimId"] = &NpcThinkParam::weaponOffAnimId;
+        utNpcThinkParam["weaponOnAnimId"] = &NpcThinkParam::weaponOnAnimId;
+        utNpcThinkParam["surpriseAnimId"] = &NpcThinkParam::surpriseAnimId;
+    };
+    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<NpcThinkParam>>(gParamMgr.findTable(L"NpcThinkParam")); };
+    paramsTable["NpcThinkParam"] = tableLoader;
+}
+
+}

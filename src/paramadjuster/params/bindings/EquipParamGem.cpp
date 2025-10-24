@@ -1,0 +1,118 @@
+#include "../luabindings.h"
+#include "../defs/EquipParamGem.h"
+
+namespace paramadjuster::params {
+
+void registerEquipParamGem(sol::state *state, sol::table &paramsTable) {
+    auto delayInit = [state, &paramsTable]() {
+        if (sol::optional<sol::table> usertype = (*state)["EquipParamGem"]; usertype) return;
+        auto indexerEquipParamGem = state->new_usertype<ParamTableIndexer<EquipParamGem>>("EquipParamGemTableIndexer");
+        indexerEquipParamGem["count"] = sol::property(&ParamTableIndexer<EquipParamGem>::count);
+        indexerEquipParamGem["__index"] = &ParamTableIndexer<EquipParamGem>::at;
+        indexerEquipParamGem["id"] = &ParamTableIndexer<EquipParamGem>::paramId;
+        indexerEquipParamGem["get"] = &ParamTableIndexer<EquipParamGem>::get;
+        auto utEquipParamGem = state->new_usertype<EquipParamGem>("EquipParamGem");
+        utEquipParamGem["disableParam_NT"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.disableParam_NT; }, [](EquipParamGem &param, uint8_t value) { param.disableParam_NT = value; });
+        utEquipParamGem["iconId"] = &EquipParamGem::iconId;
+        utEquipParamGem["rank"] = &EquipParamGem::rank;
+        utEquipParamGem["sortGroupId"] = &EquipParamGem::sortGroupId;
+        utEquipParamGem["spEffectId0"] = &EquipParamGem::spEffectId0;
+        utEquipParamGem["spEffectId1"] = &EquipParamGem::spEffectId1;
+        utEquipParamGem["spEffectId2"] = &EquipParamGem::spEffectId2;
+        utEquipParamGem["itemGetTutorialFlagId"] = &EquipParamGem::itemGetTutorialFlagId;
+        utEquipParamGem["swordArtsParamId"] = &EquipParamGem::swordArtsParamId;
+        utEquipParamGem["mountValue"] = &EquipParamGem::mountValue;
+        utEquipParamGem["sellValue"] = &EquipParamGem::sellValue;
+        utEquipParamGem["saleValue"] = &EquipParamGem::saleValue;
+        utEquipParamGem["sortId"] = &EquipParamGem::sortId;
+        utEquipParamGem["compTrophySedId"] = &EquipParamGem::compTrophySedId;
+        utEquipParamGem["trophySeqId"] = &EquipParamGem::trophySeqId;
+        utEquipParamGem["configurableWepAttr00"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr00; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr00 = value; });
+        utEquipParamGem["configurableWepAttr01"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr01; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr01 = value; });
+        utEquipParamGem["configurableWepAttr02"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr02; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr02 = value; });
+        utEquipParamGem["configurableWepAttr03"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr03; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr03 = value; });
+        utEquipParamGem["configurableWepAttr04"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr04; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr04 = value; });
+        utEquipParamGem["configurableWepAttr05"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr05; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr05 = value; });
+        utEquipParamGem["configurableWepAttr06"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr06; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr06 = value; });
+        utEquipParamGem["configurableWepAttr07"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr07; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr07 = value; });
+        utEquipParamGem["configurableWepAttr08"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr08; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr08 = value; });
+        utEquipParamGem["configurableWepAttr09"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr09; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr09 = value; });
+        utEquipParamGem["configurableWepAttr10"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr10; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr10 = value; });
+        utEquipParamGem["configurableWepAttr11"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr11; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr11 = value; });
+        utEquipParamGem["configurableWepAttr12"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr12; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr12 = value; });
+        utEquipParamGem["configurableWepAttr13"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr13; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr13 = value; });
+        utEquipParamGem["configurableWepAttr14"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr14; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr14 = value; });
+        utEquipParamGem["configurableWepAttr15"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr15; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr15 = value; });
+        utEquipParamGem["rarity"] = &EquipParamGem::rarity;
+        utEquipParamGem["configurableWepAttr16"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr16; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr16 = value; });
+        utEquipParamGem["configurableWepAttr17"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr17; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr17 = value; });
+        utEquipParamGem["configurableWepAttr18"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr18; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr18 = value; });
+        utEquipParamGem["configurableWepAttr19"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr19; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr19 = value; });
+        utEquipParamGem["configurableWepAttr20"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr20; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr20 = value; });
+        utEquipParamGem["configurableWepAttr21"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr21; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr21 = value; });
+        utEquipParamGem["configurableWepAttr22"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr22; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr22 = value; });
+        utEquipParamGem["configurableWepAttr23"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.configurableWepAttr23; }, [](EquipParamGem &param, uint8_t value) { param.configurableWepAttr23 = value; });
+        utEquipParamGem["isDiscard"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.isDiscard; }, [](EquipParamGem &param, uint8_t value) { param.isDiscard = value; });
+        utEquipParamGem["isDrop"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.isDrop; }, [](EquipParamGem &param, uint8_t value) { param.isDrop = value; });
+        utEquipParamGem["isDeposit"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.isDeposit; }, [](EquipParamGem &param, uint8_t value) { param.isDeposit = value; });
+        utEquipParamGem["disableMultiDropShare"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.disableMultiDropShare; }, [](EquipParamGem &param, uint8_t value) { param.disableMultiDropShare = value; });
+        utEquipParamGem["showDialogCondType"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.showDialogCondType; }, [](EquipParamGem &param, uint8_t value) { param.showDialogCondType = value; });
+        utEquipParamGem["showLogCondType"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.showLogCondType; }, [](EquipParamGem &param, uint8_t value) { param.showLogCondType = value; });
+        utEquipParamGem["defaultWepAttr"] = &EquipParamGem::defaultWepAttr;
+        utEquipParamGem["isSpecialSwordArt"] = &EquipParamGem::isSpecialSwordArt;
+        utEquipParamGem["canMountWep_Dagger"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Dagger; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Dagger = value; });
+        utEquipParamGem["canMountWep_SwordNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SwordNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SwordNormal = value; });
+        utEquipParamGem["canMountWep_SwordLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SwordLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SwordLarge = value; });
+        utEquipParamGem["canMountWep_SwordGigantic"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SwordGigantic; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SwordGigantic = value; });
+        utEquipParamGem["canMountWep_SaberNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SaberNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SaberNormal = value; });
+        utEquipParamGem["canMountWep_SaberLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SaberLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SaberLarge = value; });
+        utEquipParamGem["canMountWep_katana"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_katana; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_katana = value; });
+        utEquipParamGem["canMountWep_SwordDoubleEdge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SwordDoubleEdge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SwordDoubleEdge = value; });
+        utEquipParamGem["canMountWep_SwordPierce"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SwordPierce; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SwordPierce = value; });
+        utEquipParamGem["canMountWep_RapierHeavy"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_RapierHeavy; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_RapierHeavy = value; });
+        utEquipParamGem["canMountWep_AxeNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_AxeNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_AxeNormal = value; });
+        utEquipParamGem["canMountWep_AxeLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_AxeLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_AxeLarge = value; });
+        utEquipParamGem["canMountWep_HammerNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_HammerNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_HammerNormal = value; });
+        utEquipParamGem["canMountWep_HammerLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_HammerLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_HammerLarge = value; });
+        utEquipParamGem["canMountWep_Flail"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Flail; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Flail = value; });
+        utEquipParamGem["canMountWep_SpearNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SpearNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SpearNormal = value; });
+        utEquipParamGem["canMountWep_SpearLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SpearLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SpearLarge = value; });
+        utEquipParamGem["canMountWep_SpearHeavy"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SpearHeavy; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SpearHeavy = value; });
+        utEquipParamGem["canMountWep_SpearAxe"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_SpearAxe; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_SpearAxe = value; });
+        utEquipParamGem["canMountWep_Sickle"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Sickle; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Sickle = value; });
+        utEquipParamGem["canMountWep_Knuckle"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Knuckle; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Knuckle = value; });
+        utEquipParamGem["canMountWep_Claw"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Claw; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Claw = value; });
+        utEquipParamGem["canMountWep_Whip"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Whip; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Whip = value; });
+        utEquipParamGem["canMountWep_AxhammerLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_AxhammerLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_AxhammerLarge = value; });
+        utEquipParamGem["canMountWep_BowSmall"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_BowSmall; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_BowSmall = value; });
+        utEquipParamGem["canMountWep_BowNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_BowNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_BowNormal = value; });
+        utEquipParamGem["canMountWep_BowLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_BowLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_BowLarge = value; });
+        utEquipParamGem["canMountWep_ClossBow"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ClossBow; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ClossBow = value; });
+        utEquipParamGem["canMountWep_Ballista"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Ballista; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Ballista = value; });
+        utEquipParamGem["canMountWep_Staff"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Staff; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Staff = value; });
+        utEquipParamGem["canMountWep_Sorcery"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Sorcery; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Sorcery = value; });
+        utEquipParamGem["canMountWep_Talisman"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Talisman; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Talisman = value; });
+        utEquipParamGem["canMountWep_ShieldSmall"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ShieldSmall; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ShieldSmall = value; });
+        utEquipParamGem["canMountWep_ShieldNormal"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ShieldNormal; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ShieldNormal = value; });
+        utEquipParamGem["canMountWep_ShieldLarge"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ShieldLarge; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ShieldLarge = value; });
+        utEquipParamGem["canMountWep_Torch"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_Torch; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_Torch = value; });
+        utEquipParamGem["canMountWep_HandToHand"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_HandToHand; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_HandToHand = value; });
+        utEquipParamGem["canMountWep_PerfumeBottle"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_PerfumeBottle; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_PerfumeBottle = value; });
+        utEquipParamGem["canMountWep_ThrustingShield"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ThrustingShield; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ThrustingShield = value; });
+        utEquipParamGem["canMountWep_ThrowingWeapon"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ThrowingWeapon; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ThrowingWeapon = value; });
+        utEquipParamGem["canMountWep_ReverseHandSword"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_ReverseHandSword; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_ReverseHandSword = value; });
+        utEquipParamGem["canMountWep_LightGreatsword"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_LightGreatsword; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_LightGreatsword = value; });
+        utEquipParamGem["canMountWep_GreatKatana"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_GreatKatana; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_GreatKatana = value; });
+        utEquipParamGem["canMountWep_BeastClaw"] = sol::property([](EquipParamGem &param) -> uint8_t { return param.canMountWep_BeastClaw; }, [](EquipParamGem &param, uint8_t value) { param.canMountWep_BeastClaw = value; });
+        utEquipParamGem["spEffectMsgId0"] = &EquipParamGem::spEffectMsgId0;
+        utEquipParamGem["spEffectMsgId1"] = &EquipParamGem::spEffectMsgId1;
+        utEquipParamGem["spEffectId_forAtk0"] = &EquipParamGem::spEffectId_forAtk0;
+        utEquipParamGem["spEffectId_forAtk1"] = &EquipParamGem::spEffectId_forAtk1;
+        utEquipParamGem["spEffectId_forAtk2"] = &EquipParamGem::spEffectId_forAtk2;
+        utEquipParamGem["mountWepTextId"] = &EquipParamGem::mountWepTextId;
+    };
+    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<EquipParamGem>>(gParamMgr.findTable(L"EquipParamGem")); };
+    paramsTable["EquipParamGem"] = tableLoader;
+}
+
+}

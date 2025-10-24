@@ -1,0 +1,15 @@
+# JetBrains IDE
+/.idea/
+
+# Visual Studio Code
+/.vscode/
+
+# Build
+/cmake-build-*/
+/build/
+/dist/
+
+# Generator
+/src/boss/data/gen/text/
+/src/boss/data/gen/msg/*/
+__pycache__/
