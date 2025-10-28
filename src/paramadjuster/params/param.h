@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <sol/sol.hpp>
-
 #include <unordered_map>
 #include <string>
 #include <string_view>

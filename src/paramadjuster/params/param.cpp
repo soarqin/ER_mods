@@ -12,6 +12,8 @@
 #include "paramdefs.h"
 #include "global.h"
 
+#define SOL_ALL_SAFETIES_ON 1
+#include <sol/sol.hpp>
 #include <lazycsv.hpp>
 
 #include <filesystem>
@@ -49,16 +51,12 @@ ParamMgr gParamMgr;
 static void runAllLuaScripts(sol::state *state, const wchar_t *scriptPath) {
     for (const auto &dir_entry: std::filesystem::directory_iterator{std::filesystem::path(gModulePath) / scriptPath}) {
         if (dir_entry.is_regular_file() && dir_entry.path().extension() == L".lua") {
-            fwprintf(stderr, L"Run lua script: %ls\n", dir_entry.path().wstring().c_str());
-            try {
-                auto result = state->safe_script_file(dir_entry.path().string());
-                if (!result.valid()) {
-                    fwprintf(stderr, L"  Error: %hs\n", result.get<sol::error>().what());
-                    continue;
-                }
-            } catch (const sol::error &e) {
-                fwprintf(stderr, L"  Error: %hs\n", e.what());
-                continue;
+            fwprintf(stderr, L"Run lua script: %ls... ", dir_entry.path().wstring().c_str());
+            if (sol::protected_function_result result = state->safe_script_file(dir_entry.path().string(), sol::script_pass_on_error); !result.valid()) {
+                sol::error error = result;
+                fwprintf(stderr, L"Error: %hs\n", error.what());
+            } else {
+                fwprintf(stderr, L"Done.\n");
             }
         }
     }
@@ -142,7 +140,7 @@ void ParamTableIndexerBase::importFromCsv(const std::wstring &csvPath) {
     if (csvPath.empty()) return;
     auto isAbolutePath = csvPath.find(L':') != std::wstring::npos || csvPath[0] == L'\\' || csvPath[0] == L'/';
     auto fullPath = (isAbolutePath ? std::filesystem::path(csvPath) : (std::filesystem::path(gModulePath) / csvPath)).wstring();
-    fwprintf(stderr, L"Importing from CSV: %ls\n", fullPath.c_str());
+    fwprintf(stderr, L"Importing from CSV: %ls... ", fullPath.c_str());
     lazycsv::parser parser { fullPath };
     std::vector<std::pair<std::string, bool>> headers;
     auto headerRow = parser.header();
@@ -180,15 +178,10 @@ void ParamTableIndexerBase::importFromCsv(const std::wstring &csvPath) {
             if (++index >= cnt) break;
         }
         oss << "end\n";
-        try {
-            auto result = state_->safe_script(oss.str());
-            if (!result.valid()) {
-                fwprintf(stderr, L"  Error: %hs\n", result.get<sol::error>().what());
-                break;
-            }
-        } catch (const sol::error &e) {
-            fwprintf(stderr, L"  Error: %hs\n", e.what());
-            break;
+        if (sol::protected_function_result result = state_->safe_script(oss.str(), sol::script_pass_on_error); !result.valid()) {
+            sol::error error = result;
+            fwprintf(stderr, L"Error: %hs\n", error.what());
+            return;
         }
     }
     fwprintf(stderr, L"Done.\n");
@@ -197,7 +190,7 @@ void ParamTableIndexerBase::importFromCsv(const std::wstring &csvPath) {
 void ParamTableIndexerBase::exportToCsv(const std::wstring &csvPath) {
     auto isAbolutePath = csvPath.find(L':') != std::wstring::npos || csvPath[0] == L'\\' || csvPath[0] == L'/';
     auto fullPath = (isAbolutePath ? std::filesystem::path(csvPath) : (std::filesystem::path(gModulePath) / csvPath)).wstring();
-    fwprintf(stderr, L"Exporting to CSV: %ls\n", fullPath.c_str());
+    fwprintf(stderr, L"Exporting to CSV: %ls... ", fullPath.c_str());
     exportToCsvImpl(fullPath);
     fwprintf(stderr, L"Done.\n");
 }
