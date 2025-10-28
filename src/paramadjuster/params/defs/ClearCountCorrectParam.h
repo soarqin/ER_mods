@@ -8,218 +8,218 @@ struct ClearCountCorrectParam {
      * Max HP %
      *   Maximum HP magnification [%]
      * Default Value  = 1 */
-    float MaxHpRate;
+    float MaxHpRate = 1;
 
     /* 《最大MP倍率[%]》
      *   最大MP倍率[%]
      * Max FP %
      *   Maximum MP magnification [%]
      * Default Value  = 1 */
-    float MaxMpRate;
+    float MaxMpRate = 1;
 
     /* 《最大スタミナ倍率[%]》
      *   最大スタミナ倍率[%]
      * Max Stamina %
      *   Maximum stamina magnification [%]
      * Default Value  = 1 */
-    float MaxStaminaRate;
+    float MaxStaminaRate = 1;
 
     /* 《物理攻撃力倍率》
      *   物理攻撃力倍率
      * Damage %: Physical
      *   Physical attack power multiplier
      * Default Value  = 1 */
-    float PhysicsAttackRate;
+    float PhysicsAttackRate = 1;
 
     /* 《斬撃攻撃力倍率》
      *   斬撃攻撃力倍率
      * Damage %: Slash
      *   Slash attack power multiplier
      * Default Value  = 1 */
-    float SlashAttackRate;
+    float SlashAttackRate = 1;
 
     /* 《打撃攻撃力倍率》
      *   打撃攻撃力倍率
      * Damage %: Strike
      *   Batter attack power multiplier
      * Default Value  = 1 */
-    float BlowAttackRate;
+    float BlowAttackRate = 1;
 
     /* 《刺突攻撃力倍率》
      *   刺突攻撃力倍率
      * Damage %: Thrust
      *   Puncture attack power multiplier
      * Default Value  = 1 */
-    float ThrustAttackRate;
+    float ThrustAttackRate = 1;
 
     /* 《無属性攻撃力倍率》
      *   無属性攻撃力倍率
      * Damage %: Standard
      *   Non-attribute attack power multiplier
      * Default Value  = 1 */
-    float NeturalAttackRate;
+    float NeturalAttackRate = 1;
 
     /* 《魔法攻撃力倍率》
      *   魔法攻撃力倍率
      * Damage %: Magic
      *   Magic attack power multiplier
      * Default Value  = 1 */
-    float MagicAttackRate;
+    float MagicAttackRate = 1;
 
     /* 《炎攻撃力倍率》
      *   炎攻撃力倍率
      * Damage %: Fire
      *   Fire attack power multiplier
      * Default Value  = 1 */
-    float FireAttackRate;
+    float FireAttackRate = 1;
 
     /* 《電撃攻撃力倍率》
      *   電撃攻撃力倍率
      * Damage %: Lightning
      *   Electric shock attack power multiplier
      * Default Value  = 1 */
-    float ThunderAttackRate;
+    float ThunderAttackRate = 1;
 
     /* 《闇攻撃力倍率》
      *   闇攻撃力倍率
      * Damage %: Holy
      *   Dark attack power multiplier
      * Default Value  = 1 */
-    float DarkAttackRate;
+    float DarkAttackRate = 1;
 
     /* 《物理防御力倍率》
      *   物理防御力倍率
      * Defence %: Physical
      *   Physical defense power multiplier
      * Default Value  = 1 */
-    float PhysicsDefenseRate;
+    float PhysicsDefenseRate = 1;
 
     /* 《魔法防御力倍率》
      *   魔法防御力倍率
      * Defence %: Magic
      *   Magic defense multiplier
      * Default Value  = 1 */
-    float MagicDefenseRate;
+    float MagicDefenseRate = 1;
 
     /* 《炎防御力倍率》
      *   炎防御力倍率
      * Defence %: Fire
      *   Fire defense multiplier
      * Default Value  = 1 */
-    float FireDefenseRate;
+    float FireDefenseRate = 1;
 
     /* 《電撃防御力倍率》
      *   電撃防御力倍率
      * Defence %: Lightning
      *   Electric shock defense power multiplier
      * Default Value  = 1 */
-    float ThunderDefenseRate;
+    float ThunderDefenseRate = 1;
 
     /* 《闇防御力倍率》
      *   闇防御力倍率
      * Defence %: Holy
      *   Dark defense multiplier
      * Default Value  = 1 */
-    float DarkDefenseRate;
+    float DarkDefenseRate = 1;
 
     /* 《スタミナ攻撃力倍率》
      *   スタミナ攻撃力倍率
      * Damage %: Stamina
      *   Stamina attack power multiplier
      * Default Value  = 1 */
-    float StaminaAttackRate;
+    float StaminaAttackRate = 1;
 
     /* 《所持ソウル率》
      *   所持ソウル率
      * Rune Multiplier
      *   Possession soul rate
      * Default Value  = 1 */
-    float SoulRate;
+    float SoulRate = 1;
 
     /* 《毒耐性変化倍率》
      *   毒耐性変化倍率
      * Resist %: Poison
      *   Poison resistance change rate
      * Default Value  = 1 */
-    float PoisionResistRate;
+    float PoisionResistRate = 1;
 
     /* 《疫病耐性変化倍率》
      *   疫病耐性変化倍率
      * Resist %: Scarlet Rot
      *   Epidemic resistance change rate
      * Default Value  = 1 */
-    float DiseaseResistRate;
+    float DiseaseResistRate = 1;
 
     /* 《出血耐性変化倍率》
      *   出血耐性変化倍率
      * Resist %: Blood Loss
      *   Bleeding resistance change rate
      * Default Value  = 1 */
-    float BloodResistRate;
+    float BloodResistRate = 1;
 
     /* 《呪耐性変化倍率》
      *   呪耐性変化倍率
      * Resist %: Death Blight
      *   Curse resistance change rate
      * Default Value  = 1 */
-    float CurseResistRate;
+    float CurseResistRate = 1;
 
     /* 《冷気耐性変化倍率》
      *   冷気耐性変化倍率
      * Resist %: Frostbite
      *   Cold resistance change rate
      * Default Value  = 1 */
-    float FreezeResistRate;
+    float FreezeResistRate = 1;
 
     /* 《出血ダメージ補正倍率》
      *   出血ダメージ補正倍率
      * Damage %: Blood Loss
      *   Bleeding damage correction factor
      * Default Value  = 1 */
-    float BloodDamageRate;
+    float BloodDamageRate = 1;
 
     /* 《SAダメージ補正倍率》
      *   SAダメージ補正倍率
      * Damage %: Poise
      *   SA damage correction factor
      * Default Value  = 1 */
-    float SuperArmorDamageRate;
+    float SuperArmorDamageRate = 1;
 
     /* 《冷気ダメージ補正倍率》
      *   冷気ダメージ補正倍率
      * Damage %: Frostbite
      *   Cold damage correction factor
      * Default Value  = 1 */
-    float FreezeDamageRate;
+    float FreezeDamageRate = 1;
 
     /* 《睡眠耐性変化倍率》
      *   睡眠耐性変化倍率
      * Resist %: Sleep
      *   Sleep tolerance change rate
      * Default Value  = 1 */
-    float SleepResistRate;
+    float SleepResistRate = 1;
 
     /* 《発狂耐性変化倍率》
      *   発狂耐性変化倍率
      * Resist %: Madness
      *   Madness resistance change rate
      * Default Value  = 1 */
-    float MadnessResistRate;
+    float MadnessResistRate = 1;
 
     /* 《睡眠ダメージ補正倍率》
      *   睡眠ダメージ補正倍率
      * Damage %: Sleep
      *   Sleep damage correction factor
      * Default Value  = 1 */
-    float SleepDamageRate;
+    float SleepDamageRate = 1;
 
     /* 《発狂ダメージ補正倍率》
      *   発狂ダメージ補正倍率
      * Damage %: Madness
      *   Mad damage correction factor
      * Default Value  = 1 */
-    float MadnessDamageRate;
+    float MadnessDamageRate = 1;
 
     /* pad */
-    char pad1[4];
+    char pad1[4] {};
 };

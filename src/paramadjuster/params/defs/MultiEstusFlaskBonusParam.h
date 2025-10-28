@@ -7,98 +7,98 @@ struct MultiEstusFlaskBonusParam {
      *   ホストのエスト回復数
      * Flask Recovery - Host
      *   Number of host est recovery */
-    uint8_t host;
+    uint8_t host {};
 
     /* 白サイン
      *   協力サインの白霊のエスト回復数
      * Flask Recovery - White Phantom - None
      *   Number of white spirits recovering from the cooperation sign */
-    uint8_t WhiteGhost_None;
+    uint8_t WhiteGhost_None {};
 
     /* 金霊（太陽）
      *   協力サインの金霊のエスト回復数
      * Flask Recovery - White Phantom - Gold
      *   Number of est recovery of gold spirits of cooperation sign */
-    uint8_t WhiteGhost_Umbasa;
+    uint8_t WhiteGhost_Umbasa {};
 
     /* 白バーサーカー
      *   協力サインの白バーサーカーのエスト回復数
      * Flask Recovery - White Phantom - Berserker
      *   Number of recovery of white Berserker's est of cooperation sign */
-    uint8_t WhiteGhost_Berserker;
+    uint8_t WhiteGhost_Berserker {};
 
     /* 赤サイン
      *   敵対サインの赤霊のエスト回復数
      * Flask Recovery - Black Phantom - None
      *   Number of est recovery of red spirits of hostile sign */
-    uint8_t BlackGhost_None_Sign;
+    uint8_t BlackGhost_None_Sign {};
 
     /* 赤金霊（サイン）
      *   敵対サインの赤金霊のエスト回復数
      * Flask Recovery - Black Phantom - Gold
      *   Number of est recovery of red gold spirit of hostile sign */
-    uint8_t BlackGhost_Umbasa_Sign;
+    uint8_t BlackGhost_Umbasa_Sign {};
 
     /* 赤バーサーカー（サイン）
      *   敵対サインの赤バーサーカーのエスト回復数
      * Flask Recovery - Black Phantom - Berserker
      *   Number of est recovery of red Berserker of hostile sign */
-    uint8_t BlackGhost_Berserker_Sign;
+    uint8_t BlackGhost_Berserker_Sign {};
 
     /* 侵入
      *   侵入のエスト回復数
      * Flask Recovery - Black Phantom - None - Invasion
      *   Number of intrusion est recovery */
-    uint8_t BlackGhost_None_Invade;
+    uint8_t BlackGhost_None_Invade {};
 
     /* 赤金霊（侵入）
      *   侵入オーブの赤金霊のエスト回復数
      * Flask Recovery - Black Phantom - Gold - Invasion
      *   Number of est recovery of red gold spirits of invading orbs */
-    uint8_t BlackGhost_Umbasa_Invade;
+    uint8_t BlackGhost_Umbasa_Invade {};
 
     /* 赤バーサーカー（侵入）
      *   侵入オーブの赤バーサーカーのエスト回復数
      * Flask Recovery - Black Phantom - Berserker - Invasion
      *   Invasion Orb Red Berserker Est Recovery Number */
-    uint8_t BlackGhost_Berserker_Invade;
+    uint8_t BlackGhost_Berserker_Invade {};
 
     /* 救援ゲスト
      *   救援ゲストのエスト回復数
      * Flask Recovery - Red Hunter [1]
      *   Number of rescue guests' est recovery */
-    uint8_t RedHunter1;
+    uint8_t RedHunter1 {};
 
     /* 赤狩り霊２
      *   赤狩り霊２のエスト回復数
      * Flask Recovery - Red Hunter [2]
      *   Number of est recovery of Red Scare Spirit 2 */
-    uint8_t RedHunter2;
+    uint8_t RedHunter2 {};
 
     /* マップ守護霊(森)
      *   マップ守護霊（森）のエスト回復数
      * Flask Recovery - Forest Guardian
      *   Map guardian spirit (forest) est recovery number */
-    uint8_t GuardianOfForest;
+    uint8_t GuardianOfForest {};
 
     /* マップ守護霊(アノール)
      *   マップ守護霊(アノール)のエスト回復数
      * Flask Recovery - Darkmoon Blade
      *   Map Guardian Spirit (Anor) Est Recovery Number */
-    uint8_t GuardianOfAnor;
+    uint8_t GuardianOfAnor {};
 
     /* 闘技場
      *   闘技場のエスト回復数
      * Flask Recovery - Arena
      *   Number of est recovery in the arena */
-    uint8_t BattleRoyal;
+    uint8_t BattleRoyal {};
 
     /* 黄衣の翁
      *   黄衣の翁のエスト回復数
      * Flask Recovery - Yellow Monk
      *   The number of est recovery of the old man in yellow */
-    uint8_t YellowMonk;
+    uint8_t YellowMonk {};
 
     /* pad */
-    char pad1[48];
+    char pad1[48] {};
 };

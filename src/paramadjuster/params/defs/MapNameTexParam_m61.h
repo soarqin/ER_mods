@@ -7,63 +7,63 @@ struct MapNameTexParam_m61 {
      *   ○をつけたパラメータをNT版パッケージでは除外します
      * Disable Param - Network Test
      *   Parameters marked with  are excluded in the NT version package. */
-    uint8_t disableParam_NT:1;
+    uint8_t disableParam_NT:1 {};
 
     /* パッケージ出力用リザーブ1
      *   パッケージ出力用リザーブ1 */
-    char disableParamReserve1:7;
+    char disableParamReserve1:7 {};
 
     /* パッケージ出力用リザーブ2
      *   パッケージ出力用リザーブ2 */
-    char disableParamReserve2[3];
+    char disableParamReserve2[3] {};
 
     /* R
      *   変換前の地図画像のカラー情報（R）。RGB値が一致したピクセルとこのパラメータが紐づく
      * Pre-conversion - Map Image - R
      *   Color information (R) of the map image before conversion. Pixels with matching RGB values are associated with this parameter */
-    uint8_t srcR;
+    uint8_t srcR {};
 
     /* G
      *   変換前の地図画像のカラー情報（G）。RGB値が一致したピクセルとこのパラメータが紐づく
      * Pre-conversion - Map Image - G
      *   Color information (G) of the map image before conversion. Pixels with matching RGB values are associated with this parameter */
-    uint8_t srcG;
+    uint8_t srcG {};
 
     /* B
      *   変換前の地図画像のカラー情報（B）。RGB値が一致したピクセルとこのパラメータが紐づく
      * Pre-conversion - Map Image - B
      *   Color information (B) of the map image before conversion. Pixels with matching RGB values are associated with this parameter */
-    uint8_t srcB;
+    uint8_t srcB {};
 
     /* パッド
      *   パッド。一応「画像色情報（A）」用で空けておく */
-    char pad1[1];
+    char pad1[1] {};
 
     /* マップ名ID_地名表示用
      *   地名表示用のマップ名ID[PlaceName](0:無効値)
      * Map Name ID
      *   Map name ID for displaying place names [PlaceName] (0 - invalid value) */
-    int32_t mapNameId;
+    int32_t mapNameId {};
 
-    int32_t unknown_0xc;
+    int32_t unknown_0xc {};
 
-    uint8_t unknown_0x10;
+    uint8_t unknown_0x10 {};
 
-    uint8_t unknown_0x11;
+    uint8_t unknown_0x11 {};
 
-    uint8_t unknown_0x12;
+    uint8_t unknown_0x12 {};
 
-    uint8_t unknown_0x13;
+    uint8_t unknown_0x13 {};
 
-    int32_t unknown_0x14;
+    int32_t unknown_0x14 {};
 
     /* Location Text ID [1] */
-    int32_t unknownTextID_1;
+    int32_t unknownTextID_1 {};
 
     /* Location Text ID [2] */
-    int32_t unknownTextID_2;
+    int32_t unknownTextID_2 {};
 
-    int32_t unknown_0x20;
+    int32_t unknown_0x20 {};
 
-    int32_t unknown_0x24;
+    int32_t unknown_0x24 {};
 };

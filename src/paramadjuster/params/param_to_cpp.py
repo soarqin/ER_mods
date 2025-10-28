@@ -289,6 +289,10 @@ for path in pathlist:
         def_line = '    ' + tp + ' ' + r[1]
         if r[2] is not None:
             def_line = def_line + r[2]
+        if r[3] is not None:
+            def_line = def_line + r[3]
+        else:
+            def_line = def_line + ' {}';
         def_line = def_line + ';\n'
         sfields = sfields + def_line
         itp, rtp, to_func = param_type_to_lua_type(r[0])

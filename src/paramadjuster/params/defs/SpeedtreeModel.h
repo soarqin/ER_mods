@@ -5,45 +5,45 @@
 struct SpeedtreeModel {
     /* Leafの最小フェード値
      * Leaf - Min Fade */
-    float MinFadeLeaf;
+    float MinFadeLeaf {};
 
     /* Frondの最小フェード値
      * Frond - Min Fade */
-    float MinFadeFrond;
+    float MinFadeFrond {};
 
     /* Branchの最小フェード値
      * Branch - Min Fade */
-    float MinFadeBranch;
+    float MinFadeBranch {};
 
     /* Leafの透過光最小値
      * Leaf - Min Translucency */
-    float MinTranslucencyLeaf;
+    float MinTranslucencyLeaf {};
 
     /* Leafの透過光最大値
      * Leaf - Max Translucency
      * Default Value  = 5 */
-    float MaxTranslucencyLeaf;
+    float MaxTranslucencyLeaf = 5;
 
     /* Frondの透過光最小値
      * Frond - Min Translucency */
-    float MinTranslucencyFrond;
+    float MinTranslucencyFrond {};
 
     /* Frondの透過光最大値
      * Frond - Max Translucency
      * Default Value  = 5 */
-    float MaxTranslucencyFrond;
+    float MaxTranslucencyFrond = 5;
 
     /* Branchの透過光最小値
      * Branch - Min Translucency */
-    float MinTranslucencyBranch;
+    float MinTranslucencyBranch {};
 
     /* Branchの透過光最大値
      * Branch - Max Translucency
      * Default Value  = 5 */
-    float MaxTranslucencyBranch;
+    float MaxTranslucencyBranch = 5;
 
     /* ビルボードのSpecular抑制値
      * Billboard Specular Suppression Value
      * Default Value  = 1 */
-    float BillboardBackSpecularWeakenParam;
+    float BillboardBackSpecularWeakenParam = 1;
 };

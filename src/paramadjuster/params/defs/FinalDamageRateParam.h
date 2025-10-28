@@ -7,35 +7,35 @@ struct FinalDamageRateParam {
     /* Physical Rate
      *   Unk
      * Damage %: Physical */
-    float physRate;
+    float physRate {};
 
     /* Magic Rate
      *   Unk
      * Damage %: Magic */
-    float magRate;
+    float magRate {};
 
     /* Fire Rate
      *   Unk
      * Damage %: Fire */
-    float fireRate;
+    float fireRate {};
 
     /* Lightning Rate
      *   Unk
      * Damage %: Lightning */
-    float thunRate;
+    float thunRate {};
 
     /* Dark Rate
      *   Unk
      * Damage %: Holy */
-    float darkRate;
+    float darkRate {};
 
     /* Stamina Rate
      *   Unk
      * Damage %: Stamina */
-    float staminaRate;
+    float staminaRate {};
 
     /* Super Armor Rate
      *   Unk
      * Damage %: Poise */
-    float saRate;
+    float saRate {};
 };

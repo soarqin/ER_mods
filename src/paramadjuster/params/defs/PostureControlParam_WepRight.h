@@ -5,271 +5,271 @@
 struct PostureControlParam_WepRight {
     /* [a000] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a000_rightArmFB;
+    int16_t a000_rightArmFB {};
 
     /* [a000] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a000_rightWristFB;
+    int16_t a000_rightWristFB {};
 
     /* [a000] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a000_rightWristIO;
+    int16_t a000_rightWristIO {};
 
     /* [a000] Right Weapon Rotation */
-    int16_t a000_rightWeaponRotation;
+    int16_t a000_rightWeaponRotation {};
 
     /* [a000] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a000_leftArmFB;
+    int16_t a000_leftArmFB {};
 
     /* [a000] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a000_leftWristFB;
+    int16_t a000_leftWristFB {};
 
     /* [a000] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a000_leftWristIO;
+    int16_t a000_leftWristIO {};
 
     /* [a000] Left Weapon Rotation */
-    int16_t a000_lefttWeaponRotation;
+    int16_t a000_lefttWeaponRotation {};
 
     /* [a002] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a002_rightArmFB;
+    int16_t a002_rightArmFB {};
 
     /* [a002] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a002_rightWristFB;
+    int16_t a002_rightWristFB {};
 
     /* [a002] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a002_rightWristIO;
+    int16_t a002_rightWristIO {};
 
     /* [a002] Right Weapon Rotation */
-    int16_t a002_rightWeaponRotation;
+    int16_t a002_rightWeaponRotation {};
 
     /* [a002] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a002_leftArmFB;
+    int16_t a002_leftArmFB {};
 
     /* [a002] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a002_leftWristFB;
+    int16_t a002_leftWristFB {};
 
     /* [a002] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a002_leftWristIO;
+    int16_t a002_leftWristIO {};
 
     /* [a002] Left Weapon Rotation */
-    int16_t a002_lefttWeaponRotation;
+    int16_t a002_lefttWeaponRotation {};
 
     /* [a003] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a003_rightArmFB;
+    int16_t a003_rightArmFB {};
 
     /* [a003] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a003_rightWristFB;
+    int16_t a003_rightWristFB {};
 
     /* [a003] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a003_rightWristIO;
+    int16_t a003_rightWristIO {};
 
     /* [a003] Right Weapon Rotation */
-    int16_t a003_rightWeaponRotation;
+    int16_t a003_rightWeaponRotation {};
 
     /* [a003] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a003_leftArmFB;
+    int16_t a003_leftArmFB {};
 
     /* [a003] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a003_leftWristFB;
+    int16_t a003_leftWristFB {};
 
     /* [a003] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a003_leftWristIO;
+    int16_t a003_leftWristIO {};
 
     /* [a003] Left Weapon Rotation */
-    int16_t a003_lefttWeaponRotation;
+    int16_t a003_lefttWeaponRotation {};
 
     /* [a010] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a010_rightArmFB;
+    int16_t a010_rightArmFB {};
 
     /* [a010] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a010_rightWristFB;
+    int16_t a010_rightWristFB {};
 
     /* [a010] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a010_rightWristIO;
+    int16_t a010_rightWristIO {};
 
     /* [a010] Right Weapon Rotation */
-    int16_t a010_rightWeaponRotation;
+    int16_t a010_rightWeaponRotation {};
 
     /* [a010] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a010_leftArmFB;
+    int16_t a010_leftArmFB {};
 
     /* [a010] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a010_leftWristFB;
+    int16_t a010_leftWristFB {};
 
     /* [a010] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a010_leftWristIO;
+    int16_t a010_leftWristIO {};
 
     /* [a010] Left Weapon Rotation */
-    int16_t a010_lefttWeaponRotation;
+    int16_t a010_lefttWeaponRotation {};
 
     /* [a012] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a012_rightArmFB;
+    int16_t a012_rightArmFB {};
 
     /* [a012] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a012_rightWristFB;
+    int16_t a012_rightWristFB {};
 
     /* [a012] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a012_rightWristIO;
+    int16_t a012_rightWristIO {};
 
     /* [a012] Right Weapon Rotation */
-    int16_t a012_rightWeaponRotation;
+    int16_t a012_rightWeaponRotation {};
 
     /* [a012] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a012_leftArmFB;
+    int16_t a012_leftArmFB {};
 
     /* [a012] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a012_leftWristFB;
+    int16_t a012_leftWristFB {};
 
     /* [a012] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a012_leftWristIO;
+    int16_t a012_leftWristIO {};
 
     /* [a012] Left Weapon Rotation */
-    int16_t a012_lefttWeaponRotation;
+    int16_t a012_lefttWeaponRotation {};
 
     /* [a013] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a013_rightArmFB;
+    int16_t a013_rightArmFB {};
 
     /* [a013] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a013_rightWristFB;
+    int16_t a013_rightWristFB {};
 
     /* [a013] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a013_rightWristIO;
+    int16_t a013_rightWristIO {};
 
     /* [a013] Right Weapon Rotation */
-    int16_t a013_rightWeaponRotation;
+    int16_t a013_rightWeaponRotation {};
 
     /* [a013] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a013_leftArmFB;
+    int16_t a013_leftArmFB {};
 
     /* [a013] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a013_leftWristFB;
+    int16_t a013_leftWristFB {};
 
     /* [a013] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a013_leftWristIO;
+    int16_t a013_leftWristIO {};
 
     /* [a013] Left Weapon Rotation */
-    int16_t a013_lefttWeaponRotation;
+    int16_t a013_lefttWeaponRotation {};
 
     /* [a014] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a014_rightArmFB;
+    int16_t a014_rightArmFB {};
 
     /* [a014] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a014_rightWristFB;
+    int16_t a014_rightWristFB {};
 
     /* [a014] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a014_rightWristIO;
+    int16_t a014_rightWristIO {};
 
     /* [a014] Right Weapon Rotation */
-    int16_t a014_rightWeaponRotation;
+    int16_t a014_rightWeaponRotation {};
 
     /* [a014] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a014_leftArmFB;
+    int16_t a014_leftArmFB {};
 
     /* [a014] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a014_leftWristFB;
+    int16_t a014_leftWristFB {};
 
     /* [a014] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a014_leftWristIO;
+    int16_t a014_leftWristIO {};
 
     /* [a014] Left Weapon Rotation */
-    int16_t a014_lefttWeaponRotation;
+    int16_t a014_lefttWeaponRotation {};
 
     /* [a015] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a015_rightArmFB;
+    int16_t a015_rightArmFB {};
 
     /* [a015] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a015_rightWristFB;
+    int16_t a015_rightWristFB {};
 
     /* [a015] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a015_rightWristIO;
+    int16_t a015_rightWristIO {};
 
     /* [a015] Right Weapon Rotation */
-    int16_t a015_rightWeaponRotation;
+    int16_t a015_rightWeaponRotation {};
 
     /* [a015] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a015_leftArmFB;
+    int16_t a015_leftArmFB {};
 
     /* [a015] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a015_leftWristFB;
+    int16_t a015_leftWristFB {};
 
     /* [a015] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a015_leftWristIO;
+    int16_t a015_leftWristIO {};
 
     /* [a015] Left Weapon Rotation */
-    int16_t a015_lefttWeaponRotation;
+    int16_t a015_lefttWeaponRotation {};
 
     /* [a016] Right Arm - Front/Back
      *   Right arm_front and back */
-    int16_t a016_rightArmFB;
+    int16_t a016_rightArmFB {};
 
     /* [a016] Right Wrist - Front/Back
      *   Right wrist_front and back */
-    int16_t a016_rightWristFB;
+    int16_t a016_rightWristFB {};
 
     /* [a016] Right Wrist - Inside/Outside
      *   Right wrist_inside and outside */
-    int16_t a016_rightWristIO;
+    int16_t a016_rightWristIO {};
 
     /* [a016] Right Weapon Rotation */
-    int16_t a016_rightWeaponRotation;
+    int16_t a016_rightWeaponRotation {};
 
     /* [a016] Left Arm - Front/Back
      *   Left arm_front and back */
-    int16_t a016_leftArmFB;
+    int16_t a016_leftArmFB {};
 
     /* [a016] Left Wrist - Front/Back
      *   Left wrist_front and back */
-    int16_t a016_leftWristFB;
+    int16_t a016_leftWristFB {};
 
     /* [a016] Left Wrist - Inside/Outside
      *   Left wrist_inside and outside */
-    int16_t a016_leftWristIO;
+    int16_t a016_leftWristIO {};
 
     /* [a016] Left Weapon Rotation */
-    int16_t a016_lefttWeaponRotation;
+    int16_t a016_lefttWeaponRotation {};
 };

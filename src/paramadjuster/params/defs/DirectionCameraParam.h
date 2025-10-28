@@ -7,13 +7,13 @@ struct DirectionCameraParam {
      *   演出カメラON/OFFオプションの影響を受けるか？
      * Is Use Option
      *   Is it affected by the production camera ON / OFF option? */
-    uint8_t isUseOption:1;
+    uint8_t isUseOption:1 {};
 
     /* パッド
      *   pad */
-    char pad2:3;
+    char pad2:3 {};
 
     /* パッド
      *   pad */
-    char pad1[15];
+    char pad1[15] {};
 };

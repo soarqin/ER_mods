@@ -23,16 +23,21 @@ namespace paramadjuster::params {
 
 struct ParamEntryOffset {
     uint64_t paramId;
-    intptr_t offset;
-    uint64_t unk0;
+    uint64_t offset;
+    uint64_t endOffset;
 };
 
 struct ParamTable {
-    uintptr_t vtable;
+    uint32_t fileEndoffset;
+    uint16_t dataOffset;
     uint16_t unk0;
+    uint16_t paramDefVer;
     uint16_t count;
     uint16_t padding0[2];
-    uintptr_t unk1[6];
+    uint64_t paramTypeOffset;
+    uint64_t unk1[3];
+    uint64_t paramDataOffset;
+    uint64_t unk2;
     ParamEntryOffset entries[1];
 };
 
@@ -71,10 +76,11 @@ public:
 private:
     struct ParamType {
         const wchar_t *name;
-        ParamTable *param;
+        size_t index;
     };
 
     std::unordered_map<std::wstring, ParamType> paramTypes_;
+    const void *regMan_ = nullptr;
     sol::state *state_ = nullptr;
 };
 

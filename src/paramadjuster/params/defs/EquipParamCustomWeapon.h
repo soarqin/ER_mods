@@ -9,19 +9,19 @@ struct EquipParamCustomWeapon {
      *   武器ベースID
      * Base Weapon ID
      *   Weapon base ID */
-    int32_t baseWepId;
+    int32_t baseWepId {};
 
     /* 魔石ID
      *   魔石ID
      * Gem ID
      *   Magic stone ID */
-    int32_t gemId;
+    int32_t gemId {};
 
     /* 強化値
      *   強化値
      * Reinforcement Level
      *   Enhancement value */
-    uint8_t reinforceLv;
+    uint8_t reinforceLv {};
 
-    char pad[7];
+    char pad[7] {};
 };

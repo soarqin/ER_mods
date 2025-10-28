@@ -10,714 +10,714 @@ struct CharaInitParam {
      *   ＭＰが、1ポイント回復するまでの時間（小数点第一位）
      * Base FP Recovery Time
      *   Time until MP recovers 1 point (first decimal place) */
-    float baseRec_mp;
+    float baseRec_mp {};
 
     /* スタミナ回復速度基本値[s]
      *   スタミナが、1ポイント回復するまでの時間（小数点第一位）
      * Base Stamina Recovery Time
      *   Time to recover 1 point of stamina (first decimal place) */
-    float baseRec_sp;
+    float baseRec_sp {};
 
     /* 落下ダメージ軽減補正[%]
      *   他のキャラクターに上からのしかかれたときに、クッションとなりえるダメージ軽減量（％）（小数点第一位）
      * Characer Head Land - Damage Reduction
      *   Damage reduction amount (%) that can be a cushion when scolded by another character from above (first decimal place) */
-    float red_Falldam;
+    float red_Falldam {};
 
     /* 初期ソウル
      *   初期に所持しているソウル量
      * Runes
      *   The amount of soul you have at the beginning */
-    int32_t soul;
+    int32_t soul {};
 
     /* 右手武器スロット1
      *   装備品パラメータの武器ＩＤ(右手スロット１)
      * Equipped Weapon: Right Primary
      *   Weapon ID of equipment parameter (right hand slot 1)
      * Default Value  = -1 */
-    int32_t equip_Wep_Right;
+    int32_t equip_Wep_Right = -1;
 
     /* 右手武器スロット2
      *   装備品パラメータの武器ＩＤ(右手スロット２)
      * Equipped Weapon: Right Secondary
      *   Weapon ID of equipment parameter (right hand slot 2)
      * Default Value  = -1 */
-    int32_t equip_Subwep_Right;
+    int32_t equip_Subwep_Right = -1;
 
     /* 左手武器スロット1
      *   装備品パラメータの武器ＩＤ(左手スロット１)
      * Equipped Weapon: Left Primary
      *   Weapon ID of equipment parameter (left hand slot 1)
      * Default Value  = -1 */
-    int32_t equip_Wep_Left;
+    int32_t equip_Wep_Left = -1;
 
     /* 左手武器スロット2
      *   装備品パラメータの武器ＩＤ(左手スロット２)
      * Equipped Weapon: Left Secondary
      *   Weapon ID of equipment parameter (left hand slot 2)
      * Default Value  = -1 */
-    int32_t equip_Subwep_Left;
+    int32_t equip_Subwep_Left = -1;
 
     /* 頭防具
      *   装備品パラメータの防具ＩＤ(頭防具)
      * Equipped Armor: Head
      *   Equipment parameter armor ID (head armor)
      * Default Value  = -1 */
-    int32_t equip_Helm;
+    int32_t equip_Helm = -1;
 
     /* 胴体防具
      *   装備品パラメータの防具ＩＤ(胴体防具)
      * Equipped Armor: Chest
      *   Equipment parameter armor ID (torso armor)
      * Default Value  = -1 */
-    int32_t equip_Armer;
+    int32_t equip_Armer = -1;
 
     /* 腕防具
      *   装備品パラメータの防具ＩＤ(腕防具)
      * Equipped Armor: Arms
      *   Equipment parameter armor ID (arm armor)
      * Default Value  = -1 */
-    int32_t equip_Gaunt;
+    int32_t equip_Gaunt = -1;
 
     /* 脚防具
      *   装備品パラメータの防具ＩＤ(脚防具)
      * Equipped Armor: Legs
      *   Equipment parameter armor ID (leg armor)
      * Default Value  = -1 */
-    int32_t equip_Leg;
+    int32_t equip_Leg = -1;
 
     /* 矢
      *   装備品パラメータの武器ＩＤ(矢)
      * Equipped Ammunition: Arrow Primary
      *   Weapon ID (arrow) of equipment parameter
      * Default Value  = -1 */
-    int32_t equip_Arrow;
+    int32_t equip_Arrow = -1;
 
     /* ボルト
      *   装備品パラメータの武器ＩＤ(ボルト)
      * Equipped Ammunition: Bolt Primary
      *   Weapon ID (bolt) of equipment parameter
      * Default Value  = -1 */
-    int32_t equip_Bolt;
+    int32_t equip_Bolt = -1;
 
     /* 予備矢
      *   装備品パラメータの武器ＩＤ(矢予備)
      * Equipped Ammunition: Arrow Secondary
      *   Weapon ID of equipment parameter (arrow reserve)
      * Default Value  = -1 */
-    int32_t equip_SubArrow;
+    int32_t equip_SubArrow = -1;
 
     /* 予備ボルト
      *   装備品パラメータの武器ＩＤ(ボルト予備)
      * Equipped Ammunition: Bolt Secondary
      *   Weapon ID of equipment parameter (spare bolt)
      * Default Value  = -1 */
-    int32_t equip_SubBolt;
+    int32_t equip_SubBolt = -1;
 
     /* 装飾品1
      *   装備品パラメータの装飾品ＩＤ01
      * Equipped Accessory: Slot 1
      *   Equipment parameter decoration ID01
      * Default Value  = -1 */
-    int32_t equip_Accessory01;
+    int32_t equip_Accessory01 = -1;
 
     /* 装飾品2
      *   装備品パラメータの装飾品ＩＤ02
      * Equipped Accessory: Slot 2
      *   Equipment parameter decoration ID02
      * Default Value  = -1 */
-    int32_t equip_Accessory02;
+    int32_t equip_Accessory02 = -1;
 
     /* 装飾品3
      *   装備品パラメータの装飾品ＩＤ03
      * Equipped Accessory: Slot 3
      *   Equipment parameter decoration ID03
      * Default Value  = -1 */
-    int32_t equip_Accessory03;
+    int32_t equip_Accessory03 = -1;
 
     /* 装飾品4
      *   装備品パラメータの装飾品ＩＤ04
      * Equipped Accessory: Slot 4
      *   Equipment parameter decoration ID04
      * Default Value  = -1 */
-    int32_t equip_Accessory04;
+    int32_t equip_Accessory04 = -1;
 
-    uint8_t unknown_0x50;
+    uint8_t unknown_0x50 {};
 
-    uint8_t unknown_0x51;
+    uint8_t unknown_0x51 {};
 
     /* pad
      *   pad */
-    char pad8[2];
+    char pad8[2] {};
 
     /* エリクサー用素材ID1
      *   エリクサー用素材ID1
      * Elixir Material 1
      *   Material ID1 for Elixir
      * Default Value  = -1 */
-    int32_t elixir_material00;
+    int32_t elixir_material00 = -1;
 
     /* エリクサー用素材ID2
      *   エリクサー用素材ID2
      * Elixir Material 2
      *   Material ID2 for Elixir
      * Default Value  = -1 */
-    int32_t elixir_material01;
+    int32_t elixir_material01 = -1;
 
     /* エリクサー用素材ID3
      *   エリクサー用素材ID3
      * Elixir Material 3
      *   Material ID3 for Elixir
      * Default Value  = -1 */
-    int32_t elixir_material02;
+    int32_t elixir_material02 = -1;
 
     /* 魔法・奇跡1
      *   初期配置の魔法・奇跡ID01
      * Equipped Spell: Slot 1
      *   Initial placement magic / miracle ID01
      * Default Value  = -1 */
-    int32_t equip_Spell_01;
+    int32_t equip_Spell_01 = -1;
 
     /* 魔法・奇跡2
      *   初期配置の魔法・奇跡ID02
      * Equipped Spell: Slot 2
      *   Initial placement magic / miracle ID02
      * Default Value  = -1 */
-    int32_t equip_Spell_02;
+    int32_t equip_Spell_02 = -1;
 
     /* 魔法・奇跡3
      *   初期配置の魔法・奇跡ID03
      * Equipped Spell: Slot 3
      *   Initial placement magic / miracle ID03
      * Default Value  = -1 */
-    int32_t equip_Spell_03;
+    int32_t equip_Spell_03 = -1;
 
     /* 魔法・奇跡4
      *   初期配置の魔法・奇跡ID04
      * Equipped Spell: Slot 4
      *   Initial placement magic / miracle ID04
      * Default Value  = -1 */
-    int32_t equip_Spell_04;
+    int32_t equip_Spell_04 = -1;
 
     /* 魔法・奇跡5
      *   初期配置の魔法・奇跡ID05
      * Equipped Spell: Slot 5
      *   Initial placement magic / miracle ID05
      * Default Value  = -1 */
-    int32_t equip_Spell_05;
+    int32_t equip_Spell_05 = -1;
 
     /* 魔法・奇跡6
      *   初期配置の魔法・奇跡ID06
      * Equipped Spell: Slot 6
      *   Initial placement magic / miracle ID06
      * Default Value  = -1 */
-    int32_t equip_Spell_06;
+    int32_t equip_Spell_06 = -1;
 
     /* 魔法・奇跡7
      *   初期配置の魔法・奇跡ID07
      * Equipped Spell: Slot 7
      *   Initial placement magic / miracle ID07
      * Default Value  = -1 */
-    int32_t equip_Spell_07;
+    int32_t equip_Spell_07 = -1;
 
     /* アイテム01
      *   初期所持のアイテムID01
      * Equipped Item: Slot 1
      *   Initial possession item ID 01
      * Default Value  = -1 */
-    int32_t item_01;
+    int32_t item_01 = -1;
 
     /* アイテム02
      *   初期所持のアイテムID02
      * Equipped Item: Slot 2
      *   Initial possession item ID 02
      * Default Value  = -1 */
-    int32_t item_02;
+    int32_t item_02 = -1;
 
     /* アイテム03
      *   初期所持のアイテムID03
      * Equipped Item: Slot 3
      *   Initial possession item ID 03
      * Default Value  = -1 */
-    int32_t item_03;
+    int32_t item_03 = -1;
 
     /* アイテム04
      *   初期所持のアイテムID04
      * Equipped Item: Slot 4
      *   Initial possession item ID 04
      * Default Value  = -1 */
-    int32_t item_04;
+    int32_t item_04 = -1;
 
     /* アイテム05
      *   初期所持のアイテムID05
      * Equipped Item: Slot 5
      *   Initial possession item ID 05
      * Default Value  = -1 */
-    int32_t item_05;
+    int32_t item_05 = -1;
 
     /* アイテム06
      *   初期所持のアイテムID06
      * Equipped Item: Slot 6
      *   Initial possession item ID 06
      * Default Value  = -1 */
-    int32_t item_06;
+    int32_t item_06 = -1;
 
     /* アイテム07
      *   初期所持のアイテムID07
      * Equipped Item: Slot 7
      *   Initial possession item ID 07
      * Default Value  = -1 */
-    int32_t item_07;
+    int32_t item_07 = -1;
 
     /* アイテム08
      *   初期所持のアイテムID08
      * Equipped Item: Slot 8
      *   Initial possession item ID 08
      * Default Value  = -1 */
-    int32_t item_08;
+    int32_t item_08 = -1;
 
     /* アイテム09
      *   初期所持のアイテムID09
      * Equipped Item: Slot 9
      *   Initial possession item ID 09
      * Default Value  = -1 */
-    int32_t item_09;
+    int32_t item_09 = -1;
 
     /* アイテム10
      *   初期所持のアイテムID10
      * Equipped Item: Slot 10
      *   Initial possession item ID 10
      * Default Value  = -1 */
-    int32_t item_10;
+    int32_t item_10 = -1;
 
     /* フェイスジェンパラメータID
      *   NPCプレイヤーで使用するフェイスジェンパラメータID。通常プレイヤーでは使用しません。
      * NPC Player - Face Gen ID
      *   Facegen parameter ID used by NPC players. Not used by normal players. */
-    int32_t npcPlayerFaceGenId;
+    int32_t npcPlayerFaceGenId {};
 
     /* NPCプレイヤーの思考ID
      *   NPCプレイヤーで使用するNPC思考パラメータID。通常プレイヤーでは使用しません。
      * NPC Player - Think ID
      *   NPC Thinking Parameter ID used by NPC players. Not used by normal players. */
-    int32_t npcPlayerThinkId;
+    int32_t npcPlayerThinkId {};
 
     /* ＨＰ基本値
      *   ＨＰの基本値（実際は、計算式で補正される）
      * Base HP
      *   Basic value of HP (actually, it is corrected by the calculation formula) */
-    uint16_t baseHp;
+    uint16_t baseHp {};
 
     /* ＭＰ基本値
      *   ＭＰの基本値（実際は、計算式で補正される）
      * Base FP
      *   Basic value of MP (actually, it is corrected by the calculation formula) */
-    uint16_t baseMp;
+    uint16_t baseMp {};
 
     /* スタミナ基本値
      *   スタミナの基本値（実際は、計算式で補正される）
      * Base Stamina
      *   Basic value of stamina (actually, it is corrected by the formula) */
-    uint16_t baseSp;
+    uint16_t baseSp {};
 
     /* 矢の所持数
      *   矢の初期所持数
      * Equipped Ammunition: Arrow Primary Count
      *   Initial number of arrows */
-    uint16_t arrowNum;
+    uint16_t arrowNum {};
 
     /* ボルトの所持数
      *   ボルトの初期所持数
      * Equipped Ammunition: Bolt Primary Count
      *   Initial number of bolts */
-    uint16_t boltNum;
+    uint16_t boltNum {};
 
     /* 予備矢の所持数
      *   矢の初期所持数
      * Equipped Ammunition: Arrow Secondary Count
      *   Initial number of arrows */
-    uint16_t subArrowNum;
+    uint16_t subArrowNum {};
 
     /* 予備ボルトの所持数
      *   ボルトの初期所持数
      * Equipped Ammunition: Bolt Secondary Count
      *   Initial number of bolts */
-    uint16_t subBoltNum;
+    uint16_t subBoltNum {};
 
     /* pad */
-    char pad4[6];
+    char pad4[6] {};
 
     /* ソウルLv
      *   初期Lv
      * Level
      *   Initial Lv */
-    int16_t soulLv;
+    int16_t soulLv {};
 
     /* 体力
      *   体力の基本値
      * Vigor
      *   Basic value of physical fitness */
-    uint8_t baseVit;
+    uint8_t baseVit {};
 
     /* 精神
      *   精神の基本値
      * Attunement
      *   Basic value of spirit */
-    uint8_t baseWil;
+    uint8_t baseWil {};
 
     /* 頑強
      *   頑強の基本値
      * Endurance
      *   Robust base value */
-    uint8_t baseEnd;
+    uint8_t baseEnd {};
 
     /* 筋力
      *   筋力の基本値
      * Strength
      *   Basic value of muscle strength */
-    uint8_t baseStr;
+    uint8_t baseStr {};
 
     /* 俊敏
      *   俊敏の基本値
      * Dexterity
      *   Basic value of agility */
-    uint8_t baseDex;
+    uint8_t baseDex {};
 
     /* 魔力
      *   魔力の基本値
      * Intelligence
      *   Basic value of magic power */
-    uint8_t baseMag;
+    uint8_t baseMag {};
 
     /* 信仰
      *   信仰の基本値
      * Faith
      *   Basic value of faith */
-    uint8_t baseFai;
+    uint8_t baseFai {};
 
     /* 運
      *   運の基本値
      * Arcane
      *   Basic value of luck */
-    uint8_t baseLuc;
+    uint8_t baseLuc {};
 
     /* 人間性
      *   人間性の基本値
      * Humanity
      *   Basic value of human nature */
-    uint8_t baseHeroPoint;
+    uint8_t baseHeroPoint {};
 
     /* 耐久力
      *   耐久力の基本値
      * Vitality
      *   Basic value of endurance */
-    uint8_t baseDurability;
+    uint8_t baseDurability {};
 
     /* アイテム01の所持数
      *   初期所持のアイテム個数01
      * Equipped Item: Slot 1 Amount
      *   Initial possession number of items 01 */
-    uint8_t itemNum_01;
+    uint8_t itemNum_01 {};
 
     /* アイテム02の所持数
      *   初期所持のアイテム個数02
      * Equipped Item: Slot 2 Amount
      *   Initial possession number of items 02 */
-    uint8_t itemNum_02;
+    uint8_t itemNum_02 {};
 
     /* アイテム03の所持数
      *   初期所持のアイテム個数03
      * Equipped Item: Slot 3 Amount
      *   Initial possession number of items 03 */
-    uint8_t itemNum_03;
+    uint8_t itemNum_03 {};
 
     /* アイテム個数04
      *   初期所持のアイテム個数04
      * Equipped Item: Slot 4 Amount
      *   Initial possession number of items 04 */
-    uint8_t itemNum_04;
+    uint8_t itemNum_04 {};
 
     /* アイテム個数05
      *   初期所持のアイテム個数05
      * Equipped Item: Slot 5 Amount
      *   Initial possession number of items 05 */
-    uint8_t itemNum_05;
+    uint8_t itemNum_05 {};
 
     /* アイテム個数06
      *   初期所持のアイテム個数06
      * Equipped Item: Slot 6 Amount
      *   Initial possession number of items 06 */
-    uint8_t itemNum_06;
+    uint8_t itemNum_06 {};
 
     /* アイテム個数07
      *   初期所持のアイテム個数07
      * Equipped Item: Slot 7 Amount
      *   Initial possession number of items 07 */
-    uint8_t itemNum_07;
+    uint8_t itemNum_07 {};
 
     /* アイテム個数08
      *   初期所持のアイテム個数08
      * Equipped Item: Slot 8 Amount
      *   Initial possession number of items 08 */
-    uint8_t itemNum_08;
+    uint8_t itemNum_08 {};
 
     /* アイテム個数09
      *   初期所持のアイテム個数09
      * Equipped Item: Slot 9 Amount
      *   Initial possession number of items 09 */
-    uint8_t itemNum_09;
+    uint8_t itemNum_09 {};
 
     /* アイテム個数10
      *   初期所持のアイテム個数10
      * Equipped Item: Slot 10 Amount
      *   Initial possession number of items 10 */
-    uint8_t itemNum_10;
+    uint8_t itemNum_10 {};
 
     /* pad */
-    char pad5[5];
+    char pad5[5] {};
 
     /* ジェスチャーID0
      *   ジェスチャー0番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 0
      *   Gesture 0th (0 if you want to play EzState gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId0;
+    int8_t gestureId0 = -1;
 
     /* ジェスチャーID1
      *   ジェスチャー1番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 1
      *   Gesture 1st (0 if you want to play EzState gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId1;
+    int8_t gestureId1 = -1;
 
     /* ジェスチャーID2
      *   ジェスチャー2番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 2
      *   Gesture 2nd (0 if you want to play EzState's gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId2;
+    int8_t gestureId2 = -1;
 
     /* ジェスチャーID3
      *   ジェスチャー3番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 3
      *   Gesture 3rd (0 if you want to play EzState gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId3;
+    int8_t gestureId3 = -1;
 
     /* ジェスチャーID4
      *   ジェスチャー4番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 4
      *   Gesture 4th (0 if you want to play EzState's gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId4;
+    int8_t gestureId4 = -1;
 
     /* ジェスチャーID5
      *   ジェスチャー5番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 5
      *   Gesture 5th (0 if you want to play EzState gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId5;
+    int8_t gestureId5 = -1;
 
     /* ジェスチャーID6
      *   ジェスチャー6番目(EzStateのジェスチャー0を再生したいなら0)
      * Equipped Gesture: Slot 6
      *   Gesture 6th (0 if you want to play EzState gesture 0)
      * Default Value  = -1 */
-    int8_t gestureId6;
+    int8_t gestureId6 = -1;
 
     /* NPCプレイヤーのNPCタイプ
      *   NPCプレイヤーで使用するNPCタイプ。通常プレイヤーでは使用しません。
      * NPC Player - Type
      *   NPC type used by NPC players. Not used by normal players. */
-    uint8_t npcPlayerType;
+    uint8_t npcPlayerType {};
 
     /* NPCプレイヤーの描画タイプ
      *   NPCプレイヤーで使用する描画タイプ。通常プレイヤーでは使用しません。
      * NPC Player - Draw Type
      *   Drawing type used by NPC players. Not used by normal players. */
-    int8_t npcPlayerDrawType;
+    int8_t npcPlayerDrawType {};
 
     /* NPCプレイヤーの性別
      *   NPCプレイヤーで使用する性別です。通常プレイヤーには反映しません。
      * NPC Player - Sex
      *   The gender used by NPC players. It is not reflected to normal players. */
-    uint8_t npcPlayerSex;
+    uint8_t npcPlayerSex {};
 
     /* 誓約
      *   誓約タイプ(なし：0)
      * Vow Type
      *   Pledge type (None: 0) */
-    uint8_t vowType:4;
+    uint8_t vowType:4 {};
 
     /* 送受信対象か
      *   送受信対象か（コピーNPC用）
      * Is Sync Target
      *   Is it a send / receive target (for copy NPCs)? */
-    uint8_t isSyncTarget:1;
+    uint8_t isSyncTarget:1 {};
 
-    char pad:3;
+    char pad:3 {};
 
     /* pad */
-    char pad6[2];
+    char pad6[2] {};
 
     /* 右手武器スロット1装備タイプ
      *   右手武器スロット１のパラメータ参照先
      * Weapon Param Type - Right Primary
      *   Right-handed weapon slot 1 parameter reference */
-    uint8_t wepParamType_Right1;
+    uint8_t wepParamType_Right1 {};
 
     /* 右手武器スロット2装備タイプ
      *   右手武器スロット２のパラメータ参照先
      * Weapon Param Type - Right Secondary
      *   Right-handed weapon slot 2 parameter reference */
-    uint8_t wepParamType_Right2;
+    uint8_t wepParamType_Right2 {};
 
     /* 右手武器スロット3装備タイプ
      *   右手武器スロット３のパラメータ参照先
      * Weapon Param Type - Right Tertiary
      *   Right-handed weapon slot 3 parameter reference */
-    uint8_t wepParamType_Right3;
+    uint8_t wepParamType_Right3 {};
 
     /* 左手武器スロット1装備タイプ
      *   左手武器スロット１のパラメータ参照先
      * Weapon Param Type - Left Primary
      *   Parameter reference for left-handed weapon slot 1 */
-    uint8_t wepParamType_Left1;
+    uint8_t wepParamType_Left1 {};
 
     /* 左手武器スロット2装備タイプ
      *   左手武器スロット２のパラメータ参照先
      * Weapon Param Type - Left Secondary
      *   Parameter reference for left-handed weapon slot 2 */
-    uint8_t wepParamType_Left2;
+    uint8_t wepParamType_Left2 {};
 
     /* 左手武器スロット3装備タイプ
      *   左手武器スロット３のパラメータ参照先
      * Weapon Param Type - Left Tertiary
      *   Parameter reference for left-handed weapon slot 3 */
-    uint8_t wepParamType_Left3;
+    uint8_t wepParamType_Left3 {};
 
     /* pad */
-    char pad2[26];
+    char pad2[26] {};
 
     /* 右手武器スロット3
      *   装備品パラメータの武器ＩＤ(右手スロット３)
      * Equipped Weapon: Right Tertiary
      *   Weapon ID of equipment parameter (right hand slot 3)
      * Default Value  = -1 */
-    int32_t equip_Subwep_Right3;
+    int32_t equip_Subwep_Right3 = -1;
 
     /* 左手武器スロット3
      *   装備品パラメータの武器ＩＤ(左手スロット３)
      * Equipped Weapon: Left Tertiary
      *   Weapon ID of equipment parameter (left hand slot 3)
      * Default Value  = -1 */
-    int32_t equip_Subwep_Left3;
+    int32_t equip_Subwep_Left3 = -1;
 
     /* pad */
-    char pad3[4];
+    char pad3[4] {};
 
     /* 第二アイテム01
      *   第二ショートカット初期所持のアイテムID01
      * Stored Item: Slot 1
      *   Item ID 01 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_01;
+    int32_t secondaryItem_01 = -1;
 
     /* 第二アイテム02
      *   第二ショートカット初期所持のアイテムID02
      * Stored Item: Slot 2
      *   Item ID 02 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_02;
+    int32_t secondaryItem_02 = -1;
 
     /* 第二アイテム03
      *   第二ショートカット初期所持のアイテムID03
      * Stored Item: Slot 3
      *   Item ID 03 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_03;
+    int32_t secondaryItem_03 = -1;
 
     /* 第二アイテム04
      *   第二ショートカット初期所持のアイテムID04
      * Stored Item: Slot 4
      *   Item ID 04 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_04;
+    int32_t secondaryItem_04 = -1;
 
     /* 第二アイテム05
      *   第二ショートカット初期所持のアイテムID05
      * Stored Item: Slot 5
      *   Item ID 05 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_05;
+    int32_t secondaryItem_05 = -1;
 
     /* 第二アイテム06
      *   第二ショートカット初期所持のアイテムID06
      * Stored Item: Slot 6
      *   Item ID 06 of the second shortcut initial possession
      * Default Value  = -1 */
-    int32_t secondaryItem_06;
+    int32_t secondaryItem_06 = -1;
 
     /* 第二アイテム01の所持数
      *   第二ショートカット初期所持のアイテム個数01
      * Stored Item: Slot 1 Count
      *   2nd Shortcut Initial possession number of items 01 */
-    uint8_t secondaryItemNum_01;
+    uint8_t secondaryItemNum_01 {};
 
     /* 第二アイテム02の所持数
      *   第二ショートカット初期所持のアイテム個数02
      * Stored Item: Slot 2 Count
      *   2nd Shortcut Initial possession number of items 02 */
-    uint8_t secondaryItemNum_02;
+    uint8_t secondaryItemNum_02 {};
 
     /* 第二アイテム03の所持数
      *   第二ショートカット初期所持のアイテム個数03
      * Stored Item: Slot 3 Count
      *   2nd Shortcut Initial possession number of items 03 */
-    uint8_t secondaryItemNum_03;
+    uint8_t secondaryItemNum_03 {};
 
     /* 第二アイテム04の所持数
      *   第二ショートカット初期所持のアイテム個数04
      * Stored Item: Slot 4 Count
      *   2nd Shortcut Initial possession number of items 04 */
-    uint8_t secondaryItemNum_04;
+    uint8_t secondaryItemNum_04 {};
 
     /* 第二アイテム05の所持数
      *   第二ショートカット初期所持のアイテム個数05
      * Stored Item: Slot 5 Count
      *   2nd Shortcut Initial possession number of items 05 */
-    uint8_t secondaryItemNum_05;
+    uint8_t secondaryItemNum_05 {};
 
     /* 第二アイテム06の所持数
      *   第二ショートカット初期所持のアイテム個数06
      * Stored Item: Slot 6 Count
      *   2nd Shortcut Initial possession number of items 06 */
-    uint8_t secondaryItemNum_06;
+    uint8_t secondaryItemNum_06 {};
 
     /* HPエスト瓶 所持限界数
      *   HPエスト瓶 所持限界数
      * HP Flask - Max Possession Limit
      *   HP Est Bottle Possession Limit
      * Default Value  = -1 */
-    int8_t HpEstMax;
+    int8_t HpEstMax = -1;
 
     /* MPエスト瓶 所持限界数
      *   MPエスト瓶 所持限界数
      * FP Flask - Max Possession Limit
      *   MP Est Bottle Possession Limit
      * Default Value  = -1 */
-    int8_t MpEstMax;
+    int8_t MpEstMax = -1;
 
     /* pad */
-    char pad7[5];
+    char pad7[5] {};
 
     /* 声タイプ
      *   声タイプ
      * Voice Type
      *   Voice type */
-    uint8_t voiceType;
+    uint8_t voiceType {};
 
     /* 予約領域
      *   予約領域 */
-    char reserve[6];
+    char reserve[6] {};
 };

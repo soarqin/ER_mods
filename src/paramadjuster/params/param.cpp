@@ -6,6 +6,7 @@
  * https://opensource.org/licenses/MIT.
  */
 
+#define NOMINMAX
 #include "param.h"
 #include "wstring.h"
 #include "pointers.h"
@@ -16,9 +17,11 @@
 #include <sol/sol.hpp>
 #include <lazycsv.hpp>
 
+#include <windows.h>
 #include <filesystem>
 #include <sstream>
-#include <windows.h>
+#include <algorithm>
+#include <limits>
 
 namespace paramadjuster::params {
 
@@ -29,7 +32,8 @@ struct ParamData {
     WstringImpl name;
     uintptr_t unk1[9];
     struct {
-        uintptr_t unk0[16];
+        uintptr_t unk0[15];
+        uintptr_t fileEndOffset;
         ParamTable *data;
     } *path;
 };
@@ -77,10 +81,11 @@ bool ParamMgr::loadTable() {
         if (regMan != nullptr && regMan->start != nullptr && regMan->end != nullptr && regMan->loaded) break;
         Sleep(100);
     }
+    regMan_ = regMan;
     for (ParamData **current = regMan->start; current < regMan->end; current++) {
         const ParamData *param = *current;
         const auto *name = wstringImplStr(&param->name);
-        paramTypes_.emplace(name, ParamType { name, param->path->data });
+        paramTypes_.emplace(name, ParamType { name, (size_t)(current - regMan->start) });
     }
 
     state_ = new sol::state();
@@ -100,6 +105,38 @@ void ParamMgr::unloadTable() {
     }
 }
 
+// static ParamTable *duplicateTableWithNewCount(const ParamTable *table, uint16_t newCount, size_t &newFileSize) {
+//     // Calculate single data size
+//     auto singleDataSize = (size_t)((table->paramTypeOffset - table->paramDataOffset) / table->count);
+//     // Create new table with new count
+//     auto entryOffset = (size_t)((uintptr_t)&table->entries[0] - (uintptr_t)table);
+//     const char *paramType = (const char*)table + table->paramTypeOffset;
+//     size_t paramTypeSize = lstrlenA(paramType) + 1;
+//     size_t dataOffset = entryOffset + newCount * sizeof(ParamEntryOffset);
+//     size_t endOffset = dataOffset + newCount * singleDataSize + paramTypeSize;
+//     auto *newTable = (ParamTable*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, endOffset + 4);
+//     // Copy data till offset at entries
+//     memcpy(newTable, table, entryOffset);
+//     size_t copyCount = std::min(table->count, newCount);
+//     // Copy entries and data
+//     memcpy(newTable->entries, table->entries, copyCount * sizeof(ParamEntryOffset));
+//     memcpy(newTable->entries + newCount, table->entries + copyCount, copyCount * singleDataSize);
+//     for (uint16_t i = 0; i < newCount; i++) {
+//         if (i >= copyCount) {
+//             newTable->entries[i].paramId = std::numeric_limits<uint64_t>::max();
+//             memcpy((uint8_t*)newTable + dataOffset + singleDataSize * i, (uint8_t*)newTable + dataOffset, singleDataSize);
+//             newTable->entries[i].offset = dataOffset + singleDataSize * i;
+//         }
+//         newTable->entries[i].endOffset = endOffset;
+//     }
+//     newTable->count = newCount;
+//     newTable->paramDataOffset = dataOffset;
+//     newTable->fileEndoffset = newTable->paramTypeOffset = dataOffset + newCount * singleDataSize;
+//     memcpy((uint8_t*)newTable + newTable->paramTypeOffset, paramType, paramTypeSize);
+//     newFileSize = endOffset + 4;
+//     return newTable;
+// }
+
 ParamTable *ParamMgr::findTable(const wchar_t *name) {
     if (paramTypes_.empty()) {
         if (!loadTable()) return nullptr;
@@ -108,7 +145,13 @@ ParamTable *ParamMgr::findTable(const wchar_t *name) {
     if (it == paramTypes_.end()) {
         return nullptr;
     }
-    return it->second.param;
+    const auto *regMan = (const CSRegulationManager*)regMan_;
+    auto *path = regMan->start[it->second.index]->path;
+    
+    // size_t newFileSize;
+    // path->data = duplicateTableWithNewCount(path->data, path->data->count, newFileSize);
+    // path->fileEndOffset = newFileSize;
+    return path->data;
 }
 
 const ParamTable *ParamMgr::findTable(const wchar_t *name) const {

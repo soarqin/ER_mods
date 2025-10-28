@@ -7,5 +7,5 @@ struct ReverbAuxSendBusParam {
      *   ReverbAuxSendBus名
      * Reverb Aux Send Bus Name
      *   ReverbAuxSendBus name */
-    char ReverbAuxSendBusName[32];
+    char ReverbAuxSendBusName[32] {};
 };
