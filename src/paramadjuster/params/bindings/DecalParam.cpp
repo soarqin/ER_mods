@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<DecalParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerDecalParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["DecalParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerDecalParam(sol::state *state, sol::table &paramsTable) {
         indexerDecalParam["__index"] = &ParamTableIndexer<DecalParam>::at;
         indexerDecalParam["id"] = &ParamTableIndexer<DecalParam>::paramId;
         indexerDecalParam["get"] = &ParamTableIndexer<DecalParam>::get;
+        indexerDecalParam["exportToCsv"] = &ParamTableIndexer<DecalParam>::exportToCsv;
+        indexerDecalParam["importFromCsv"] = &ParamTableIndexer<DecalParam>::importFromCsv;
         auto utDecalParam = state->new_usertype<DecalParam>("DecalParam");
         utDecalParam["textureId"] = &DecalParam::textureId;
         utDecalParam["dmypolyId"] = &DecalParam::dmypolyId;
@@ -100,8 +104,201 @@ void registerDecalParam(sol::state *state, sol::table &paramsTable) {
         utDecalParam["emissiveColorB"] = &DecalParam::emissiveColorB;
         utDecalParam["maxDecalSfxCreatableSlopeAngleDeg"] = &DecalParam::maxDecalSfxCreatableSlopeAngleDeg;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<DecalParam>>(gParamMgr.findTable(L"DecalParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<DecalParam>>(state, L"DecalParam");
+        indexer->setFieldNames({
+            {"textureId", false},
+            {"dmypolyId", false},
+            {"pitchAngle", false},
+            {"yawAngle", false},
+            {"nearDistance", false},
+            {"farDistance", false},
+            {"nearSize", false},
+            {"farSize", false},
+            {"maskSpeffectId", false},
+            {"pad_10", false},
+            {"replaceTextureId_byMaterial", false},
+            {"dmypolyCategory", false},
+            {"pad_05", false},
+            {"useDeferredDecal", false},
+            {"usePaintDecal", false},
+            {"bloodTypeEnable", false},
+            {"bUseNormal", false},
+            {"pad_08", false},
+            {"pad_09", false},
+            {"usePom", false},
+            {"useEmissive", false},
+            {"putVertical", false},
+            {"randomSizeMin", false},
+            {"randomSizeMax", false},
+            {"randomRollMin", false},
+            {"randomRollMax", false},
+            {"randomPitchMin", false},
+            {"randomPitchMax", false},
+            {"randomYawMin", false},
+            {"randomYawMax", false},
+            {"pomHightScale", false},
+            {"pomSampleMin", false},
+            {"pomSampleMax", false},
+            {"blendMode", false},
+            {"appearDirType", false},
+            {"emissiveValueBegin", false},
+            {"emissiveValueEnd", false},
+            {"emissiveTime", false},
+            {"bIntpEnable", false},
+            {"intpIntervalDist", false},
+            {"beginIntpTextureId", false},
+            {"endIntpTextureId", false},
+            {"appearSfxId", false},
+            {"appearSfxOffsetPos", false},
+            {"maskTextureId", false},
+            {"diffuseTextureId", false},
+            {"reflecTextureId", false},
+            {"maskScale", false},
+            {"normalTextureId", false},
+            {"heightTextureId", false},
+            {"emissiveTextureId", false},
+            {"diffuseColorR", false},
+            {"diffuseColorG", false},
+            {"diffuseColorB", false},
+            {"reflecColorR", false},
+            {"reflecColorG", false},
+            {"reflecColorB", false},
+            {"bLifeEnable", false},
+            {"siniScale", false},
+            {"lifeTimeSec", false},
+            {"fadeOutTimeSec", false},
+            {"priority", false},
+            {"bDistThinOutEnable", false},
+            {"bAlignedTexRandomVariationEnable", false},
+            {"distThinOutCheckDist", false},
+            {"distThinOutCheckAngleDeg", false},
+            {"distThinOutMaxNum", false},
+            {"distThinOutCheckNum", false},
+            {"delayAppearFrame", false},
+            {"randVaria_Diffuse", false},
+            {"randVaria_Mask", false},
+            {"randVaria_Reflec", false},
+            {"pad_12", false},
+            {"randVaria_Normal", false},
+            {"randVaria_Height", false},
+            {"randVaria_Emissive", false},
+            {"pad_11", false},
+            {"fadeInTimeSec", false},
+            {"thinOutOverlapMultiRadius", false},
+            {"thinOutNeighborAddRadius", false},
+            {"thinOutOverlapLimitNum", false},
+            {"thinOutNeighborLimitNum", false},
+            {"thinOutMode", false},
+            {"emissiveColorR", false},
+            {"emissiveColorG", false},
+            {"emissiveColorB", false},
+            {"maxDecalSfxCreatableSlopeAngleDeg", false},
+        });
+        return indexer;
+    };
     paramsTable["DecalParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<DecalParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,textureId,dmypolyId,pitchAngle,yawAngle,nearDistance,farDistance,nearSize,farSize,maskSpeffectId,pad_10,replaceTextureId_byMaterial,dmypolyCategory,pad_05,useDeferredDecal,usePaintDecal,bloodTypeEnable,bUseNormal,pad_08,pad_09,usePom,useEmissive,putVertical,randomSizeMin,randomSizeMax,randomRollMin,randomRollMax,randomPitchMin,randomPitchMax,randomYawMin,randomYawMax,pomHightScale,pomSampleMin,pomSampleMax,blendMode,appearDirType,emissiveValueBegin,emissiveValueEnd,emissiveTime,bIntpEnable,intpIntervalDist,beginIntpTextureId,endIntpTextureId,appearSfxId,appearSfxOffsetPos,maskTextureId,diffuseTextureId,reflecTextureId,maskScale,normalTextureId,heightTextureId,emissiveTextureId,diffuseColorR,diffuseColorG,diffuseColorB,reflecColorR,reflecColorG,reflecColorB,bLifeEnable,siniScale,lifeTimeSec,fadeOutTimeSec,priority,bDistThinOutEnable,bAlignedTexRandomVariationEnable,distThinOutCheckDist,distThinOutCheckAngleDeg,distThinOutMaxNum,distThinOutCheckNum,delayAppearFrame,randVaria_Diffuse,randVaria_Mask,randVaria_Reflec,pad_12,randVaria_Normal,randVaria_Height,randVaria_Emissive,pad_11,fadeInTimeSec,thinOutOverlapMultiRadius,thinOutNeighborAddRadius,thinOutOverlapLimitNum,thinOutNeighborLimitNum,thinOutMode,emissiveColorR,emissiveColorG,emissiveColorB,maxDecalSfxCreatableSlopeAngleDeg\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%d,%d,%g,%g,%g,%g,%g,%g,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%g,%g,%g,%g,%g,%g,%g,%u,%u,%d,%d,%g,%g,%g,%u,%g,%d,%d,%d,%g,%d,%d,%d,%g,%d,%d,%d,%u,%u,%u,%u,%u,%u,%u,%g,%g,%g,%d,%u,%u,%g,%g,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u,%g,%g,%g,%u,%u,%d,%u,%u,%u,%g\n",
+            this->paramId(i),
+            param->textureId,
+            param->dmypolyId,
+            param->pitchAngle,
+            param->yawAngle,
+            param->nearDistance,
+            param->farDistance,
+            param->nearSize,
+            param->farSize,
+            param->maskSpeffectId,
+            param->pad_10,
+            param->replaceTextureId_byMaterial,
+            param->dmypolyCategory,
+            param->pad_05,
+            param->useDeferredDecal,
+            param->usePaintDecal,
+            param->bloodTypeEnable,
+            param->bUseNormal,
+            param->pad_08,
+            param->pad_09,
+            param->usePom,
+            param->useEmissive,
+            param->putVertical,
+            param->randomSizeMin,
+            param->randomSizeMax,
+            param->randomRollMin,
+            param->randomRollMax,
+            param->randomPitchMin,
+            param->randomPitchMax,
+            param->randomYawMin,
+            param->randomYawMax,
+            param->pomHightScale,
+            param->pomSampleMin,
+            param->pomSampleMax,
+            param->blendMode,
+            param->appearDirType,
+            param->emissiveValueBegin,
+            param->emissiveValueEnd,
+            param->emissiveTime,
+            param->bIntpEnable,
+            param->intpIntervalDist,
+            param->beginIntpTextureId,
+            param->endIntpTextureId,
+            param->appearSfxId,
+            param->appearSfxOffsetPos,
+            param->maskTextureId,
+            param->diffuseTextureId,
+            param->reflecTextureId,
+            param->maskScale,
+            param->normalTextureId,
+            param->heightTextureId,
+            param->emissiveTextureId,
+            param->diffuseColorR,
+            param->diffuseColorG,
+            param->diffuseColorB,
+            param->reflecColorR,
+            param->reflecColorG,
+            param->reflecColorB,
+            param->bLifeEnable,
+            param->siniScale,
+            param->lifeTimeSec,
+            param->fadeOutTimeSec,
+            param->priority,
+            param->bDistThinOutEnable,
+            param->bAlignedTexRandomVariationEnable,
+            param->distThinOutCheckDist,
+            param->distThinOutCheckAngleDeg,
+            param->distThinOutMaxNum,
+            param->distThinOutCheckNum,
+            param->delayAppearFrame,
+            param->randVaria_Diffuse,
+            param->randVaria_Mask,
+            param->randVaria_Reflec,
+            param->pad_12,
+            param->randVaria_Normal,
+            param->randVaria_Height,
+            param->randVaria_Emissive,
+            param->pad_11,
+            param->fadeInTimeSec,
+            param->thinOutOverlapMultiRadius,
+            param->thinOutNeighborAddRadius,
+            param->thinOutOverlapLimitNum,
+            param->thinOutNeighborLimitNum,
+            param->thinOutMode,
+            param->emissiveColorR,
+            param->emissiveColorG,
+            param->emissiveColorB,
+            param->maxDecalSfxCreatableSlopeAngleDeg
+        );
+    }
+    fclose(f);
 }
 
 }

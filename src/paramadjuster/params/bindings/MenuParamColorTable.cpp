@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<MenuParamColorTable>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerMenuParamColorTable(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["MenuParamColorTable"]; usertype) return;
@@ -11,6 +13,8 @@ void registerMenuParamColorTable(sol::state *state, sol::table &paramsTable) {
         indexerMenuParamColorTable["__index"] = &ParamTableIndexer<MenuParamColorTable>::at;
         indexerMenuParamColorTable["id"] = &ParamTableIndexer<MenuParamColorTable>::paramId;
         indexerMenuParamColorTable["get"] = &ParamTableIndexer<MenuParamColorTable>::get;
+        indexerMenuParamColorTable["exportToCsv"] = &ParamTableIndexer<MenuParamColorTable>::exportToCsv;
+        indexerMenuParamColorTable["importFromCsv"] = &ParamTableIndexer<MenuParamColorTable>::importFromCsv;
         auto utMenuParamColorTable = state->new_usertype<MenuParamColorTable>("MenuParamColorTable");
         utMenuParamColorTable["lerpMode"] = &MenuParamColorTable::lerpMode;
         utMenuParamColorTable["h"] = &MenuParamColorTable::h;
@@ -21,8 +25,43 @@ void registerMenuParamColorTable(sol::state *state, sol::table &paramsTable) {
         utMenuParamColorTable["s3"] = &MenuParamColorTable::s3;
         utMenuParamColorTable["v3"] = &MenuParamColorTable::v3;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<MenuParamColorTable>>(gParamMgr.findTable(L"MenuParamColorTable")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<MenuParamColorTable>>(state, L"MenuParamColorTable");
+        indexer->setFieldNames({
+            {"lerpMode", false},
+            {"h", false},
+            {"s1", false},
+            {"v1", false},
+            {"s2", false},
+            {"v2", false},
+            {"s3", false},
+            {"v3", false},
+        });
+        return indexer;
+    };
     paramsTable["MenuColorTableParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<MenuParamColorTable>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,lerpMode,h,s1,v1,s2,v2,s3,v3\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%g,%g,%g,%g,%g,%g\n",
+            this->paramId(i),
+            param->lerpMode,
+            param->h,
+            param->s1,
+            param->v1,
+            param->s2,
+            param->v2,
+            param->s3,
+            param->v3
+        );
+    }
+    fclose(f);
 }
 
 }

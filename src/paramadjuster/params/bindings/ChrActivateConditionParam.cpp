@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<ChrActivateConditionParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["ChrActivateConditionParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTabl
         indexerChrActivateConditionParam["__index"] = &ParamTableIndexer<ChrActivateConditionParam>::at;
         indexerChrActivateConditionParam["id"] = &ParamTableIndexer<ChrActivateConditionParam>::paramId;
         indexerChrActivateConditionParam["get"] = &ParamTableIndexer<ChrActivateConditionParam>::get;
+        indexerChrActivateConditionParam["exportToCsv"] = &ParamTableIndexer<ChrActivateConditionParam>::exportToCsv;
+        indexerChrActivateConditionParam["importFromCsv"] = &ParamTableIndexer<ChrActivateConditionParam>::importFromCsv;
         auto utChrActivateConditionParam = state->new_usertype<ChrActivateConditionParam>("ChrActivateConditionParam");
         utChrActivateConditionParam["weatherSunny"] = sol::property([](ChrActivateConditionParam &param) -> uint8_t { return param.weatherSunny; }, [](ChrActivateConditionParam &param, uint8_t value) { param.weatherSunny = value; });
         utChrActivateConditionParam["weatherClearSky"] = sol::property([](ChrActivateConditionParam &param) -> uint8_t { return param.weatherClearSky; }, [](ChrActivateConditionParam &param, uint8_t value) { param.weatherClearSky = value; });
@@ -31,8 +35,63 @@ void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTabl
         utChrActivateConditionParam["timeEndHour"] = &ChrActivateConditionParam::timeEndHour;
         utChrActivateConditionParam["timeEndMin"] = &ChrActivateConditionParam::timeEndMin;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<ChrActivateConditionParam>>(gParamMgr.findTable(L"ChrActivateConditionParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<ChrActivateConditionParam>>(state, L"ChrActivateConditionParam");
+        indexer->setFieldNames({
+            {"weatherSunny", false},
+            {"weatherClearSky", false},
+            {"weatherWeakCloudy", false},
+            {"weatherCloudy", false},
+            {"weatherRain", false},
+            {"weatherHeavyRain", false},
+            {"weatherStorm", false},
+            {"weatherStormForBattle", false},
+            {"weatherSnow", false},
+            {"weatherHeavySnow", false},
+            {"weatherFog", false},
+            {"weatherHeavyFog", false},
+            {"weatherHeavyFogRain", false},
+            {"weatherSandStorm", false},
+            {"timeStartHour", false},
+            {"timeStartMin", false},
+            {"timeEndHour", false},
+            {"timeEndMin", false},
+        });
+        return indexer;
+    };
     paramsTable["ChrActivateConditionParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<ChrActivateConditionParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,weatherSunny,weatherClearSky,weatherWeakCloudy,weatherCloudy,weatherRain,weatherHeavyRain,weatherStorm,weatherStormForBattle,weatherSnow,weatherHeavySnow,weatherFog,weatherHeavyFog,weatherHeavyFogRain,weatherSandStorm,timeStartHour,timeStartMin,timeEndHour,timeEndMin\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u\n",
+            this->paramId(i),
+            param->weatherSunny,
+            param->weatherClearSky,
+            param->weatherWeakCloudy,
+            param->weatherCloudy,
+            param->weatherRain,
+            param->weatherHeavyRain,
+            param->weatherStorm,
+            param->weatherStormForBattle,
+            param->weatherSnow,
+            param->weatherHeavySnow,
+            param->weatherFog,
+            param->weatherHeavyFog,
+            param->weatherHeavyFogRain,
+            param->weatherSandStorm,
+            param->timeStartHour,
+            param->timeStartMin,
+            param->timeEndHour,
+            param->timeEndMin
+        );
+    }
+    fclose(f);
 }
 
 }

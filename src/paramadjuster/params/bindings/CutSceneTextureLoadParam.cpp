@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<CutSceneTextureLoadParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["CutSceneTextureLoadParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable
         indexerCutSceneTextureLoadParam["__index"] = &ParamTableIndexer<CutSceneTextureLoadParam>::at;
         indexerCutSceneTextureLoadParam["id"] = &ParamTableIndexer<CutSceneTextureLoadParam>::paramId;
         indexerCutSceneTextureLoadParam["get"] = &ParamTableIndexer<CutSceneTextureLoadParam>::get;
+        indexerCutSceneTextureLoadParam["exportToCsv"] = &ParamTableIndexer<CutSceneTextureLoadParam>::exportToCsv;
+        indexerCutSceneTextureLoadParam["importFromCsv"] = &ParamTableIndexer<CutSceneTextureLoadParam>::importFromCsv;
         auto utCutSceneTextureLoadParam = state->new_usertype<CutSceneTextureLoadParam>("CutSceneTextureLoadParam");
         utCutSceneTextureLoadParam["disableParam_NT"] = sol::property([](CutSceneTextureLoadParam &param) -> uint8_t { return param.disableParam_NT; }, [](CutSceneTextureLoadParam &param, uint8_t value) { param.disableParam_NT = value; });
         utCutSceneTextureLoadParam["disableParam_Debug"] = sol::property([](CutSceneTextureLoadParam &param) -> uint8_t { return param.disableParam_Debug; }, [](CutSceneTextureLoadParam &param, uint8_t value) { param.disableParam_Debug = value; });
@@ -31,8 +35,63 @@ void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable
         utCutSceneTextureLoadParam["texName_14"] = sol::property([](CutSceneTextureLoadParam &param) -> std::string { return param.texName_14; }, [](CutSceneTextureLoadParam &param, const std::string& value) { cStrToFixedStr(param.texName_14, value); });
         utCutSceneTextureLoadParam["texName_15"] = sol::property([](CutSceneTextureLoadParam &param) -> std::string { return param.texName_15; }, [](CutSceneTextureLoadParam &param, const std::string& value) { cStrToFixedStr(param.texName_15, value); });
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<CutSceneTextureLoadParam>>(gParamMgr.findTable(L"CutSceneTextureLoadParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<CutSceneTextureLoadParam>>(state, L"CutSceneTextureLoadParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"disableParam_Debug", false},
+            {"texName_00", true},
+            {"texName_01", true},
+            {"texName_02", true},
+            {"texName_03", true},
+            {"texName_04", true},
+            {"texName_05", true},
+            {"texName_06", true},
+            {"texName_07", true},
+            {"texName_08", true},
+            {"texName_09", true},
+            {"texName_10", true},
+            {"texName_11", true},
+            {"texName_12", true},
+            {"texName_13", true},
+            {"texName_14", true},
+            {"texName_15", true},
+        });
+        return indexer;
+    };
     paramsTable["CutSceneTextureLoadParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<CutSceneTextureLoadParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,disableParam_Debug,texName_00,texName_01,texName_02,texName_03,texName_04,texName_05,texName_06,texName_07,texName_08,texName_09,texName_10,texName_11,texName_12,texName_13,texName_14,texName_15\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\",\"%hs\"\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->disableParam_Debug,
+            param->texName_00,
+            param->texName_01,
+            param->texName_02,
+            param->texName_03,
+            param->texName_04,
+            param->texName_05,
+            param->texName_06,
+            param->texName_07,
+            param->texName_08,
+            param->texName_09,
+            param->texName_10,
+            param->texName_11,
+            param->texName_12,
+            param->texName_13,
+            param->texName_14,
+            param->texName_15
+        );
+    }
+    fclose(f);
 }
 
 }

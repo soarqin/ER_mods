@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<ToughnessParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerToughnessParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["ToughnessParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerToughnessParam(sol::state *state, sol::table &paramsTable) {
         indexerToughnessParam["__index"] = &ParamTableIndexer<ToughnessParam>::at;
         indexerToughnessParam["id"] = &ParamTableIndexer<ToughnessParam>::paramId;
         indexerToughnessParam["get"] = &ParamTableIndexer<ToughnessParam>::get;
+        indexerToughnessParam["exportToCsv"] = &ParamTableIndexer<ToughnessParam>::exportToCsv;
+        indexerToughnessParam["importFromCsv"] = &ParamTableIndexer<ToughnessParam>::importFromCsv;
         auto utToughnessParam = state->new_usertype<ToughnessParam>("ToughnessParam");
         utToughnessParam["correctionRate"] = &ToughnessParam::correctionRate;
         utToughnessParam["minToughness"] = &ToughnessParam::minToughness;
@@ -20,8 +24,41 @@ void registerToughnessParam(sol::state *state, sol::table &paramsTable) {
         utToughnessParam["unk1"] = &ToughnessParam::unk1;
         utToughnessParam["unk2"] = &ToughnessParam::unk2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<ToughnessParam>>(gParamMgr.findTable(L"ToughnessParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<ToughnessParam>>(state, L"ToughnessParam");
+        indexer->setFieldNames({
+            {"correctionRate", false},
+            {"minToughness", false},
+            {"isNonEffectiveCorrectionForMin", false},
+            {"spEffectId", false},
+            {"proCorrectionRate", false},
+            {"unk1", false},
+            {"unk2", false},
+        });
+        return indexer;
+    };
     paramsTable["ToughnessParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<ToughnessParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,correctionRate,minToughness,isNonEffectiveCorrectionForMin,spEffectId,proCorrectionRate,unk1,unk2\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%g,%u,%u,%d,%g,%g,%g\n",
+            this->paramId(i),
+            param->correctionRate,
+            param->minToughness,
+            param->isNonEffectiveCorrectionForMin,
+            param->spEffectId,
+            param->proCorrectionRate,
+            param->unk1,
+            param->unk2
+        );
+    }
+    fclose(f);
 }
 
 }

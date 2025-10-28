@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<KnowledgeLoadScreenItemParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerKnowledgeLoadScreenItemParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["KnowledgeLoadScreenItemParam"]; usertype) return;
@@ -11,14 +13,43 @@ void registerKnowledgeLoadScreenItemParam(sol::state *state, sol::table &paramsT
         indexerKnowledgeLoadScreenItemParam["__index"] = &ParamTableIndexer<KnowledgeLoadScreenItemParam>::at;
         indexerKnowledgeLoadScreenItemParam["id"] = &ParamTableIndexer<KnowledgeLoadScreenItemParam>::paramId;
         indexerKnowledgeLoadScreenItemParam["get"] = &ParamTableIndexer<KnowledgeLoadScreenItemParam>::get;
+        indexerKnowledgeLoadScreenItemParam["exportToCsv"] = &ParamTableIndexer<KnowledgeLoadScreenItemParam>::exportToCsv;
+        indexerKnowledgeLoadScreenItemParam["importFromCsv"] = &ParamTableIndexer<KnowledgeLoadScreenItemParam>::importFromCsv;
         auto utKnowledgeLoadScreenItemParam = state->new_usertype<KnowledgeLoadScreenItemParam>("KnowledgeLoadScreenItemParam");
         utKnowledgeLoadScreenItemParam["disableParam_NT"] = sol::property([](KnowledgeLoadScreenItemParam &param) -> uint8_t { return param.disableParam_NT; }, [](KnowledgeLoadScreenItemParam &param, uint8_t value) { param.disableParam_NT = value; });
         utKnowledgeLoadScreenItemParam["unlockFlagId"] = &KnowledgeLoadScreenItemParam::unlockFlagId;
         utKnowledgeLoadScreenItemParam["invalidFlagId"] = &KnowledgeLoadScreenItemParam::invalidFlagId;
         utKnowledgeLoadScreenItemParam["msgId"] = &KnowledgeLoadScreenItemParam::msgId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<KnowledgeLoadScreenItemParam>>(gParamMgr.findTable(L"KnowledgeLoadScreenItemParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<KnowledgeLoadScreenItemParam>>(state, L"KnowledgeLoadScreenItemParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"unlockFlagId", false},
+            {"invalidFlagId", false},
+            {"msgId", false},
+        });
+        return indexer;
+    };
     paramsTable["KnowledgeLoadScreenItemParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<KnowledgeLoadScreenItemParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,unlockFlagId,invalidFlagId,msgId\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%u,%d\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->unlockFlagId,
+            param->invalidFlagId,
+            param->msgId
+        );
+    }
+    fclose(f);
 }
 
 }

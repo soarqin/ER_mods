@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["LegacyDistantViewPartsReplaceParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &p
         indexerLegacyDistantViewPartsReplaceParam["__index"] = &ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::at;
         indexerLegacyDistantViewPartsReplaceParam["id"] = &ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::paramId;
         indexerLegacyDistantViewPartsReplaceParam["get"] = &ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::get;
+        indexerLegacyDistantViewPartsReplaceParam["exportToCsv"] = &ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::exportToCsv;
+        indexerLegacyDistantViewPartsReplaceParam["importFromCsv"] = &ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::importFromCsv;
         auto utLegacyDistantViewPartsReplaceParam = state->new_usertype<LegacyDistantViewPartsReplaceParam>("LegacyDistantViewPartsReplaceParam");
         utLegacyDistantViewPartsReplaceParam["TargetMapId"] = &LegacyDistantViewPartsReplaceParam::TargetMapId;
         utLegacyDistantViewPartsReplaceParam["TargetEventId"] = &LegacyDistantViewPartsReplaceParam::TargetEventId;
@@ -31,8 +35,63 @@ void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &p
         utLegacyDistantViewPartsReplaceParam["LimitedMapRegioAssetIdRangeMin"] = &LegacyDistantViewPartsReplaceParam::LimitedMapRegioAssetIdRangeMin;
         utLegacyDistantViewPartsReplaceParam["LimitedMapRegioAssetIdRangeMax"] = &LegacyDistantViewPartsReplaceParam::LimitedMapRegioAssetIdRangeMax;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<LegacyDistantViewPartsReplaceParam>>(gParamMgr.findTable(L"LegacyDistantViewPartsReplaceParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<LegacyDistantViewPartsReplaceParam>>(state, L"LegacyDistantViewPartsReplaceParam");
+        indexer->setFieldNames({
+            {"TargetMapId", false},
+            {"TargetEventId", false},
+            {"SrcAssetId", false},
+            {"SrcAssetPartsNo", false},
+            {"DstAssetId", false},
+            {"DstAssetPartsNo", false},
+            {"SrcAssetIdRangeMin", false},
+            {"SrcAssetIdRangeMax", false},
+            {"DstAssetIdRangeMin", false},
+            {"DstAssetIdRangeMax", false},
+            {"LimitedMapRegionId0", false},
+            {"LimitedMapRegionId1", false},
+            {"LimitedMapRegionId2", false},
+            {"LimitedMapRegionId3", false},
+            {"LimitedMapRegionAssetId", false},
+            {"LimitedMapRegioAssetPartsNo", false},
+            {"LimitedMapRegioAssetIdRangeMin", false},
+            {"LimitedMapRegioAssetIdRangeMax", false},
+        });
+        return indexer;
+    };
     paramsTable["LegacyDistantViewPartsReplaceParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,TargetMapId,TargetEventId,SrcAssetId,SrcAssetPartsNo,DstAssetId,DstAssetPartsNo,SrcAssetIdRangeMin,SrcAssetIdRangeMax,DstAssetIdRangeMin,DstAssetIdRangeMax,LimitedMapRegionId0,LimitedMapRegionId1,LimitedMapRegionId2,LimitedMapRegionId3,LimitedMapRegionAssetId,LimitedMapRegioAssetPartsNo,LimitedMapRegioAssetIdRangeMin,LimitedMapRegioAssetIdRangeMax\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%d,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
+            this->paramId(i),
+            param->TargetMapId,
+            param->TargetEventId,
+            param->SrcAssetId,
+            param->SrcAssetPartsNo,
+            param->DstAssetId,
+            param->DstAssetPartsNo,
+            param->SrcAssetIdRangeMin,
+            param->SrcAssetIdRangeMax,
+            param->DstAssetIdRangeMin,
+            param->DstAssetIdRangeMax,
+            param->LimitedMapRegionId0,
+            param->LimitedMapRegionId1,
+            param->LimitedMapRegionId2,
+            param->LimitedMapRegionId3,
+            param->LimitedMapRegionAssetId,
+            param->LimitedMapRegioAssetPartsNo,
+            param->LimitedMapRegioAssetIdRangeMin,
+            param->LimitedMapRegioAssetIdRangeMax
+        );
+    }
+    fclose(f);
 }
 
 }

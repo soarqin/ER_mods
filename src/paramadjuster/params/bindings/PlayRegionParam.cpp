@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<PlayRegionParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerPlayRegionParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["PlayRegionParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerPlayRegionParam(sol::state *state, sol::table &paramsTable) {
         indexerPlayRegionParam["__index"] = &ParamTableIndexer<PlayRegionParam>::at;
         indexerPlayRegionParam["id"] = &ParamTableIndexer<PlayRegionParam>::paramId;
         indexerPlayRegionParam["get"] = &ParamTableIndexer<PlayRegionParam>::get;
+        indexerPlayRegionParam["exportToCsv"] = &ParamTableIndexer<PlayRegionParam>::exportToCsv;
+        indexerPlayRegionParam["importFromCsv"] = &ParamTableIndexer<PlayRegionParam>::importFromCsv;
         auto utPlayRegionParam = state->new_usertype<PlayRegionParam>("PlayRegionParam");
         utPlayRegionParam["disableParam_NT"] = sol::property([](PlayRegionParam &param) -> uint8_t { return param.disableParam_NT; }, [](PlayRegionParam &param, uint8_t value) { param.disableParam_NT = value; });
         utPlayRegionParam["matchAreaId"] = &PlayRegionParam::matchAreaId;
@@ -93,8 +97,187 @@ void registerPlayRegionParam(sol::state *state, sol::table &paramsTable) {
         utPlayRegionParam["bossId_16"] = &PlayRegionParam::bossId_16;
         utPlayRegionParam["mapMenuUnlockEventId"] = &PlayRegionParam::mapMenuUnlockEventId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<PlayRegionParam>>(gParamMgr.findTable(L"PlayRegionParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<PlayRegionParam>>(state, L"PlayRegionParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"matchAreaId", false},
+            {"multiPlayStartLimitEventFlagId", false},
+            {"otherDisableDistance", false},
+            {"pcPositionSaveLimitEventFlagId", false},
+            {"bossAreaId", false},
+            {"cultNpcWhiteGhostEntityId_byFree", false},
+            {"bMapGuradianRegion", false},
+            {"bYellowCostumeRegion", false},
+            {"multiPlayStartLimitEventFlagId_targetFlagState", false},
+            {"breakInLimitEventFlagId_1_targetFlagState", false},
+            {"whiteSignLimitEventFlagId_1_targetFlagState", false},
+            {"redSignLimitEventFlagId_1_targetFlagState", false},
+            {"breakInLimitEventFlagId_2_targetFlagState", false},
+            {"breakInLimitEventFlagId_3_targetFlagState", false},
+            {"whiteSignLimitEventFlagId_2_targetFlagState", false},
+            {"warpItemUsePermitBonfireId_1", false},
+            {"warpItemUsePermitBonfireId_2", false},
+            {"warpItemUsePermitBonfireId_3", false},
+            {"warpItemUsePermitBonfireId_4", false},
+            {"warpItemUsePermitBonfireId_5", false},
+            {"warpItemProhibitionEventFlagId_1", false},
+            {"warpItemProhibitionEventFlagId_2", false},
+            {"warpItemProhibitionEventFlagId_3", false},
+            {"warpItemProhibitionEventFlagId_4", false},
+            {"warpItemProhibitionEventFlagId_5", false},
+            {"enableBloodstain", false},
+            {"enableBloodMessage", false},
+            {"enableGhost", false},
+            {"dispMask00", false},
+            {"dispMask01", false},
+            {"whiteSignLimitEventFlagId_3_targetFlagState", false},
+            {"redSignLimitEventFlagId_2_targetFlagState", false},
+            {"redSignLimitEventFlagId_3_targetFlagState", false},
+            {"isAutoIntrudePoint", false},
+            {"unknown_0x45_1", false},
+            {"multiPlayHASHostLimitEventFlagId", false},
+            {"otherMaxDistance", false},
+            {"signPuddleOpenEventFlagId", false},
+            {"areaNo", false},
+            {"gridXNo", false},
+            {"gridZNo", false},
+            {"posX", false},
+            {"posY", false},
+            {"posZ", false},
+            {"breakInLimitEventFlagId_1", false},
+            {"whiteSignLimitEventFlagId_1", false},
+            {"matchAreaSignCreateLimitEventFlagId", false},
+            {"signAimId_1", false},
+            {"signAimId_2", false},
+            {"signAimId_3", false},
+            {"signAimId_4", false},
+            {"signAimId_5", false},
+            {"signAimId_6", false},
+            {"signAimId_7", false},
+            {"signAimId_8", false},
+            {"redSignLimitEventFlagId_1", false},
+            {"breakInLimitEventFlagId_2", false},
+            {"breakInLimitEventFlagId_3", false},
+            {"whiteSignLimitEventFlagId_2", false},
+            {"whiteSignLimitEventFlagId_3", false},
+            {"redSignLimitEventFlagId_2", false},
+            {"redSignLimitEventFlagId_3", false},
+            {"bossId_1", false},
+            {"bossId_2", false},
+            {"bossId_3", false},
+            {"bossId_4", false},
+            {"bossId_5", false},
+            {"bossId_6", false},
+            {"bossId_7", false},
+            {"bossId_8", false},
+            {"bossId_9", false},
+            {"bossId_10", false},
+            {"bossId_11", false},
+            {"bossId_12", false},
+            {"bossId_13", false},
+            {"bossId_14", false},
+            {"bossId_15", false},
+            {"bossId_16", false},
+            {"mapMenuUnlockEventId", false},
+        });
+        return indexer;
+    };
     paramsTable["PlayRegionParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<PlayRegionParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,matchAreaId,multiPlayStartLimitEventFlagId,otherDisableDistance,pcPositionSaveLimitEventFlagId,bossAreaId,cultNpcWhiteGhostEntityId_byFree,bMapGuradianRegion,bYellowCostumeRegion,multiPlayStartLimitEventFlagId_targetFlagState,breakInLimitEventFlagId_1_targetFlagState,whiteSignLimitEventFlagId_1_targetFlagState,redSignLimitEventFlagId_1_targetFlagState,breakInLimitEventFlagId_2_targetFlagState,breakInLimitEventFlagId_3_targetFlagState,whiteSignLimitEventFlagId_2_targetFlagState,warpItemUsePermitBonfireId_1,warpItemUsePermitBonfireId_2,warpItemUsePermitBonfireId_3,warpItemUsePermitBonfireId_4,warpItemUsePermitBonfireId_5,warpItemProhibitionEventFlagId_1,warpItemProhibitionEventFlagId_2,warpItemProhibitionEventFlagId_3,warpItemProhibitionEventFlagId_4,warpItemProhibitionEventFlagId_5,enableBloodstain,enableBloodMessage,enableGhost,dispMask00,dispMask01,whiteSignLimitEventFlagId_3_targetFlagState,redSignLimitEventFlagId_2_targetFlagState,redSignLimitEventFlagId_3_targetFlagState,isAutoIntrudePoint,unknown_0x45_1,multiPlayHASHostLimitEventFlagId,otherMaxDistance,signPuddleOpenEventFlagId,areaNo,gridXNo,gridZNo,posX,posY,posZ,breakInLimitEventFlagId_1,whiteSignLimitEventFlagId_1,matchAreaSignCreateLimitEventFlagId,signAimId_1,signAimId_2,signAimId_3,signAimId_4,signAimId_5,signAimId_6,signAimId_7,signAimId_8,redSignLimitEventFlagId_1,breakInLimitEventFlagId_2,breakInLimitEventFlagId_3,whiteSignLimitEventFlagId_2,whiteSignLimitEventFlagId_3,redSignLimitEventFlagId_2,redSignLimitEventFlagId_3,bossId_1,bossId_2,bossId_3,bossId_4,bossId_5,bossId_6,bossId_7,bossId_8,bossId_9,bossId_10,bossId_11,bossId_12,bossId_13,bossId_14,bossId_15,bossId_16,mapMenuUnlockEventId\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%d,%u,%g,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%g,%u,%u,%u,%u,%g,%g,%g,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->matchAreaId,
+            param->multiPlayStartLimitEventFlagId,
+            param->otherDisableDistance,
+            param->pcPositionSaveLimitEventFlagId,
+            param->bossAreaId,
+            param->cultNpcWhiteGhostEntityId_byFree,
+            param->bMapGuradianRegion,
+            param->bYellowCostumeRegion,
+            param->multiPlayStartLimitEventFlagId_targetFlagState,
+            param->breakInLimitEventFlagId_1_targetFlagState,
+            param->whiteSignLimitEventFlagId_1_targetFlagState,
+            param->redSignLimitEventFlagId_1_targetFlagState,
+            param->breakInLimitEventFlagId_2_targetFlagState,
+            param->breakInLimitEventFlagId_3_targetFlagState,
+            param->whiteSignLimitEventFlagId_2_targetFlagState,
+            param->warpItemUsePermitBonfireId_1,
+            param->warpItemUsePermitBonfireId_2,
+            param->warpItemUsePermitBonfireId_3,
+            param->warpItemUsePermitBonfireId_4,
+            param->warpItemUsePermitBonfireId_5,
+            param->warpItemProhibitionEventFlagId_1,
+            param->warpItemProhibitionEventFlagId_2,
+            param->warpItemProhibitionEventFlagId_3,
+            param->warpItemProhibitionEventFlagId_4,
+            param->warpItemProhibitionEventFlagId_5,
+            param->enableBloodstain,
+            param->enableBloodMessage,
+            param->enableGhost,
+            param->dispMask00,
+            param->dispMask01,
+            param->whiteSignLimitEventFlagId_3_targetFlagState,
+            param->redSignLimitEventFlagId_2_targetFlagState,
+            param->redSignLimitEventFlagId_3_targetFlagState,
+            param->isAutoIntrudePoint,
+            param->unknown_0x45_1,
+            param->multiPlayHASHostLimitEventFlagId,
+            param->otherMaxDistance,
+            param->signPuddleOpenEventFlagId,
+            param->areaNo,
+            param->gridXNo,
+            param->gridZNo,
+            param->posX,
+            param->posY,
+            param->posZ,
+            param->breakInLimitEventFlagId_1,
+            param->whiteSignLimitEventFlagId_1,
+            param->matchAreaSignCreateLimitEventFlagId,
+            param->signAimId_1,
+            param->signAimId_2,
+            param->signAimId_3,
+            param->signAimId_4,
+            param->signAimId_5,
+            param->signAimId_6,
+            param->signAimId_7,
+            param->signAimId_8,
+            param->redSignLimitEventFlagId_1,
+            param->breakInLimitEventFlagId_2,
+            param->breakInLimitEventFlagId_3,
+            param->whiteSignLimitEventFlagId_2,
+            param->whiteSignLimitEventFlagId_3,
+            param->redSignLimitEventFlagId_2,
+            param->redSignLimitEventFlagId_3,
+            param->bossId_1,
+            param->bossId_2,
+            param->bossId_3,
+            param->bossId_4,
+            param->bossId_5,
+            param->bossId_6,
+            param->bossId_7,
+            param->bossId_8,
+            param->bossId_9,
+            param->bossId_10,
+            param->bossId_11,
+            param->bossId_12,
+            param->bossId_13,
+            param->bossId_14,
+            param->bossId_15,
+            param->bossId_16,
+            param->mapMenuUnlockEventId
+        );
+    }
+    fclose(f);
 }
 
 }

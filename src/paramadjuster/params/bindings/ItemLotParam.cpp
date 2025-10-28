@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<ItemLotParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerItemLotParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["ItemLotParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerItemLotParam(sol::state *state, sol::table &paramsTable) {
         indexerItemLotParam["__index"] = &ParamTableIndexer<ItemLotParam>::at;
         indexerItemLotParam["id"] = &ParamTableIndexer<ItemLotParam>::paramId;
         indexerItemLotParam["get"] = &ParamTableIndexer<ItemLotParam>::get;
+        indexerItemLotParam["exportToCsv"] = &ParamTableIndexer<ItemLotParam>::exportToCsv;
+        indexerItemLotParam["importFromCsv"] = &ParamTableIndexer<ItemLotParam>::importFromCsv;
         auto utItemLotParam = state->new_usertype<ItemLotParam>("ItemLotParam");
         utItemLotParam["lotItemId01"] = &ItemLotParam::lotItemId01;
         utItemLotParam["lotItemId02"] = &ItemLotParam::lotItemId02;
@@ -86,9 +90,174 @@ void registerItemLotParam(sol::state *state, sol::table &paramsTable) {
         utItemLotParam["PAD1"] = sol::property([](ItemLotParam &param) -> uint8_t { return param.PAD1; }, [](ItemLotParam &param, uint8_t value) { param.PAD1 = value; });
         utItemLotParam["PAD2"] = &ItemLotParam::PAD2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<ItemLotParam>>(gParamMgr.findTable(L"ItemLotParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<ItemLotParam>>(state, L"ItemLotParam");
+        indexer->setFieldNames({
+            {"lotItemId01", false},
+            {"lotItemId02", false},
+            {"lotItemId03", false},
+            {"lotItemId04", false},
+            {"lotItemId05", false},
+            {"lotItemId06", false},
+            {"lotItemId07", false},
+            {"lotItemId08", false},
+            {"lotItemCategory01", false},
+            {"lotItemCategory02", false},
+            {"lotItemCategory03", false},
+            {"lotItemCategory04", false},
+            {"lotItemCategory05", false},
+            {"lotItemCategory06", false},
+            {"lotItemCategory07", false},
+            {"lotItemCategory08", false},
+            {"lotItemBasePoint01", false},
+            {"lotItemBasePoint02", false},
+            {"lotItemBasePoint03", false},
+            {"lotItemBasePoint04", false},
+            {"lotItemBasePoint05", false},
+            {"lotItemBasePoint06", false},
+            {"lotItemBasePoint07", false},
+            {"lotItemBasePoint08", false},
+            {"cumulateLotPoint01", false},
+            {"cumulateLotPoint02", false},
+            {"cumulateLotPoint03", false},
+            {"cumulateLotPoint04", false},
+            {"cumulateLotPoint05", false},
+            {"cumulateLotPoint06", false},
+            {"cumulateLotPoint07", false},
+            {"cumulateLotPoint08", false},
+            {"getItemFlagId01", false},
+            {"getItemFlagId02", false},
+            {"getItemFlagId03", false},
+            {"getItemFlagId04", false},
+            {"getItemFlagId05", false},
+            {"getItemFlagId06", false},
+            {"getItemFlagId07", false},
+            {"getItemFlagId08", false},
+            {"getItemFlagId", false},
+            {"cumulateNumFlagId", false},
+            {"cumulateNumMax", false},
+            {"lotItem_Rarity", false},
+            {"lotItemNum01", false},
+            {"lotItemNum02", false},
+            {"lotItemNum03", false},
+            {"lotItemNum04", false},
+            {"lotItemNum05", false},
+            {"lotItemNum06", false},
+            {"lotItemNum07", false},
+            {"lotItemNum08", false},
+            {"enableLuck01", false},
+            {"enableLuck02", false},
+            {"enableLuck03", false},
+            {"enableLuck04", false},
+            {"enableLuck05", false},
+            {"enableLuck06", false},
+            {"enableLuck07", false},
+            {"enableLuck08", false},
+            {"cumulateReset01", false},
+            {"cumulateReset02", false},
+            {"cumulateReset03", false},
+            {"cumulateReset04", false},
+            {"cumulateReset05", false},
+            {"cumulateReset06", false},
+            {"cumulateReset07", false},
+            {"cumulateReset08", false},
+            {"GameClearOffset", false},
+            {"canExecByFriendlyGhost", false},
+            {"canExecByHostileGhost", false},
+            {"PAD1", false},
+            {"PAD2", false},
+        });
+        return indexer;
+    };
     paramsTable["ItemLotParam_enemy"] = tableLoader;
     paramsTable["ItemLotParam_map"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<ItemLotParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,lotItemId01,lotItemId02,lotItemId03,lotItemId04,lotItemId05,lotItemId06,lotItemId07,lotItemId08,lotItemCategory01,lotItemCategory02,lotItemCategory03,lotItemCategory04,lotItemCategory05,lotItemCategory06,lotItemCategory07,lotItemCategory08,lotItemBasePoint01,lotItemBasePoint02,lotItemBasePoint03,lotItemBasePoint04,lotItemBasePoint05,lotItemBasePoint06,lotItemBasePoint07,lotItemBasePoint08,cumulateLotPoint01,cumulateLotPoint02,cumulateLotPoint03,cumulateLotPoint04,cumulateLotPoint05,cumulateLotPoint06,cumulateLotPoint07,cumulateLotPoint08,getItemFlagId01,getItemFlagId02,getItemFlagId03,getItemFlagId04,getItemFlagId05,getItemFlagId06,getItemFlagId07,getItemFlagId08,getItemFlagId,cumulateNumFlagId,cumulateNumMax,lotItem_Rarity,lotItemNum01,lotItemNum02,lotItemNum03,lotItemNum04,lotItemNum05,lotItemNum06,lotItemNum07,lotItemNum08,enableLuck01,enableLuck02,enableLuck03,enableLuck04,enableLuck05,enableLuck06,enableLuck07,enableLuck08,cumulateReset01,cumulateReset02,cumulateReset03,cumulateReset04,cumulateReset05,cumulateReset06,cumulateReset07,cumulateReset08,GameClearOffset,canExecByFriendlyGhost,canExecByHostileGhost,PAD1,PAD2\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u\n",
+            this->paramId(i),
+            param->lotItemId01,
+            param->lotItemId02,
+            param->lotItemId03,
+            param->lotItemId04,
+            param->lotItemId05,
+            param->lotItemId06,
+            param->lotItemId07,
+            param->lotItemId08,
+            param->lotItemCategory01,
+            param->lotItemCategory02,
+            param->lotItemCategory03,
+            param->lotItemCategory04,
+            param->lotItemCategory05,
+            param->lotItemCategory06,
+            param->lotItemCategory07,
+            param->lotItemCategory08,
+            param->lotItemBasePoint01,
+            param->lotItemBasePoint02,
+            param->lotItemBasePoint03,
+            param->lotItemBasePoint04,
+            param->lotItemBasePoint05,
+            param->lotItemBasePoint06,
+            param->lotItemBasePoint07,
+            param->lotItemBasePoint08,
+            param->cumulateLotPoint01,
+            param->cumulateLotPoint02,
+            param->cumulateLotPoint03,
+            param->cumulateLotPoint04,
+            param->cumulateLotPoint05,
+            param->cumulateLotPoint06,
+            param->cumulateLotPoint07,
+            param->cumulateLotPoint08,
+            param->getItemFlagId01,
+            param->getItemFlagId02,
+            param->getItemFlagId03,
+            param->getItemFlagId04,
+            param->getItemFlagId05,
+            param->getItemFlagId06,
+            param->getItemFlagId07,
+            param->getItemFlagId08,
+            param->getItemFlagId,
+            param->cumulateNumFlagId,
+            param->cumulateNumMax,
+            param->lotItem_Rarity,
+            param->lotItemNum01,
+            param->lotItemNum02,
+            param->lotItemNum03,
+            param->lotItemNum04,
+            param->lotItemNum05,
+            param->lotItemNum06,
+            param->lotItemNum07,
+            param->lotItemNum08,
+            param->enableLuck01,
+            param->enableLuck02,
+            param->enableLuck03,
+            param->enableLuck04,
+            param->enableLuck05,
+            param->enableLuck06,
+            param->enableLuck07,
+            param->enableLuck08,
+            param->cumulateReset01,
+            param->cumulateReset02,
+            param->cumulateReset03,
+            param->cumulateReset04,
+            param->cumulateReset05,
+            param->cumulateReset06,
+            param->cumulateReset07,
+            param->cumulateReset08,
+            param->GameClearOffset,
+            param->canExecByFriendlyGhost,
+            param->canExecByHostileGhost,
+            param->PAD1,
+            param->PAD2
+        );
+    }
+    fclose(f);
 }
 
 }

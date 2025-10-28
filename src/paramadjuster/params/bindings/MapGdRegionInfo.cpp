@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<MapGdRegionInfo>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerMapGdRegionInfo(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["MapGdRegionInfo"]; usertype) return;
@@ -11,12 +13,37 @@ void registerMapGdRegionInfo(sol::state *state, sol::table &paramsTable) {
         indexerMapGdRegionInfo["__index"] = &ParamTableIndexer<MapGdRegionInfo>::at;
         indexerMapGdRegionInfo["id"] = &ParamTableIndexer<MapGdRegionInfo>::paramId;
         indexerMapGdRegionInfo["get"] = &ParamTableIndexer<MapGdRegionInfo>::get;
+        indexerMapGdRegionInfo["exportToCsv"] = &ParamTableIndexer<MapGdRegionInfo>::exportToCsv;
+        indexerMapGdRegionInfo["importFromCsv"] = &ParamTableIndexer<MapGdRegionInfo>::importFromCsv;
         auto utMapGdRegionInfo = state->new_usertype<MapGdRegionInfo>("MapGdRegionInfo");
         utMapGdRegionInfo["disableParam_NT"] = sol::property([](MapGdRegionInfo &param) -> uint8_t { return param.disableParam_NT; }, [](MapGdRegionInfo &param, uint8_t value) { param.disableParam_NT = value; });
         utMapGdRegionInfo["mapRegionId"] = &MapGdRegionInfo::mapRegionId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<MapGdRegionInfo>>(gParamMgr.findTable(L"MapGdRegionInfo")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<MapGdRegionInfo>>(state, L"MapGdRegionInfo");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"mapRegionId", false},
+        });
+        return indexer;
+    };
     paramsTable["MapGdRegionInfoParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<MapGdRegionInfo>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,mapRegionId\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->mapRegionId
+        );
+    }
+    fclose(f);
 }
 
 }

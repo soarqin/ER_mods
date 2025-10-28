@@ -8,8 +8,11 @@
 
 #pragma once
 
+#include <sol/sol.hpp>
+
 #include <unordered_map>
 #include <string>
+#include <string_view>
 #include <cstdint>
 
 namespace sol {
@@ -76,6 +79,29 @@ private:
     std::unordered_map<std::wstring, ParamType> paramTypes_;
     sol::state *state_ = nullptr;
 };
+
+struct ParamTableIndexerBase {
+    ParamTableIndexerBase(sol::state *state, const wchar_t *tableName);
+
+    void setFieldNames(const std::initializer_list<std::pair<const char *, bool>> &fieldNames);
+    uint64_t paramId(int index) const;
+    uint16_t count() const;
+    void importFromCsv(const std::wstring &csvPath);
+    void exportToCsv(const std::wstring &csvPath);
+
+protected:
+    virtual void exportToCsvImpl(const std::wstring &csvPath) = 0;
+
+protected:
+    sol::state *state_;
+    ParamTable *table_;
+    std::string tableName_;
+    std::unordered_map<std::string, bool> fieldNames_;
+};
+
+extern std::string ucs2toutf8(const std::wstring_view &str);
+extern std::wstring utf8toucs2(const std::string_view &str);
+extern std::string tryEscape(std::string_view str);
 
 extern ParamMgr gParamMgr;
 

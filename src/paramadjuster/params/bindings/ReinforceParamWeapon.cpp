@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<ReinforceParamWeapon>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["ReinforceParamWeapon"]; usertype) return;
@@ -11,6 +13,8 @@ void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
         indexerReinforceParamWeapon["__index"] = &ParamTableIndexer<ReinforceParamWeapon>::at;
         indexerReinforceParamWeapon["id"] = &ParamTableIndexer<ReinforceParamWeapon>::paramId;
         indexerReinforceParamWeapon["get"] = &ParamTableIndexer<ReinforceParamWeapon>::get;
+        indexerReinforceParamWeapon["exportToCsv"] = &ParamTableIndexer<ReinforceParamWeapon>::exportToCsv;
+        indexerReinforceParamWeapon["importFromCsv"] = &ParamTableIndexer<ReinforceParamWeapon>::importFromCsv;
         auto utReinforceParamWeapon = state->new_usertype<ReinforceParamWeapon>("ReinforceParamWeapon");
         utReinforceParamWeapon["physicsAtkRate"] = &ReinforceParamWeapon::physicsAtkRate;
         utReinforceParamWeapon["magicAtkRate"] = &ReinforceParamWeapon::magicAtkRate;
@@ -51,8 +55,103 @@ void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
         utReinforceParamWeapon["madnessGuardDefRate"] = &ReinforceParamWeapon::madnessGuardDefRate;
         utReinforceParamWeapon["baseAtkRate"] = &ReinforceParamWeapon::baseAtkRate;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<ReinforceParamWeapon>>(gParamMgr.findTable(L"ReinforceParamWeapon")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<ReinforceParamWeapon>>(state, L"ReinforceParamWeapon");
+        indexer->setFieldNames({
+            {"physicsAtkRate", false},
+            {"magicAtkRate", false},
+            {"fireAtkRate", false},
+            {"thunderAtkRate", false},
+            {"staminaAtkRate", false},
+            {"saWeaponAtkRate", false},
+            {"saDurabilityRate", false},
+            {"correctStrengthRate", false},
+            {"correctAgilityRate", false},
+            {"correctMagicRate", false},
+            {"correctFaithRate", false},
+            {"physicsGuardCutRate", false},
+            {"magicGuardCutRate", false},
+            {"fireGuardCutRate", false},
+            {"thunderGuardCutRate", false},
+            {"poisonGuardResistRate", false},
+            {"diseaseGuardResistRate", false},
+            {"bloodGuardResistRate", false},
+            {"curseGuardResistRate", false},
+            {"staminaGuardDefRate", false},
+            {"spEffectId1", false},
+            {"spEffectId2", false},
+            {"spEffectId3", false},
+            {"residentSpEffectId1", false},
+            {"residentSpEffectId2", false},
+            {"residentSpEffectId3", false},
+            {"materialSetId", false},
+            {"maxReinforceLevel", false},
+            {"darkAtkRate", false},
+            {"darkGuardCutRate", false},
+            {"correctLuckRate", false},
+            {"freezeGuardDefRate", false},
+            {"reinforcePriceRate", false},
+            {"baseChangePriceRate", false},
+            {"enableGemRank", false},
+            {"sleepGuardDefRate", false},
+            {"madnessGuardDefRate", false},
+            {"baseAtkRate", false},
+        });
+        return indexer;
+    };
     paramsTable["ReinforceParamWeapon"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<ReinforceParamWeapon>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,physicsAtkRate,magicAtkRate,fireAtkRate,thunderAtkRate,staminaAtkRate,saWeaponAtkRate,saDurabilityRate,correctStrengthRate,correctAgilityRate,correctMagicRate,correctFaithRate,physicsGuardCutRate,magicGuardCutRate,fireGuardCutRate,thunderGuardCutRate,poisonGuardResistRate,diseaseGuardResistRate,bloodGuardResistRate,curseGuardResistRate,staminaGuardDefRate,spEffectId1,spEffectId2,spEffectId3,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,materialSetId,maxReinforceLevel,darkAtkRate,darkGuardCutRate,correctLuckRate,freezeGuardDefRate,reinforcePriceRate,baseChangePriceRate,enableGemRank,sleepGuardDefRate,madnessGuardDefRate,baseAtkRate\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%g,%u,%u,%u,%u,%u,%u,%u,%u,%g,%g,%g,%g,%g,%g,%d,%g,%g,%g\n",
+            this->paramId(i),
+            param->physicsAtkRate,
+            param->magicAtkRate,
+            param->fireAtkRate,
+            param->thunderAtkRate,
+            param->staminaAtkRate,
+            param->saWeaponAtkRate,
+            param->saDurabilityRate,
+            param->correctStrengthRate,
+            param->correctAgilityRate,
+            param->correctMagicRate,
+            param->correctFaithRate,
+            param->physicsGuardCutRate,
+            param->magicGuardCutRate,
+            param->fireGuardCutRate,
+            param->thunderGuardCutRate,
+            param->poisonGuardResistRate,
+            param->diseaseGuardResistRate,
+            param->bloodGuardResistRate,
+            param->curseGuardResistRate,
+            param->staminaGuardDefRate,
+            param->spEffectId1,
+            param->spEffectId2,
+            param->spEffectId3,
+            param->residentSpEffectId1,
+            param->residentSpEffectId2,
+            param->residentSpEffectId3,
+            param->materialSetId,
+            param->maxReinforceLevel,
+            param->darkAtkRate,
+            param->darkGuardCutRate,
+            param->correctLuckRate,
+            param->freezeGuardDefRate,
+            param->reinforcePriceRate,
+            param->baseChangePriceRate,
+            param->enableGemRank,
+            param->sleepGuardDefRate,
+            param->madnessGuardDefRate,
+            param->baseAtkRate
+        );
+    }
+    fclose(f);
 }
 
 }

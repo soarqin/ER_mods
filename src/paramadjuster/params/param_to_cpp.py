@@ -7,6 +7,7 @@ import os
 
 pattern_def = re.compile(r'([\w]+)[\s]+([\w]+)(:[0-9]+|\[[0-9]+\])?([\s]+=[\s]+[\S]+)?')
 except_param_tables = {
+    "GameSystemCommonParam",
     "NetworkAreaParam",
     "NetworkMsgParam",
     "NetworkParam",
@@ -100,6 +101,43 @@ def parse_field(s):
     return m[1], m[2], m[3], m[4]
 
 
+def param_type_is_str(s):
+    if s == 'fixstr':
+        return True
+    if s == 'fixstrW':
+        return True
+    if s == 'dummy8':
+        return True
+    return False
+
+
+def param_type_to_printf_format(s):
+    if s == 's8':
+        return '%d'
+    if s == 'u8':
+        return '%u'
+    if s == 's16':
+        return '%d'
+    if s == 'u16':
+        return '%u'
+    if s == 's32':
+        return '%d'
+    if s == 'u32':
+        return '%u'
+    if s == 'b32':
+        return '%d'
+    if s == 'f32' or s == 'angle32':
+        return '%g'
+    if s == 'f64':
+        return '%g'
+    if s == 'fixstr':
+        return '\\"%hs\\"'
+    if s == 'fixstrW':
+        return '\\"%ls\\"'
+    if s == 'dummy8':
+        return '\\"%hs\\"'
+
+
 def param_type_to_c_type(s):
     if s == 's8':
         return 'int8_t'
@@ -146,11 +184,11 @@ def param_type_to_lua_type(s):
         return 'float', 'float', None
     if s == 'f64':
         return 'double', 'double', None
-    elif s == 'fixstr':
+    if s == 'fixstr':
         return 'const std::string&', 'std::string', 'cStrToFixedStr'
-    elif s == 'fixstrW':
+    if s == 'fixstrW':
         return 'const std::wstring&', 'std::wstring', 'cStrToFixedStrW'
-    elif s == 'dummy8':
+    if s == 'dummy8':
         return None, None, None
 
 
@@ -192,11 +230,13 @@ for path in pathlist:
     print('Generating', type_name, '...')
     is_first = True
     sfields = ''
+    field_names = []
 
     inc = open('bindings/' + type_name + '.cpp', 'w', encoding='utf-8')
     inc.write('#include "../luabindings.h"\n')
     inc.write('#include "../defs/' + type_name + '.h"\n')
     inc.write(f'\nnamespace paramadjuster::params {{\n')
+    inc.write(f'\ntemplate<> void ParamTableIndexer<{type_name}>::exportToCsvImpl(const std::wstring &csvPath);\n')
     inc.write(f'\nvoid register{type_name}(sol::state *state, sol::table &paramsTable) {{\n')
     inc.write('    auto delayInit = [state, &paramsTable]() {\n')
     inc.write(f'        if (sol::optional<sol::table> usertype = (*state)["{type_name}"]; usertype) return;\n')
@@ -205,6 +245,8 @@ for path in pathlist:
     inc.write(f'        indexer{type_name}["__index"] = &ParamTableIndexer<{type_name}>::at;\n')
     inc.write(f'        indexer{type_name}["id"] = &ParamTableIndexer<{type_name}>::paramId;\n')
     inc.write(f'        indexer{type_name}["get"] = &ParamTableIndexer<{type_name}>::get;\n')
+    inc.write(f'        indexer{type_name}["exportToCsv"] = &ParamTableIndexer<{type_name}>::exportToCsv;\n')
+    inc.write(f'        indexer{type_name}["importFromCsv"] = &ParamTableIndexer<{type_name}>::importFromCsv;\n')
     inc.write(f'        auto ut{type_name} = state->new_usertype<{type_name}>("{type_name}");\n')
     for elem in root.find('Fields'):
         if elem.get('RemovedVersion') != None:
@@ -249,9 +291,9 @@ for path in pathlist:
             def_line = def_line + r[2]
         def_line = def_line + ';\n'
         sfields = sfields + def_line
-
         itp, rtp, to_func = param_type_to_lua_type(r[0])
         if itp is not None:
+            field_names.append((r[1], r[0]))
             if to_func is None:
                 if r[2] is None:
                     inc.write(f'        ut{type_name}["{r[1]}"] = &{type_name}::{r[1]};\n')
@@ -260,10 +302,38 @@ for path in pathlist:
             else:
                 inc.write(f'        ut{type_name}["{r[1]}"] = sol::property([]({type_name} &param) -> {rtp} {{ return param.{r[1]}; }}, []({type_name} &param, {itp} value) {{ {to_func}(param.{r[1]}, value); }});\n')
     inc.write('    };\n')
-    inc.write(f'    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto {{ delayInit(); return std::make_unique<ParamTableIndexer<{type_name}>>(gParamMgr.findTable(L"{type_name}")); }};\n')
+    inc.write(f'    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {{\n')
+    inc.write(f'        delayInit();\n')
+    inc.write(f'        auto indexer = std::make_unique<ParamTableIndexer<{type_name}>>(state, L"{type_name}");\n')
+    inc.write(f'        indexer->setFieldNames({{\n')
+    for fname, ftype in field_names:
+        inc.write(f'            {{"{fname}", {str(param_type_is_str(ftype)).lower()}}},\n')
+    inc.write(f'        }});\n')
+    inc.write(f'        return indexer;\n')
+    inc.write(f'    }};\n')
     for mapping_name in mapping_list:
         inc.write(f'    paramsTable["{mapping_name}"] = tableLoader;\n')
-    inc.write('}\n\n}\n')
+    inc.write('}\n')
+    inc.write(f'\ntemplate<> void ParamTableIndexer<{type_name}>::exportToCsvImpl(const std::wstring &csvPath) {{\n')
+    inc.write('    FILE *f = _wfopen(csvPath.c_str(), L"wt");\n')
+    inc.write(f'    fwprintf(f, L"ID')
+    for fname, ftype in field_names:
+        inc.write(f',{fname}')
+    inc.write('\\n");\n')
+    inc.write('    auto cnt = this->count();\n')
+    inc.write('    for (int i = 0; i < cnt; i++) {\n')
+    inc.write('        auto *param = this->at(i);\n')
+    inc.write('        fwprintf(f, L"%llu');
+    for fname, ftype in field_names:
+        inc.write(f',{param_type_to_printf_format(ftype)}')
+    inc.write('\\n",\n            this->paramId(i)')
+    for fname, ftype in field_names:
+        inc.write(f',\n            param->{fname}')
+    inc.write('\n        );\n')
+    inc.write('    }\n')
+    inc.write('    fclose(f);\n')
+    inc.write('}\n')
+    inc.write('\n}\n')
     inc.close()
 
     slf = root2.find('Self')

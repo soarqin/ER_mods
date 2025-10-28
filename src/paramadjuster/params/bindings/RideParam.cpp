@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<RideParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerRideParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["RideParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerRideParam(sol::state *state, sol::table &paramsTable) {
         indexerRideParam["__index"] = &ParamTableIndexer<RideParam>::at;
         indexerRideParam["id"] = &ParamTableIndexer<RideParam>::paramId;
         indexerRideParam["get"] = &ParamTableIndexer<RideParam>::get;
+        indexerRideParam["exportToCsv"] = &ParamTableIndexer<RideParam>::exportToCsv;
+        indexerRideParam["importFromCsv"] = &ParamTableIndexer<RideParam>::importFromCsv;
         auto utRideParam = state->new_usertype<RideParam>("RideParam");
         utRideParam["atkChrId"] = &RideParam::atkChrId;
         utRideParam["defChrId"] = &RideParam::defChrId;
@@ -26,8 +30,53 @@ void registerRideParam(sol::state *state, sol::table &paramsTable) {
         utRideParam["diffAngMin"] = &RideParam::diffAngMin;
         utRideParam["diffAngMax"] = &RideParam::diffAngMax;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<RideParam>>(gParamMgr.findTable(L"RideParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<RideParam>>(state, L"RideParam");
+        indexer->setFieldNames({
+            {"atkChrId", false},
+            {"defChrId", false},
+            {"rideCamParamId", false},
+            {"atkChrAnimId", false},
+            {"defChrAnimId", false},
+            {"defAdjustDmyId", false},
+            {"defCheckDmyId", false},
+            {"diffAngMyToDef", false},
+            {"dist", false},
+            {"upperYRange", false},
+            {"lowerYRange", false},
+            {"diffAngMin", false},
+            {"diffAngMax", false},
+        });
+        return indexer;
+    };
     paramsTable["RideParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<RideParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,atkChrId,defChrId,rideCamParamId,atkChrAnimId,defChrAnimId,defAdjustDmyId,defCheckDmyId,diffAngMyToDef,dist,upperYRange,lowerYRange,diffAngMin,diffAngMax\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%d,%u,%u,%d,%d,%g,%g,%g,%g,%g,%g\n",
+            this->paramId(i),
+            param->atkChrId,
+            param->defChrId,
+            param->rideCamParamId,
+            param->atkChrAnimId,
+            param->defChrAnimId,
+            param->defAdjustDmyId,
+            param->defCheckDmyId,
+            param->diffAngMyToDef,
+            param->dist,
+            param->upperYRange,
+            param->lowerYRange,
+            param->diffAngMin,
+            param->diffAngMax
+        );
+    }
+    fclose(f);
 }
 
 }

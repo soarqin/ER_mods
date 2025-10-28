@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<WeatherParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["WeatherParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
         indexerWeatherParam["__index"] = &ParamTableIndexer<WeatherParam>::at;
         indexerWeatherParam["id"] = &ParamTableIndexer<WeatherParam>::paramId;
         indexerWeatherParam["get"] = &ParamTableIndexer<WeatherParam>::get;
+        indexerWeatherParam["exportToCsv"] = &ParamTableIndexer<WeatherParam>::exportToCsv;
+        indexerWeatherParam["importFromCsv"] = &ParamTableIndexer<WeatherParam>::importFromCsv;
         auto utWeatherParam = state->new_usertype<WeatherParam>("WeatherParam");
         utWeatherParam["SfxId"] = &WeatherParam::SfxId;
         utWeatherParam["WindSfxId"] = &WeatherParam::WindSfxId;
@@ -30,8 +34,61 @@ void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
         utWeatherParam["aiSightRate"] = &WeatherParam::aiSightRate;
         utWeatherParam["DistViewWeatherGparamOverrideWeight"] = &WeatherParam::DistViewWeatherGparamOverrideWeight;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<WeatherParam>>(gParamMgr.findTable(L"WeatherParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<WeatherParam>>(state, L"WeatherParam");
+        indexer->setFieldNames({
+            {"SfxId", false},
+            {"WindSfxId", false},
+            {"GroundHitSfxId", false},
+            {"SoundId", false},
+            {"WetTime", false},
+            {"GparamId", false},
+            {"NextLotIngameSecondsMin", false},
+            {"NextLotIngameSecondsMax", false},
+            {"WetSpEffectId00", false},
+            {"WetSpEffectId01", false},
+            {"WetSpEffectId02", false},
+            {"WetSpEffectId03", false},
+            {"WetSpEffectId04", false},
+            {"SfxIdInoor", false},
+            {"SfxIdOutdoor", false},
+            {"aiSightRate", false},
+            {"DistViewWeatherGparamOverrideWeight", false},
+        });
+        return indexer;
+    };
     paramsTable["WeatherParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<WeatherParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,SfxId,WindSfxId,GroundHitSfxId,SoundId,WetTime,GparamId,NextLotIngameSecondsMin,NextLotIngameSecondsMax,WetSpEffectId00,WetSpEffectId01,WetSpEffectId02,WetSpEffectId03,WetSpEffectId04,SfxIdInoor,SfxIdOutdoor,aiSightRate,DistViewWeatherGparamOverrideWeight\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%d,%d,%d,%d,%g,%u,%u,%u,%d,%d,%d,%d,%d,%d,%d,%g,%g\n",
+            this->paramId(i),
+            param->SfxId,
+            param->WindSfxId,
+            param->GroundHitSfxId,
+            param->SoundId,
+            param->WetTime,
+            param->GparamId,
+            param->NextLotIngameSecondsMin,
+            param->NextLotIngameSecondsMax,
+            param->WetSpEffectId00,
+            param->WetSpEffectId01,
+            param->WetSpEffectId02,
+            param->WetSpEffectId03,
+            param->WetSpEffectId04,
+            param->SfxIdInoor,
+            param->SfxIdOutdoor,
+            param->aiSightRate,
+            param->DistViewWeatherGparamOverrideWeight
+        );
+    }
+    fclose(f);
 }
 
 }

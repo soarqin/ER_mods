@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<BonfireWarpParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerBonfireWarpParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["BonfireWarpParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerBonfireWarpParam(sol::state *state, sol::table &paramsTable) {
         indexerBonfireWarpParam["__index"] = &ParamTableIndexer<BonfireWarpParam>::at;
         indexerBonfireWarpParam["id"] = &ParamTableIndexer<BonfireWarpParam>::paramId;
         indexerBonfireWarpParam["get"] = &ParamTableIndexer<BonfireWarpParam>::get;
+        indexerBonfireWarpParam["exportToCsv"] = &ParamTableIndexer<BonfireWarpParam>::exportToCsv;
+        indexerBonfireWarpParam["importFromCsv"] = &ParamTableIndexer<BonfireWarpParam>::importFromCsv;
         auto utBonfireWarpParam = state->new_usertype<BonfireWarpParam>("BonfireWarpParam");
         utBonfireWarpParam["disableParam_NT"] = sol::property([](BonfireWarpParam &param) -> uint8_t { return param.disableParam_NT; }, [](BonfireWarpParam &param, uint8_t value) { param.disableParam_NT = value; });
         utBonfireWarpParam["eventflagId"] = &BonfireWarpParam::eventflagId;
@@ -86,8 +90,173 @@ void registerBonfireWarpParam(sol::state *state, sol::table &paramsTable) {
         utBonfireWarpParam["altIconId"] = &BonfireWarpParam::altIconId;
         utBonfireWarpParam["altForbiddenIconId"] = &BonfireWarpParam::altForbiddenIconId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<BonfireWarpParam>>(gParamMgr.findTable(L"BonfireWarpParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<BonfireWarpParam>>(state, L"BonfireWarpParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"eventflagId", false},
+            {"bonfireEntityId", false},
+            {"bonfireSubCategorySortId", false},
+            {"forbiddenIconId", false},
+            {"dispMinZoomStep", false},
+            {"selectMinZoomStep", false},
+            {"bonfireSubCategoryId", false},
+            {"clearedEventFlagId", false},
+            {"iconId", false},
+            {"dispMask00", false},
+            {"dispMask01", false},
+            {"dispMask02", false},
+            {"areaNo", false},
+            {"gridXNo", false},
+            {"gridZNo", false},
+            {"posX", false},
+            {"posY", false},
+            {"posZ", false},
+            {"textId1", false},
+            {"textEnableFlagId1", false},
+            {"textDisableFlagId1", false},
+            {"textId2", false},
+            {"textEnableFlagId2", false},
+            {"textDisableFlagId2", false},
+            {"textId3", false},
+            {"textEnableFlagId3", false},
+            {"textDisableFlagId3", false},
+            {"textId4", false},
+            {"textEnableFlagId4", false},
+            {"textDisableFlagId4", false},
+            {"textId5", false},
+            {"textEnableFlagId5", false},
+            {"textDisableFlagId5", false},
+            {"textId6", false},
+            {"textEnableFlagId6", false},
+            {"textDisableFlagId6", false},
+            {"textId7", false},
+            {"textEnableFlagId7", false},
+            {"textDisableFlagId7", false},
+            {"textId8", false},
+            {"textEnableFlagId8", false},
+            {"textDisableFlagId8", false},
+            {"textType1", false},
+            {"textType2", false},
+            {"textType3", false},
+            {"textType4", false},
+            {"textType5", false},
+            {"textType6", false},
+            {"textType7", false},
+            {"textType8", false},
+            {"noIgnitionSfxDmypolyId_0", false},
+            {"noIgnitionSfxId_0", false},
+            {"noIgnitionSfxDmypolyId_1", false},
+            {"noIgnitionSfxId_1", false},
+            {"textEnableFlag2Id1", false},
+            {"textEnableFlag2Id2", false},
+            {"textEnableFlag2Id3", false},
+            {"textEnableFlag2Id4", false},
+            {"textEnableFlag2Id5", false},
+            {"textEnableFlag2Id6", false},
+            {"textEnableFlag2Id7", false},
+            {"textEnableFlag2Id8", false},
+            {"textDisableFlag2Id1", false},
+            {"textDisableFlag2Id2", false},
+            {"textDisableFlag2Id3", false},
+            {"textDisableFlag2Id4", false},
+            {"textDisableFlag2Id5", false},
+            {"textDisableFlag2Id6", false},
+            {"textDisableFlag2Id7", false},
+            {"textDisableFlag2Id8", false},
+            {"altIconId", false},
+            {"altForbiddenIconId", false},
+        });
+        return indexer;
+    };
     paramsTable["BonfireWarpParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<BonfireWarpParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,eventflagId,bonfireEntityId,bonfireSubCategorySortId,forbiddenIconId,dispMinZoomStep,selectMinZoomStep,bonfireSubCategoryId,clearedEventFlagId,iconId,dispMask00,dispMask01,dispMask02,areaNo,gridXNo,gridZNo,posX,posY,posZ,textId1,textEnableFlagId1,textDisableFlagId1,textId2,textEnableFlagId2,textDisableFlagId2,textId3,textEnableFlagId3,textDisableFlagId3,textId4,textEnableFlagId4,textDisableFlagId4,textId5,textEnableFlagId5,textDisableFlagId5,textId6,textEnableFlagId6,textDisableFlagId6,textId7,textEnableFlagId7,textDisableFlagId7,textId8,textEnableFlagId8,textDisableFlagId8,textType1,textType2,textType3,textType4,textType5,textType6,textType7,textType8,noIgnitionSfxDmypolyId_0,noIgnitionSfxId_0,noIgnitionSfxDmypolyId_1,noIgnitionSfxId_1,textEnableFlag2Id1,textEnableFlag2Id2,textEnableFlag2Id3,textEnableFlag2Id4,textEnableFlag2Id5,textEnableFlag2Id6,textEnableFlag2Id7,textEnableFlag2Id8,textDisableFlag2Id1,textDisableFlag2Id2,textDisableFlag2Id3,textDisableFlag2Id4,textDisableFlag2Id5,textDisableFlag2Id6,textDisableFlag2Id7,textDisableFlag2Id8,altIconId,altForbiddenIconId\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%u,%u,%u,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u,%g,%g,%g,%d,%u,%u,%d,%u,%u,%d,%u,%u,%d,%u,%u,%d,%u,%u,%d,%u,%u,%d,%u,%u,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%u,%u\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->eventflagId,
+            param->bonfireEntityId,
+            param->bonfireSubCategorySortId,
+            param->forbiddenIconId,
+            param->dispMinZoomStep,
+            param->selectMinZoomStep,
+            param->bonfireSubCategoryId,
+            param->clearedEventFlagId,
+            param->iconId,
+            param->dispMask00,
+            param->dispMask01,
+            param->dispMask02,
+            param->areaNo,
+            param->gridXNo,
+            param->gridZNo,
+            param->posX,
+            param->posY,
+            param->posZ,
+            param->textId1,
+            param->textEnableFlagId1,
+            param->textDisableFlagId1,
+            param->textId2,
+            param->textEnableFlagId2,
+            param->textDisableFlagId2,
+            param->textId3,
+            param->textEnableFlagId3,
+            param->textDisableFlagId3,
+            param->textId4,
+            param->textEnableFlagId4,
+            param->textDisableFlagId4,
+            param->textId5,
+            param->textEnableFlagId5,
+            param->textDisableFlagId5,
+            param->textId6,
+            param->textEnableFlagId6,
+            param->textDisableFlagId6,
+            param->textId7,
+            param->textEnableFlagId7,
+            param->textDisableFlagId7,
+            param->textId8,
+            param->textEnableFlagId8,
+            param->textDisableFlagId8,
+            param->textType1,
+            param->textType2,
+            param->textType3,
+            param->textType4,
+            param->textType5,
+            param->textType6,
+            param->textType7,
+            param->textType8,
+            param->noIgnitionSfxDmypolyId_0,
+            param->noIgnitionSfxId_0,
+            param->noIgnitionSfxDmypolyId_1,
+            param->noIgnitionSfxId_1,
+            param->textEnableFlag2Id1,
+            param->textEnableFlag2Id2,
+            param->textEnableFlag2Id3,
+            param->textEnableFlag2Id4,
+            param->textEnableFlag2Id5,
+            param->textEnableFlag2Id6,
+            param->textEnableFlag2Id7,
+            param->textEnableFlag2Id8,
+            param->textDisableFlag2Id1,
+            param->textDisableFlag2Id2,
+            param->textDisableFlag2Id3,
+            param->textDisableFlag2Id4,
+            param->textDisableFlag2Id5,
+            param->textDisableFlag2Id6,
+            param->textDisableFlag2Id7,
+            param->textDisableFlag2Id8,
+            param->altIconId,
+            param->altForbiddenIconId
+        );
+    }
+    fclose(f);
 }
 
 }

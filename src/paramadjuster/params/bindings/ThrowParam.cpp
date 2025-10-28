@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<ThrowParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerThrowParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["ThrowParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerThrowParam(sol::state *state, sol::table &paramsTable) {
         indexerThrowParam["__index"] = &ParamTableIndexer<ThrowParam>::at;
         indexerThrowParam["id"] = &ParamTableIndexer<ThrowParam>::paramId;
         indexerThrowParam["get"] = &ParamTableIndexer<ThrowParam>::get;
+        indexerThrowParam["exportToCsv"] = &ParamTableIndexer<ThrowParam>::exportToCsv;
+        indexerThrowParam["importFromCsv"] = &ParamTableIndexer<ThrowParam>::importFromCsv;
         auto utThrowParam = state->new_usertype<ThrowParam>("ThrowParam");
         utThrowParam["AtkChrId"] = &ThrowParam::AtkChrId;
         utThrowParam["DefChrId"] = &ThrowParam::DefChrId;
@@ -52,8 +56,105 @@ void registerThrowParam(sol::state *state, sol::table &paramsTable) {
         utThrowParam["adsrobModelPosInterpolationTime"] = &ThrowParam::adsrobModelPosInterpolationTime;
         utThrowParam["throwFollowingEndEasingTime"] = &ThrowParam::throwFollowingEndEasingTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<ThrowParam>>(gParamMgr.findTable(L"ThrowParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<ThrowParam>>(state, L"ThrowParam");
+        indexer->setFieldNames({
+            {"AtkChrId", false},
+            {"DefChrId", false},
+            {"Dist", false},
+            {"DiffAngMin", false},
+            {"DiffAngMax", false},
+            {"upperYRange", false},
+            {"lowerYRange", false},
+            {"diffAngMyToDef", false},
+            {"throwTypeId", false},
+            {"atkAnimId", false},
+            {"defAnimId", false},
+            {"escHp", false},
+            {"selfEscCycleTime", false},
+            {"sphereCastRadiusRateTop", false},
+            {"sphereCastRadiusRateLow", false},
+            {"PadType", false},
+            {"AtkEnableState", false},
+            {"throwFollowingType", false},
+            {"throwType", false},
+            {"selfEscCycleCnt", false},
+            {"dmyHasChrDirType", false},
+            {"isTurnAtker", false},
+            {"isSkipWepCate", false},
+            {"isSkipSphereCast", false},
+            {"isEnableCorrectPos_forThrowAdjust", false},
+            {"isEnableThrowFollowingFallAssist", false},
+            {"isEnableThrowFollowingFeedback", false},
+            {"atkSorbDmyId", false},
+            {"defSorbDmyId", false},
+            {"Dist_start", false},
+            {"DiffAngMin_start", false},
+            {"DiffAngMax_start", false},
+            {"upperYRange_start", false},
+            {"lowerYRange_start", false},
+            {"diffAngMyToDef_start", false},
+            {"judgeRangeBasePosDmyId1", false},
+            {"judgeRangeBasePosDmyId2", false},
+            {"adsrobModelPosInterpolationTime", false},
+            {"throwFollowingEndEasingTime", false},
+        });
+        return indexer;
+    };
     paramsTable["ThrowParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<ThrowParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,AtkChrId,DefChrId,Dist,DiffAngMin,DiffAngMax,upperYRange,lowerYRange,diffAngMyToDef,throwTypeId,atkAnimId,defAnimId,escHp,selfEscCycleTime,sphereCastRadiusRateTop,sphereCastRadiusRateLow,PadType,AtkEnableState,throwFollowingType,throwType,selfEscCycleCnt,dmyHasChrDirType,isTurnAtker,isSkipWepCate,isSkipSphereCast,isEnableCorrectPos_forThrowAdjust,isEnableThrowFollowingFallAssist,isEnableThrowFollowingFeedback,atkSorbDmyId,defSorbDmyId,Dist_start,DiffAngMin_start,DiffAngMax_start,upperYRange_start,lowerYRange_start,diffAngMyToDef_start,judgeRangeBasePosDmyId1,judgeRangeBasePosDmyId2,adsrobModelPosInterpolationTime,throwFollowingEndEasingTime\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%d,%d,%g,%g,%g,%g,%g,%g,%d,%d,%d,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%g,%g,%g,%g,%g,%g,%d,%d,%g,%g\n",
+            this->paramId(i),
+            param->AtkChrId,
+            param->DefChrId,
+            param->Dist,
+            param->DiffAngMin,
+            param->DiffAngMax,
+            param->upperYRange,
+            param->lowerYRange,
+            param->diffAngMyToDef,
+            param->throwTypeId,
+            param->atkAnimId,
+            param->defAnimId,
+            param->escHp,
+            param->selfEscCycleTime,
+            param->sphereCastRadiusRateTop,
+            param->sphereCastRadiusRateLow,
+            param->PadType,
+            param->AtkEnableState,
+            param->throwFollowingType,
+            param->throwType,
+            param->selfEscCycleCnt,
+            param->dmyHasChrDirType,
+            param->isTurnAtker,
+            param->isSkipWepCate,
+            param->isSkipSphereCast,
+            param->isEnableCorrectPos_forThrowAdjust,
+            param->isEnableThrowFollowingFallAssist,
+            param->isEnableThrowFollowingFeedback,
+            param->atkSorbDmyId,
+            param->defSorbDmyId,
+            param->Dist_start,
+            param->DiffAngMin_start,
+            param->DiffAngMax_start,
+            param->upperYRange_start,
+            param->lowerYRange_start,
+            param->diffAngMyToDef_start,
+            param->judgeRangeBasePosDmyId1,
+            param->judgeRangeBasePosDmyId2,
+            param->adsrobModelPosInterpolationTime,
+            param->throwFollowingEndEasingTime
+        );
+    }
+    fclose(f);
 }
 
 }

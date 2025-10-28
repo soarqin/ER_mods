@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerCutsceneWeatherOverrideGparamIdConvertParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["CutsceneWeatherOverrideGparamIdConvertParam"]; usertype) return;
@@ -11,11 +13,34 @@ void registerCutsceneWeatherOverrideGparamIdConvertParam(sol::state *state, sol:
         indexerCutsceneWeatherOverrideGparamIdConvertParam["__index"] = &ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::at;
         indexerCutsceneWeatherOverrideGparamIdConvertParam["id"] = &ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::paramId;
         indexerCutsceneWeatherOverrideGparamIdConvertParam["get"] = &ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::get;
+        indexerCutsceneWeatherOverrideGparamIdConvertParam["exportToCsv"] = &ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::exportToCsv;
+        indexerCutsceneWeatherOverrideGparamIdConvertParam["importFromCsv"] = &ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::importFromCsv;
         auto utCutsceneWeatherOverrideGparamIdConvertParam = state->new_usertype<CutsceneWeatherOverrideGparamIdConvertParam>("CutsceneWeatherOverrideGparamIdConvertParam");
         utCutsceneWeatherOverrideGparamIdConvertParam["weatherOverrideGparamId"] = &CutsceneWeatherOverrideGparamIdConvertParam::weatherOverrideGparamId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>>(gParamMgr.findTable(L"CutsceneWeatherOverrideGparamIdConvertParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>>(state, L"CutsceneWeatherOverrideGparamIdConvertParam");
+        indexer->setFieldNames({
+            {"weatherOverrideGparamId", false},
+        });
+        return indexer;
+    };
     paramsTable["CutsceneWeatherOverrideGparamConvertParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<CutsceneWeatherOverrideGparamIdConvertParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,weatherOverrideGparamId\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u\n",
+            this->paramId(i),
+            param->weatherOverrideGparamId
+        );
+    }
+    fclose(f);
 }
 
 }

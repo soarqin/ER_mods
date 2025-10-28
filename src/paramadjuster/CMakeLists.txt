@@ -17,4 +17,4 @@ add_project(ParamAdjuster SHARED
     NO_PREFIX
     LANGUAGES CXX)
 target_include_directories(ParamAdjuster PRIVATE .)
-target_link_libraries(ParamAdjuster PRIVATE sol3 DllProxy Pattern16 Shlwapi)
+target_link_libraries(ParamAdjuster PRIVATE sol3 lazycsv DllProxy Pattern16 Shlwapi)

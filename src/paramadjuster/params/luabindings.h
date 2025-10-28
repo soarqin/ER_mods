@@ -1,24 +1,25 @@
+#pragma once
+
 #include "param.h"
 
+#include "global.h"
+
 #include <sol/sol.hpp>
+#include <lazycsv.hpp>
+
 #include <windows.h>
-#include <unordered_map>
 #include <memory>
 
 namespace paramadjuster::params {
 
 template<typename T>
-struct ParamTableIndexer {
-    ParamTableIndexer(ParamTable *table): table_(table) {
+struct ParamTableIndexer: ParamTableIndexerBase {
+    ParamTableIndexer(sol::state *state, const wchar_t *tableName) : ParamTableIndexerBase(state, tableName) {
         for (int i = 0; i < table_->count; i++) {
             const ParamEntryOffset *entry = &table_->entries[i];
             auto *ptr = (T*)((uintptr_t)table_ + entry->offset);
             paramIdMap_[entry->paramId] = ptr;
         }
-    }
-    uint64_t paramId(int index) const {
-        const ParamEntryOffset *entry = &table_->entries[index];
-        return entry->paramId;
     }
     T *at(int index) {
         const ParamEntryOffset *entry = &table_->entries[index];
@@ -31,11 +32,11 @@ struct ParamTableIndexer {
         }
         return it->second;
     }
-    uint16_t count() const {
-        return table_->count;
-    }
+
+protected:
+    void exportToCsvImpl(const std::wstring &csvPath) override;
+
 private:
-    ParamTable *table_;
     std::unordered_map<uint64_t, T*> paramIdMap_;
 };
         

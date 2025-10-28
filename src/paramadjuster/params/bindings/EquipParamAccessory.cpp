@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<EquipParamAccessory>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["EquipParamAccessory"]; usertype) return;
@@ -11,6 +13,8 @@ void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
         indexerEquipParamAccessory["__index"] = &ParamTableIndexer<EquipParamAccessory>::at;
         indexerEquipParamAccessory["id"] = &ParamTableIndexer<EquipParamAccessory>::paramId;
         indexerEquipParamAccessory["get"] = &ParamTableIndexer<EquipParamAccessory>::get;
+        indexerEquipParamAccessory["exportToCsv"] = &ParamTableIndexer<EquipParamAccessory>::exportToCsv;
+        indexerEquipParamAccessory["importFromCsv"] = &ParamTableIndexer<EquipParamAccessory>::importFromCsv;
         auto utEquipParamAccessory = state->new_usertype<EquipParamAccessory>("EquipParamAccessory");
         utEquipParamAccessory["disableParam_NT"] = sol::property([](EquipParamAccessory &param) -> uint8_t { return param.disableParam_NT; }, [](EquipParamAccessory &param, uint8_t value) { param.disableParam_NT = value; });
         utEquipParamAccessory["refId"] = &EquipParamAccessory::refId;
@@ -51,8 +55,103 @@ void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
         utEquipParamAccessory["residentSpEffectId3"] = &EquipParamAccessory::residentSpEffectId3;
         utEquipParamAccessory["residentSpEffectId4"] = &EquipParamAccessory::residentSpEffectId4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<EquipParamAccessory>>(gParamMgr.findTable(L"EquipParamAccessory")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<EquipParamAccessory>>(state, L"EquipParamAccessory");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"refId", false},
+            {"sfxVariationId", false},
+            {"weight", false},
+            {"behaviorId", false},
+            {"basicPrice", false},
+            {"sellValue", false},
+            {"sortId", false},
+            {"qwcId", false},
+            {"equipModelId", false},
+            {"iconId", false},
+            {"shopLv", false},
+            {"trophySGradeId", false},
+            {"trophySeqId", false},
+            {"equipModelCategory", false},
+            {"equipModelGender", false},
+            {"accessoryCategory", false},
+            {"refCategory", false},
+            {"spEffectCategory", false},
+            {"sortGroupId", false},
+            {"vagrantItemLotId", false},
+            {"vagrantBonusEneDropItemLotId", false},
+            {"vagrantItemEneDropItemLotId", false},
+            {"isDeposit", false},
+            {"isEquipOutBrake", false},
+            {"disableMultiDropShare", false},
+            {"isDiscard", false},
+            {"isDrop", false},
+            {"showLogCondType", false},
+            {"showDialogCondType", false},
+            {"rarity", false},
+            {"saleValue", false},
+            {"accessoryGroup", false},
+            {"compTrophySedId", false},
+            {"residentSpEffectId1", false},
+            {"residentSpEffectId2", false},
+            {"residentSpEffectId3", false},
+            {"residentSpEffectId4", false},
+        });
+        return indexer;
+    };
     paramsTable["EquipParamAccessory"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<EquipParamAccessory>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,refId,sfxVariationId,weight,behaviorId,basicPrice,sellValue,sortId,qwcId,equipModelId,iconId,shopLv,trophySGradeId,trophySeqId,equipModelCategory,equipModelGender,accessoryCategory,refCategory,spEffectCategory,sortGroupId,vagrantItemLotId,vagrantBonusEneDropItemLotId,vagrantItemEneDropItemLotId,isDeposit,isEquipOutBrake,disableMultiDropShare,isDiscard,isDrop,showLogCondType,showDialogCondType,rarity,saleValue,accessoryGroup,compTrophySedId,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,residentSpEffectId4\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%d,%d,%g,%d,%d,%d,%d,%d,%u,%u,%d,%d,%d,%u,%u,%u,%u,%u,%u,%d,%d,%d,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%d,%d,%d,%d,%d\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->refId,
+            param->sfxVariationId,
+            param->weight,
+            param->behaviorId,
+            param->basicPrice,
+            param->sellValue,
+            param->sortId,
+            param->qwcId,
+            param->equipModelId,
+            param->iconId,
+            param->shopLv,
+            param->trophySGradeId,
+            param->trophySeqId,
+            param->equipModelCategory,
+            param->equipModelGender,
+            param->accessoryCategory,
+            param->refCategory,
+            param->spEffectCategory,
+            param->sortGroupId,
+            param->vagrantItemLotId,
+            param->vagrantBonusEneDropItemLotId,
+            param->vagrantItemEneDropItemLotId,
+            param->isDeposit,
+            param->isEquipOutBrake,
+            param->disableMultiDropShare,
+            param->isDiscard,
+            param->isDrop,
+            param->showLogCondType,
+            param->showDialogCondType,
+            param->rarity,
+            param->saleValue,
+            param->accessoryGroup,
+            param->compTrophySedId,
+            param->residentSpEffectId1,
+            param->residentSpEffectId2,
+            param->residentSpEffectId3,
+            param->residentSpEffectId4
+        );
+    }
+    fclose(f);
 }
 
 }

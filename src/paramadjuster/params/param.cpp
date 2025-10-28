@@ -12,11 +12,10 @@
 #include "paramdefs.h"
 #include "global.h"
 
+#include <lazycsv.hpp>
+
 #include <filesystem>
-#include <fstream>
 #include <sstream>
-#include <memory>
-#include <sol/sol.hpp>
 #include <windows.h>
 
 namespace paramadjuster::params {
@@ -50,7 +49,17 @@ ParamMgr gParamMgr;
 static void runAllLuaScripts(sol::state *state, const wchar_t *scriptPath) {
     for (const auto &dir_entry: std::filesystem::directory_iterator{std::filesystem::path(gModulePath) / scriptPath}) {
         if (dir_entry.is_regular_file() && dir_entry.path().extension() == L".lua") {
-            state->script_file(dir_entry.path().string());
+            fwprintf(stderr, L"Run lua script: %ls\n", dir_entry.path().wstring().c_str());
+            try {
+                auto result = state->safe_script_file(dir_entry.path().string());
+                if (!result.valid()) {
+                    fwprintf(stderr, L"  Error: %hs\n", result.get<sol::error>().what());
+                    continue;
+                }
+            } catch (const sol::error &e) {
+                fwprintf(stderr, L"  Error: %hs\n", e.what());
+                continue;
+            }
         }
     }
 }
@@ -106,6 +115,123 @@ ParamTable *ParamMgr::findTable(const wchar_t *name) {
 
 const ParamTable *ParamMgr::findTable(const wchar_t *name) const {
     return const_cast<ParamMgr*>(this)->findTable(name);
+}
+
+ParamTableIndexerBase::ParamTableIndexerBase(sol::state *state, const wchar_t *tableName) : state_(state) {
+    table_ = gParamMgr.findTable(tableName);
+    tableName_ = ucs2toutf8(tableName);
+}
+
+void ParamTableIndexerBase::setFieldNames(const std::initializer_list<std::pair<const char *, bool>> &fieldNames) {
+    fieldNames_.clear();
+    for (const auto &p : fieldNames) {
+        fieldNames_[p.first] = p.second;
+    }
+}
+
+uint64_t ParamTableIndexerBase::paramId(int index) const {
+    const ParamEntryOffset *entry = &table_->entries[index];
+    return entry->paramId;
+}
+
+uint16_t ParamTableIndexerBase::count() const {
+    return table_->count;
+}
+
+void ParamTableIndexerBase::importFromCsv(const std::wstring &csvPath) {
+    if (csvPath.empty()) return;
+    auto isAbolutePath = csvPath.find(L':') != std::wstring::npos || csvPath[0] == L'\\' || csvPath[0] == L'/';
+    auto fullPath = (isAbolutePath ? std::filesystem::path(csvPath) : (std::filesystem::path(gModulePath) / csvPath)).wstring();
+    fwprintf(stderr, L"Importing from CSV: %ls\n", fullPath.c_str());
+    lazycsv::parser parser { fullPath };
+    std::vector<std::pair<std::string, bool>> headers;
+    auto headerRow = parser.header();
+    for (const auto &cell : headerRow) {
+        auto it = fieldNames_.find(cell.unescaped());
+        if (it == fieldNames_.end()) {
+            headers.emplace_back("", false);
+            continue;
+        }
+        headers.emplace_back(it->first, it->second);
+    }
+    auto cnt = headers.size();
+    for (const auto &row : parser) {
+        size_t index = 0;
+        std::ostringstream oss;
+        oss << "p=Params." << this->tableName_ << "()\n";
+        for (const auto &cell: row) {
+            if (index == 0) {
+                auto uid = std::stoull(cell.unescaped());
+                oss << "row=p:get(" << uid << ")\n";
+                oss << "if row then\n";
+                index++;
+                continue;
+            }
+            const auto &p = headers[index];
+            if (p.first.empty()) {
+                index++;
+                continue;
+            }
+            if (p.second) {
+                oss << "row." << p.first << "=\"" << tryEscape(cell.unescaped()) << "\"\n";
+            } else {
+                oss << "row." << p.first << "=" << cell.unescaped() << "\n";
+            }
+            if (++index >= cnt) break;
+        }
+        oss << "end\n";
+        try {
+            auto result = state_->safe_script(oss.str());
+            if (!result.valid()) {
+                fwprintf(stderr, L"  Error: %hs\n", result.get<sol::error>().what());
+                break;
+            }
+        } catch (const sol::error &e) {
+            fwprintf(stderr, L"  Error: %hs\n", e.what());
+            break;
+        }
+    }
+    fwprintf(stderr, L"Done.\n");
+}
+
+void ParamTableIndexerBase::exportToCsv(const std::wstring &csvPath) {
+    auto isAbolutePath = csvPath.find(L':') != std::wstring::npos || csvPath[0] == L'\\' || csvPath[0] == L'/';
+    auto fullPath = (isAbolutePath ? std::filesystem::path(csvPath) : (std::filesystem::path(gModulePath) / csvPath)).wstring();
+    fwprintf(stderr, L"Exporting to CSV: %ls\n", fullPath.c_str());
+    exportToCsvImpl(fullPath);
+    fwprintf(stderr, L"Done.\n");
+}
+
+std::string ucs2toutf8(const std::wstring_view &str) {
+    std::string utf8;
+    int len = WideCharToMultiByte(CP_UTF8, 0, str.data(), str.size(), nullptr, 0, nullptr, nullptr);
+    if (len > 0) {
+        utf8.resize(len);
+        WideCharToMultiByte(CP_UTF8, 0, str.data(), str.size(), utf8.data(), len, nullptr, nullptr);
+    }
+    return utf8;
+}
+
+std::wstring utf8toucs2(const std::string_view &str) {
+    std::wstring wstr;
+    int len = MultiByteToWideChar(CP_UTF8, 0, str.data(), str.size(), nullptr, 0);
+    if (len > 0) {
+        wstr.resize(len);
+        MultiByteToWideChar(CP_UTF8, 0, str.data(), str.size(), wstr.data(), len);
+    }
+    return wstr;
+}
+
+std::string tryEscape(std::string_view str) {
+    std::string result;
+    result.reserve(str.size());
+    for (auto &c : str) {
+        if (c == '"') {
+            result.push_back('\\');
+        }
+        result.push_back(c);
+    }
+    return result;
 }
 
 } // namespace paramadjuster::params

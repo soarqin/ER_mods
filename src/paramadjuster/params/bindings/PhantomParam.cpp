@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<PhantomParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["PhantomParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
         indexerPhantomParam["__index"] = &ParamTableIndexer<PhantomParam>::at;
         indexerPhantomParam["id"] = &ParamTableIndexer<PhantomParam>::paramId;
         indexerPhantomParam["get"] = &ParamTableIndexer<PhantomParam>::get;
+        indexerPhantomParam["exportToCsv"] = &ParamTableIndexer<PhantomParam>::exportToCsv;
+        indexerPhantomParam["importFromCsv"] = &ParamTableIndexer<PhantomParam>::importFromCsv;
         auto utPhantomParam = state->new_usertype<PhantomParam>("PhantomParam");
         utPhantomParam["edgeColorA"] = &PhantomParam::edgeColorA;
         utPhantomParam["frontColorA"] = &PhantomParam::frontColorA;
@@ -41,8 +45,83 @@ void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
         utPhantomParam["edgePower"] = &PhantomParam::edgePower;
         utPhantomParam["glowScale"] = &PhantomParam::glowScale;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<PhantomParam>>(gParamMgr.findTable(L"PhantomParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<PhantomParam>>(state, L"PhantomParam");
+        indexer->setFieldNames({
+            {"edgeColorA", false},
+            {"frontColorA", false},
+            {"diffMulColorA", false},
+            {"specMulColorA", false},
+            {"lightColorA", false},
+            {"edgeColorR", false},
+            {"edgeColorG", false},
+            {"edgeColorB", false},
+            {"frontColorR", false},
+            {"frontColorG", false},
+            {"frontColorB", false},
+            {"diffMulColorR", false},
+            {"diffMulColorG", false},
+            {"diffMulColorB", false},
+            {"specMulColorR", false},
+            {"specMulColorG", false},
+            {"specMulColorB", false},
+            {"lightColorR", false},
+            {"lightColorG", false},
+            {"lightColorB", false},
+            {"alpha", false},
+            {"blendRate", false},
+            {"blendType", false},
+            {"isEdgeSubtract", false},
+            {"isFrontSubtract", false},
+            {"isNo2Pass", false},
+            {"edgePower", false},
+            {"glowScale", false},
+        });
+        return indexer;
+    };
     paramsTable["PhantomParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<PhantomParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,edgeColorA,frontColorA,diffMulColorA,specMulColorA,lightColorA,edgeColorR,edgeColorG,edgeColorB,frontColorR,frontColorG,frontColorB,diffMulColorR,diffMulColorG,diffMulColorB,specMulColorR,specMulColorG,specMulColorB,lightColorR,lightColorG,lightColorB,alpha,blendRate,blendType,isEdgeSubtract,isFrontSubtract,isNo2Pass,edgePower,glowScale\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%g,%g,%g,%g,%g,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%g,%g,%u,%u,%u,%u,%g,%g\n",
+            this->paramId(i),
+            param->edgeColorA,
+            param->frontColorA,
+            param->diffMulColorA,
+            param->specMulColorA,
+            param->lightColorA,
+            param->edgeColorR,
+            param->edgeColorG,
+            param->edgeColorB,
+            param->frontColorR,
+            param->frontColorG,
+            param->frontColorB,
+            param->diffMulColorR,
+            param->diffMulColorG,
+            param->diffMulColorB,
+            param->specMulColorR,
+            param->specMulColorG,
+            param->specMulColorB,
+            param->lightColorR,
+            param->lightColorG,
+            param->lightColorB,
+            param->alpha,
+            param->blendRate,
+            param->blendType,
+            param->isEdgeSubtract,
+            param->isFrontSubtract,
+            param->isNo2Pass,
+            param->edgePower,
+            param->glowScale
+        );
+    }
+    fclose(f);
 }
 
 }

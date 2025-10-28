@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<WorldMapPieceParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerWorldMapPieceParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["WorldMapPieceParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerWorldMapPieceParam(sol::state *state, sol::table &paramsTable) {
         indexerWorldMapPieceParam["__index"] = &ParamTableIndexer<WorldMapPieceParam>::at;
         indexerWorldMapPieceParam["id"] = &ParamTableIndexer<WorldMapPieceParam>::paramId;
         indexerWorldMapPieceParam["get"] = &ParamTableIndexer<WorldMapPieceParam>::get;
+        indexerWorldMapPieceParam["exportToCsv"] = &ParamTableIndexer<WorldMapPieceParam>::exportToCsv;
+        indexerWorldMapPieceParam["importFromCsv"] = &ParamTableIndexer<WorldMapPieceParam>::importFromCsv;
         auto utWorldMapPieceParam = state->new_usertype<WorldMapPieceParam>("WorldMapPieceParam");
         utWorldMapPieceParam["disableParam_NT"] = sol::property([](WorldMapPieceParam &param) -> uint8_t { return param.disableParam_NT; }, [](WorldMapPieceParam &param, uint8_t value) { param.disableParam_NT = value; });
         utWorldMapPieceParam["openEventFlagId"] = &WorldMapPieceParam::openEventFlagId;
@@ -26,8 +30,53 @@ void registerWorldMapPieceParam(sol::state *state, sol::table &paramsTable) {
         utWorldMapPieceParam["acquisitionEventResOffsetX"] = &WorldMapPieceParam::acquisitionEventResOffsetX;
         utWorldMapPieceParam["acquisitionEventResOffsetY"] = &WorldMapPieceParam::acquisitionEventResOffsetY;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<WorldMapPieceParam>>(gParamMgr.findTable(L"WorldMapPieceParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPieceParam>>(state, L"WorldMapPieceParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"openEventFlagId", false},
+            {"openTravelAreaLeft", false},
+            {"openTravelAreaRight", false},
+            {"openTravelAreaTop", false},
+            {"openTravelAreaBottom", false},
+            {"acquisitionEventFlagId", false},
+            {"acquisitionEventScale", false},
+            {"acquisitionEventCenterX", false},
+            {"acquisitionEventCenterY", false},
+            {"acquisitionEventResScale", false},
+            {"acquisitionEventResOffsetX", false},
+            {"acquisitionEventResOffsetY", false},
+        });
+        return indexer;
+    };
     paramsTable["WorldMapPieceParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<WorldMapPieceParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,openEventFlagId,openTravelAreaLeft,openTravelAreaRight,openTravelAreaTop,openTravelAreaBottom,acquisitionEventFlagId,acquisitionEventScale,acquisitionEventCenterX,acquisitionEventCenterY,acquisitionEventResScale,acquisitionEventResOffsetX,acquisitionEventResOffsetY\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%g,%g,%g,%g,%u,%g,%g,%g,%g,%g,%g\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->openEventFlagId,
+            param->openTravelAreaLeft,
+            param->openTravelAreaRight,
+            param->openTravelAreaTop,
+            param->openTravelAreaBottom,
+            param->acquisitionEventFlagId,
+            param->acquisitionEventScale,
+            param->acquisitionEventCenterX,
+            param->acquisitionEventCenterY,
+            param->acquisitionEventResScale,
+            param->acquisitionEventResOffsetX,
+            param->acquisitionEventResOffsetY
+        );
+    }
+    fclose(f);
 }
 
 }

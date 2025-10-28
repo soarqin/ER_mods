@@ -3,6 +3,8 @@
 
 namespace paramadjuster::params {
 
+template<> void ParamTableIndexer<GameAreaParam>::exportToCsvImpl(const std::wstring &csvPath);
+
 void registerGameAreaParam(sol::state *state, sol::table &paramsTable) {
     auto delayInit = [state, &paramsTable]() {
         if (sol::optional<sol::table> usertype = (*state)["GameAreaParam"]; usertype) return;
@@ -11,6 +13,8 @@ void registerGameAreaParam(sol::state *state, sol::table &paramsTable) {
         indexerGameAreaParam["__index"] = &ParamTableIndexer<GameAreaParam>::at;
         indexerGameAreaParam["id"] = &ParamTableIndexer<GameAreaParam>::paramId;
         indexerGameAreaParam["get"] = &ParamTableIndexer<GameAreaParam>::get;
+        indexerGameAreaParam["exportToCsv"] = &ParamTableIndexer<GameAreaParam>::exportToCsv;
+        indexerGameAreaParam["importFromCsv"] = &ParamTableIndexer<GameAreaParam>::importFromCsv;
         auto utGameAreaParam = state->new_usertype<GameAreaParam>("GameAreaParam");
         utGameAreaParam["disableParam_NT"] = sol::property([](GameAreaParam &param) -> uint8_t { return param.disableParam_NT; }, [](GameAreaParam &param, uint8_t value) { param.disableParam_NT = value; });
         utGameAreaParam["bonusSoul_single"] = &GameAreaParam::bonusSoul_single;
@@ -42,8 +46,85 @@ void registerGameAreaParam(sol::state *state, sol::table &paramsTable) {
         utGameAreaParam["bossMapBlockNo"] = &GameAreaParam::bossMapBlockNo;
         utGameAreaParam["bossMapMapNo"] = &GameAreaParam::bossMapMapNo;
     };
-    auto tableLoader = [delayInit = std::move(delayInit)]() -> auto { delayInit(); return std::make_unique<ParamTableIndexer<GameAreaParam>>(gParamMgr.findTable(L"GameAreaParam")); };
+    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+        delayInit();
+        auto indexer = std::make_unique<ParamTableIndexer<GameAreaParam>>(state, L"GameAreaParam");
+        indexer->setFieldNames({
+            {"disableParam_NT", false},
+            {"bonusSoul_single", false},
+            {"bonusSoul_multi", false},
+            {"humanityPointCountFlagIdTop", false},
+            {"humanityDropPoint1", false},
+            {"humanityDropPoint2", false},
+            {"humanityDropPoint3", false},
+            {"humanityDropPoint4", false},
+            {"humanityDropPoint5", false},
+            {"humanityDropPoint6", false},
+            {"humanityDropPoint7", false},
+            {"humanityDropPoint8", false},
+            {"humanityDropPoint9", false},
+            {"humanityDropPoint10", false},
+            {"soloBreakInPoint_Min", false},
+            {"soloBreakInPoint_Max", false},
+            {"defeatBossFlagId_forSignAimList", false},
+            {"displayAimFlagId", false},
+            {"foundBossFlagId", false},
+            {"foundBossTextId", false},
+            {"notFindBossTextId", false},
+            {"bossChallengeFlagId", false},
+            {"defeatBossFlagId", false},
+            {"bossPosX", false},
+            {"bossPosY", false},
+            {"bossPosZ", false},
+            {"bossMapAreaNo", false},
+            {"bossMapBlockNo", false},
+            {"bossMapMapNo", false},
+        });
+        return indexer;
+    };
     paramsTable["GameAreaParam"] = tableLoader;
+}
+
+template<> void ParamTableIndexer<GameAreaParam>::exportToCsvImpl(const std::wstring &csvPath) {
+    FILE *f = _wfopen(csvPath.c_str(), L"wt");
+    fwprintf(f, L"ID,disableParam_NT,bonusSoul_single,bonusSoul_multi,humanityPointCountFlagIdTop,humanityDropPoint1,humanityDropPoint2,humanityDropPoint3,humanityDropPoint4,humanityDropPoint5,humanityDropPoint6,humanityDropPoint7,humanityDropPoint8,humanityDropPoint9,humanityDropPoint10,soloBreakInPoint_Min,soloBreakInPoint_Max,defeatBossFlagId_forSignAimList,displayAimFlagId,foundBossFlagId,foundBossTextId,notFindBossTextId,bossChallengeFlagId,defeatBossFlagId,bossPosX,bossPosY,bossPosZ,bossMapAreaNo,bossMapBlockNo,bossMapMapNo\n");
+    auto cnt = this->count();
+    for (int i = 0; i < cnt; i++) {
+        auto *param = this->at(i);
+        fwprintf(f, L"%llu,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%d,%d,%u,%u,%g,%g,%g,%u,%u,%u\n",
+            this->paramId(i),
+            param->disableParam_NT,
+            param->bonusSoul_single,
+            param->bonusSoul_multi,
+            param->humanityPointCountFlagIdTop,
+            param->humanityDropPoint1,
+            param->humanityDropPoint2,
+            param->humanityDropPoint3,
+            param->humanityDropPoint4,
+            param->humanityDropPoint5,
+            param->humanityDropPoint6,
+            param->humanityDropPoint7,
+            param->humanityDropPoint8,
+            param->humanityDropPoint9,
+            param->humanityDropPoint10,
+            param->soloBreakInPoint_Min,
+            param->soloBreakInPoint_Max,
+            param->defeatBossFlagId_forSignAimList,
+            param->displayAimFlagId,
+            param->foundBossFlagId,
+            param->foundBossTextId,
+            param->notFindBossTextId,
+            param->bossChallengeFlagId,
+            param->defeatBossFlagId,
+            param->bossPosX,
+            param->bossPosY,
+            param->bossPosZ,
+            param->bossMapAreaNo,
+            param->bossMapBlockNo,
+            param->bossMapMapNo
+        );
+    }
+    fclose(f);
 }
 
 }
