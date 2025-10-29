@@ -25,9 +25,10 @@ void registerCoolTimeParam(sol::state *state, sol::table &paramsTable) {
         utCoolTimeParam["limitationTime_3"] = &CoolTimeParam::limitationTime_3;
         utCoolTimeParam["observeTime_3"] = &CoolTimeParam::observeTime_3;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CoolTimeParam>>(state, L"CoolTimeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CoolTimeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CoolTimeParam>>(nullptr);
         indexer->setFieldNames({
             {"limitationTime_0", false},
             {"observeTime_0", false},
@@ -40,7 +41,7 @@ void registerCoolTimeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CoolTimeParam"] = tableLoader;
+    paramsTable["CoolTimeParam"] = [tableLoader]() -> auto { return tableLoader(L"CoolTimeParam"); };
 }
 
 template<> void ParamTableIndexer<CoolTimeParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -33,9 +33,10 @@ void registerMultiSoulBonusRateParam(sol::state *state, sol::table &paramsTable)
         utMultiSoulBonusRateParam["BattleRoyal"] = &MultiSoulBonusRateParam::BattleRoyal;
         utMultiSoulBonusRateParam["YellowMonk"] = &MultiSoulBonusRateParam::YellowMonk;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MultiSoulBonusRateParam>>(state, L"MultiSoulBonusRateParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MultiSoulBonusRateParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MultiSoulBonusRateParam>>(nullptr);
         indexer->setFieldNames({
             {"host", false},
             {"WhiteGhost_None", false},
@@ -56,7 +57,7 @@ void registerMultiSoulBonusRateParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["MultiSoulBonusRateParam"] = tableLoader;
+    paramsTable["MultiSoulBonusRateParam"] = [tableLoader]() -> auto { return tableLoader(L"MultiSoulBonusRateParam"); };
 }
 
 template<> void ParamTableIndexer<MultiSoulBonusRateParam>::exportToCsvImpl(const std::wstring &csvPath) {

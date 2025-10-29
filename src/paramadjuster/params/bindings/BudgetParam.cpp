@@ -43,9 +43,10 @@ void registerBudgetParam(sol::state *state, sol::table &paramsTable) {
         utBudgetParam["vram_chr_and_parts"] = &BudgetParam::vram_chr_and_parts;
         utBudgetParam["havok_navimesh"] = &BudgetParam::havok_navimesh;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BudgetParam>>(state, L"BudgetParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BudgetParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BudgetParam>>(nullptr);
         indexer->setFieldNames({
             {"vram_all", false},
             {"vram_mapobj_tex", false},
@@ -76,7 +77,7 @@ void registerBudgetParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["BudgetParam"] = tableLoader;
+    paramsTable["BudgetParam"] = [tableLoader]() -> auto { return tableLoader(L"BudgetParam"); };
 }
 
 template<> void ParamTableIndexer<BudgetParam>::exportToCsvImpl(const std::wstring &csvPath) {

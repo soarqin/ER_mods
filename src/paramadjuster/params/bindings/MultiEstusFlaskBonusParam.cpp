@@ -33,9 +33,10 @@ void registerMultiEstusFlaskBonusParam(sol::state *state, sol::table &paramsTabl
         utMultiEstusFlaskBonusParam["BattleRoyal"] = &MultiEstusFlaskBonusParam::BattleRoyal;
         utMultiEstusFlaskBonusParam["YellowMonk"] = &MultiEstusFlaskBonusParam::YellowMonk;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MultiEstusFlaskBonusParam>>(state, L"MultiEstusFlaskBonusParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MultiEstusFlaskBonusParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MultiEstusFlaskBonusParam>>(nullptr);
         indexer->setFieldNames({
             {"host", false},
             {"WhiteGhost_None", false},
@@ -56,8 +57,8 @@ void registerMultiEstusFlaskBonusParam(sol::state *state, sol::table &paramsTabl
         });
         return indexer;
     };
-    paramsTable["MultiHPEstusFlaskBonusParam"] = tableLoader;
-    paramsTable["MultiMPEstusFlaskBonusParam"] = tableLoader;
+    paramsTable["MultiHPEstusFlaskBonusParam"] = [tableLoader]() -> auto { return tableLoader(L"MultiHPEstusFlaskBonusParam"); };
+    paramsTable["MultiMPEstusFlaskBonusParam"] = [tableLoader]() -> auto { return tableLoader(L"MultiMPEstusFlaskBonusParam"); };
 }
 
 template<> void ParamTableIndexer<MultiEstusFlaskBonusParam>::exportToCsvImpl(const std::wstring &csvPath) {

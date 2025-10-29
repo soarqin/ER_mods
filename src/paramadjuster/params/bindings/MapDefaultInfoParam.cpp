@@ -40,9 +40,10 @@ void registerMapDefaultInfoParam(sol::state *state, sol::table &paramsTable) {
         utMapDefaultInfoParam["MapMimicryEstablishmentParamId"] = &MapDefaultInfoParam::MapMimicryEstablishmentParamId;
         utMapDefaultInfoParam["OverrideGIResolution_XSX"] = &MapDefaultInfoParam::OverrideGIResolution_XSX;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapDefaultInfoParam>>(state, L"MapDefaultInfoParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MapDefaultInfoParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapDefaultInfoParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"EnableFastTravelEventFlagId", false},
@@ -70,7 +71,7 @@ void registerMapDefaultInfoParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MapDefaultInfoParam"] = tableLoader;
+    paramsTable["MapDefaultInfoParam"] = [tableLoader]() -> auto { return tableLoader(L"MapDefaultInfoParam"); };
 }
 
 template<> void ParamTableIndexer<MapDefaultInfoParam>::exportToCsvImpl(const std::wstring &csvPath) {

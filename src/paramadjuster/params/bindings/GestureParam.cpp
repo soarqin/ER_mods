@@ -21,9 +21,10 @@ void registerGestureParam(sol::state *state, sol::table &paramsTable) {
         utGestureParam["msgAnimId"] = &GestureParam::msgAnimId;
         utGestureParam["cannotUseRiding"] = sol::property([](GestureParam &param) -> uint8_t { return param.cannotUseRiding; }, [](GestureParam &param, uint8_t value) { param.cannotUseRiding = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<GestureParam>>(state, L"GestureParam");
+        auto indexer = std::make_unique<ParamTableIndexer<GestureParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<GestureParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"itemId", false},
@@ -32,7 +33,7 @@ void registerGestureParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["GestureParam"] = tableLoader;
+    paramsTable["GestureParam"] = [tableLoader]() -> auto { return tableLoader(L"GestureParam"); };
 }
 
 template<> void ParamTableIndexer<GestureParam>::exportToCsvImpl(const std::wstring &csvPath) {

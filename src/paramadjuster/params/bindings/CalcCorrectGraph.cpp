@@ -36,9 +36,10 @@ void registerCalcCorrectGraph(sol::state *state, sol::table &paramsTable) {
         utCalcCorrectGraph["boundry_inclination_soul"] = &CalcCorrectGraph::boundry_inclination_soul;
         utCalcCorrectGraph["boundry_value"] = &CalcCorrectGraph::boundry_value;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CalcCorrectGraph>>(state, L"CalcCorrectGraph");
+        auto indexer = std::make_unique<ParamTableIndexer<CalcCorrectGraph>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CalcCorrectGraph>>(nullptr);
         indexer->setFieldNames({
             {"stageMaxVal0", false},
             {"stageMaxVal1", false},
@@ -62,7 +63,7 @@ void registerCalcCorrectGraph(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CalcCorrectGraph"] = tableLoader;
+    paramsTable["CalcCorrectGraph"] = [tableLoader]() -> auto { return tableLoader(L"CalcCorrectGraph"); };
 }
 
 template<> void ParamTableIndexer<CalcCorrectGraph>::exportToCsvImpl(const std::wstring &csvPath) {

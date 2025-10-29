@@ -31,9 +31,10 @@ void registerWorldMapLegacyConvParam(sol::state *state, sol::table &paramsTable)
         utWorldMapLegacyConvParam["dstPosZ"] = &WorldMapLegacyConvParam::dstPosZ;
         utWorldMapLegacyConvParam["isBasePoint"] = sol::property([](WorldMapLegacyConvParam &param) -> uint8_t { return param.isBasePoint; }, [](WorldMapLegacyConvParam &param, uint8_t value) { param.isBasePoint = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WorldMapLegacyConvParam>>(state, L"WorldMapLegacyConvParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WorldMapLegacyConvParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WorldMapLegacyConvParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcAreaNo", false},
@@ -52,7 +53,7 @@ void registerWorldMapLegacyConvParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["WorldMapLegacyConvParam"] = tableLoader;
+    paramsTable["WorldMapLegacyConvParam"] = [tableLoader]() -> auto { return tableLoader(L"WorldMapLegacyConvParam"); };
 }
 
 template<> void ParamTableIndexer<WorldMapLegacyConvParam>::exportToCsvImpl(const std::wstring &csvPath) {

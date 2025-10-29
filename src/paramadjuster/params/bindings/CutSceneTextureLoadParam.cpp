@@ -35,9 +35,10 @@ void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable
         utCutSceneTextureLoadParam["texName_14"] = sol::property([](CutSceneTextureLoadParam &param) -> std::string { return param.texName_14; }, [](CutSceneTextureLoadParam &param, const std::string& value) { cStrToFixedStr(param.texName_14, value); });
         utCutSceneTextureLoadParam["texName_15"] = sol::property([](CutSceneTextureLoadParam &param) -> std::string { return param.texName_15; }, [](CutSceneTextureLoadParam &param, const std::string& value) { cStrToFixedStr(param.texName_15, value); });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CutSceneTextureLoadParam>>(state, L"CutSceneTextureLoadParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CutSceneTextureLoadParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CutSceneTextureLoadParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"disableParam_Debug", false},
@@ -60,7 +61,7 @@ void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable
         });
         return indexer;
     };
-    paramsTable["CutSceneTextureLoadParam"] = tableLoader;
+    paramsTable["CutSceneTextureLoadParam"] = [tableLoader]() -> auto { return tableLoader(L"CutSceneTextureLoadParam"); };
 }
 
 template<> void ParamTableIndexer<CutSceneTextureLoadParam>::exportToCsvImpl(const std::wstring &csvPath) {

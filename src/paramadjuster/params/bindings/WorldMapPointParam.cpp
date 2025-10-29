@@ -100,9 +100,10 @@ void registerWorldMapPointParam(sol::state *state, sol::table &paramsTable) {
         utWorldMapPointParam["textDisableFlag2Id7"] = &WorldMapPointParam::textDisableFlag2Id7;
         utWorldMapPointParam["textDisableFlag2Id8"] = &WorldMapPointParam::textDisableFlag2Id8;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPointParam>>(state, L"WorldMapPointParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPointParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WorldMapPointParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"eventFlagId", false},
@@ -190,7 +191,7 @@ void registerWorldMapPointParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WorldMapPointParam"] = tableLoader;
+    paramsTable["WorldMapPointParam"] = [tableLoader]() -> auto { return tableLoader(L"WorldMapPointParam"); };
 }
 
 template<> void ParamTableIndexer<WorldMapPointParam>::exportToCsvImpl(const std::wstring &csvPath) {

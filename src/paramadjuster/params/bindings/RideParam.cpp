@@ -30,9 +30,10 @@ void registerRideParam(sol::state *state, sol::table &paramsTable) {
         utRideParam["diffAngMin"] = &RideParam::diffAngMin;
         utRideParam["diffAngMax"] = &RideParam::diffAngMax;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<RideParam>>(state, L"RideParam");
+        auto indexer = std::make_unique<ParamTableIndexer<RideParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<RideParam>>(nullptr);
         indexer->setFieldNames({
             {"atkChrId", false},
             {"defChrId", false},
@@ -50,7 +51,7 @@ void registerRideParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["RideParam"] = tableLoader;
+    paramsTable["RideParam"] = [tableLoader]() -> auto { return tableLoader(L"RideParam"); };
 }
 
 template<> void ParamTableIndexer<RideParam>::exportToCsvImpl(const std::wstring &csvPath) {

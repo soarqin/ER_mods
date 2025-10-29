@@ -37,9 +37,10 @@ void registerEstusFlaskRecoveryParam(sol::state *state, sol::table &paramsTable)
         utEstusFlaskRecoveryParam["paramReplaceRate"] = &EstusFlaskRecoveryParam::paramReplaceRate;
         utEstusFlaskRecoveryParam["paramReplaceId"] = &EstusFlaskRecoveryParam::paramReplaceId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EstusFlaskRecoveryParam>>(state, L"EstusFlaskRecoveryParam");
+        auto indexer = std::make_unique<ParamTableIndexer<EstusFlaskRecoveryParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EstusFlaskRecoveryParam>>(nullptr);
         indexer->setFieldNames({
             {"host", false},
             {"invadeOrb_None", false},
@@ -64,8 +65,8 @@ void registerEstusFlaskRecoveryParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["HPEstusFlaskRecoveryParam"] = tableLoader;
-    paramsTable["MPEstusFlaskRecoveryParam"] = tableLoader;
+    paramsTable["HPEstusFlaskRecoveryParam"] = [tableLoader]() -> auto { return tableLoader(L"HPEstusFlaskRecoveryParam"); };
+    paramsTable["MPEstusFlaskRecoveryParam"] = [tableLoader]() -> auto { return tableLoader(L"MPEstusFlaskRecoveryParam"); };
 }
 
 template<> void ParamTableIndexer<EstusFlaskRecoveryParam>::exportToCsvImpl(const std::wstring &csvPath) {

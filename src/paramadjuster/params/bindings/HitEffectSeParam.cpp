@@ -152,9 +152,10 @@ void registerHitEffectSeParam(sol::state *state, sol::table &paramsTable) {
         utHitEffectSeParam["EnergyStrong_Blow_L"] = &HitEffectSeParam::EnergyStrong_Blow_L;
         utHitEffectSeParam["EnergyStrong_Blow_LL"] = &HitEffectSeParam::EnergyStrong_Blow_LL;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSeParam>>(state, L"HitEffectSeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<HitEffectSeParam>>(nullptr);
         indexer->setFieldNames({
             {"Iron_Slash_S", false},
             {"Iron_Slash_L", false},
@@ -294,7 +295,7 @@ void registerHitEffectSeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["HitEffectSeParam"] = tableLoader;
+    paramsTable["HitEffectSeParam"] = [tableLoader]() -> auto { return tableLoader(L"HitEffectSeParam"); };
 }
 
 template<> void ParamTableIndexer<HitEffectSeParam>::exportToCsvImpl(const std::wstring &csvPath) {

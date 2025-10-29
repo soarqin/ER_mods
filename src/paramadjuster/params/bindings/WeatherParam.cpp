@@ -34,9 +34,10 @@ void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
         utWeatherParam["aiSightRate"] = &WeatherParam::aiSightRate;
         utWeatherParam["DistViewWeatherGparamOverrideWeight"] = &WeatherParam::DistViewWeatherGparamOverrideWeight;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WeatherParam>>(state, L"WeatherParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WeatherParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WeatherParam>>(nullptr);
         indexer->setFieldNames({
             {"SfxId", false},
             {"WindSfxId", false},
@@ -58,7 +59,7 @@ void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WeatherParam"] = tableLoader;
+    paramsTable["WeatherParam"] = [tableLoader]() -> auto { return tableLoader(L"WeatherParam"); };
 }
 
 template<> void ParamTableIndexer<WeatherParam>::exportToCsvImpl(const std::wstring &csvPath) {

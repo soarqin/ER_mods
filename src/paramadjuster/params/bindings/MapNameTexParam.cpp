@@ -22,9 +22,10 @@ void registerMapNameTexParam(sol::state *state, sol::table &paramsTable) {
         utMapNameTexParam["srcB"] = &MapNameTexParam::srcB;
         utMapNameTexParam["mapNameId"] = &MapNameTexParam::mapNameId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapNameTexParam>>(state, L"MapNameTexParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MapNameTexParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapNameTexParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -34,7 +35,7 @@ void registerMapNameTexParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MapNameTexParam"] = tableLoader;
+    paramsTable["MapNameTexParam"] = [tableLoader]() -> auto { return tableLoader(L"MapNameTexParam"); };
 }
 
 template<> void ParamTableIndexer<MapNameTexParam>::exportToCsvImpl(const std::wstring &csvPath) {

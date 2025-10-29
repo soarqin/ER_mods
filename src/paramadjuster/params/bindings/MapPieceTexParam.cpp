@@ -23,9 +23,10 @@ void registerMapPieceTexParam(sol::state *state, sol::table &paramsTable) {
         utMapPieceTexParam["saveMapNameId"] = &MapPieceTexParam::saveMapNameId;
         utMapPieceTexParam["multiPlayAreaId"] = &MapPieceTexParam::multiPlayAreaId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapPieceTexParam>>(state, L"MapPieceTexParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MapPieceTexParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapPieceTexParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -36,7 +37,7 @@ void registerMapPieceTexParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MapPieceTexParam"] = tableLoader;
+    paramsTable["MapPieceTexParam"] = [tableLoader]() -> auto { return tableLoader(L"MapPieceTexParam"); };
 }
 
 template<> void ParamTableIndexer<MapPieceTexParam>::exportToCsvImpl(const std::wstring &csvPath) {

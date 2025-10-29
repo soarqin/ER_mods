@@ -18,15 +18,16 @@ void registerSeMaterialConvertParam(sol::state *state, sol::table &paramsTable) 
         auto utSeMaterialConvertParam = state->new_usertype<SeMaterialConvertParam>("SeMaterialConvertParam");
         utSeMaterialConvertParam["seMaterialId"] = &SeMaterialConvertParam::seMaterialId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SeMaterialConvertParam>>(state, L"SeMaterialConvertParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SeMaterialConvertParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SeMaterialConvertParam>>(nullptr);
         indexer->setFieldNames({
             {"seMaterialId", false},
         });
         return indexer;
     };
-    paramsTable["SeMaterialConvertParam"] = tableLoader;
+    paramsTable["SeMaterialConvertParam"] = [tableLoader]() -> auto { return tableLoader(L"SeMaterialConvertParam"); };
 }
 
 template<> void ParamTableIndexer<SeMaterialConvertParam>::exportToCsvImpl(const std::wstring &csvPath) {

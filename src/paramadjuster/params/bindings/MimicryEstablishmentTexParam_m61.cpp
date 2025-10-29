@@ -27,9 +27,10 @@ void registerMimicryEstablishmentTexParam_m61(sol::state *state, sol::table &par
         utMimicryEstablishmentTexParam_m61["unknown_0x18"] = &MimicryEstablishmentTexParam_m61::unknown_0x18;
         utMimicryEstablishmentTexParam_m61["unknown_0x1c"] = &MimicryEstablishmentTexParam_m61::unknown_0x1c;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MimicryEstablishmentTexParam_m61>>(state, L"MimicryEstablishmentTexParam_m61");
+        auto indexer = std::make_unique<ParamTableIndexer<MimicryEstablishmentTexParam_m61>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MimicryEstablishmentTexParam_m61>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -44,7 +45,7 @@ void registerMimicryEstablishmentTexParam_m61(sol::state *state, sol::table &par
         });
         return indexer;
     };
-    paramsTable["MimicryEstablishmentTexParam_m61"] = tableLoader;
+    paramsTable["MimicryEstablishmentTexParam_m61"] = [tableLoader]() -> auto { return tableLoader(L"MimicryEstablishmentTexParam_m61"); };
 }
 
 template<> void ParamTableIndexer<MimicryEstablishmentTexParam_m61>::exportToCsvImpl(const std::wstring &csvPath) {

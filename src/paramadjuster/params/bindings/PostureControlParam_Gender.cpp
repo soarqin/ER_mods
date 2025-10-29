@@ -44,9 +44,10 @@ void registerPostureControlParam_Gender(sol::state *state, sol::table &paramsTab
         utPostureControlParam_Gender["a016_leftElbowIO"] = &PostureControlParam_Gender::a016_leftElbowIO;
         utPostureControlParam_Gender["a016_bothLegsIO"] = &PostureControlParam_Gender::a016_bothLegsIO;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_Gender>>(state, L"PostureControlParam_Gender");
+        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_Gender>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PostureControlParam_Gender>>(nullptr);
         indexer->setFieldNames({
             {"a000_rightElbowIO", false},
             {"a000_leftElbowIO", false},
@@ -78,7 +79,7 @@ void registerPostureControlParam_Gender(sol::state *state, sol::table &paramsTab
         });
         return indexer;
     };
-    paramsTable["PostureControlParam_Gender"] = tableLoader;
+    paramsTable["PostureControlParam_Gender"] = [tableLoader]() -> auto { return tableLoader(L"PostureControlParam_Gender"); };
 }
 
 template<> void ParamTableIndexer<PostureControlParam_Gender>::exportToCsvImpl(const std::wstring &csvPath) {

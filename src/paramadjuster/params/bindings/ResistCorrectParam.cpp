@@ -27,9 +27,10 @@ void registerResistCorrectParam(sol::state *state, sol::table &paramsTable) {
         utResistCorrectParam["addRate4"] = &ResistCorrectParam::addRate4;
         utResistCorrectParam["addRate5"] = &ResistCorrectParam::addRate5;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ResistCorrectParam>>(state, L"ResistCorrectParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ResistCorrectParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ResistCorrectParam>>(nullptr);
         indexer->setFieldNames({
             {"addPoint1", false},
             {"addPoint2", false},
@@ -44,7 +45,7 @@ void registerResistCorrectParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ResistCorrectParam"] = tableLoader;
+    paramsTable["ResistCorrectParam"] = [tableLoader]() -> auto { return tableLoader(L"ResistCorrectParam"); };
 }
 
 template<> void ParamTableIndexer<ResistCorrectParam>::exportToCsvImpl(const std::wstring &csvPath) {

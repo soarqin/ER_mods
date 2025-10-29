@@ -115,9 +115,10 @@ void registerEquipParamGem(sol::state *state, sol::table &paramsTable) {
         utEquipParamGem["spEffectId_forAtk2"] = &EquipParamGem::spEffectId_forAtk2;
         utEquipParamGem["mountWepTextId"] = &EquipParamGem::mountWepTextId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EquipParamGem>>(state, L"EquipParamGem");
+        auto indexer = std::make_unique<ParamTableIndexer<EquipParamGem>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EquipParamGem>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"iconId", false},
@@ -220,7 +221,7 @@ void registerEquipParamGem(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EquipParamGem"] = tableLoader;
+    paramsTable["EquipParamGem"] = [tableLoader]() -> auto { return tableLoader(L"EquipParamGem"); };
 }
 
 template<> void ParamTableIndexer<EquipParamGem>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -27,9 +27,10 @@ void registerBehaviorParam(sol::state *state, sol::table &paramsTable) {
         utBehaviorParam["category"] = &BehaviorParam::category;
         utBehaviorParam["heroPoint"] = &BehaviorParam::heroPoint;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BehaviorParam>>(state, L"BehaviorParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BehaviorParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BehaviorParam>>(nullptr);
         indexer->setFieldNames({
             {"variationId", false},
             {"behaviorJudgeId", false},
@@ -44,8 +45,8 @@ void registerBehaviorParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["BehaviorParam"] = tableLoader;
-    paramsTable["BehaviorParam_PC"] = tableLoader;
+    paramsTable["BehaviorParam"] = [tableLoader]() -> auto { return tableLoader(L"BehaviorParam"); };
+    paramsTable["BehaviorParam_PC"] = [tableLoader]() -> auto { return tableLoader(L"BehaviorParam_PC"); };
 }
 
 template<> void ParamTableIndexer<BehaviorParam>::exportToCsvImpl(const std::wstring &csvPath) {

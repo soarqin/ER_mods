@@ -28,9 +28,10 @@ void registerBuddyStoneParam(sol::state *state, sol::table &paramsTable) {
         utBuddyStoneParam["overwriteActivateRegionEntityId"] = &BuddyStoneParam::overwriteActivateRegionEntityId;
         utBuddyStoneParam["warnRegionEntityId"] = &BuddyStoneParam::warnRegionEntityId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BuddyStoneParam>>(state, L"BuddyStoneParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BuddyStoneParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BuddyStoneParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"talkChrEntityId", false},
@@ -46,7 +47,7 @@ void registerBuddyStoneParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["BuddyStoneParam"] = tableLoader;
+    paramsTable["BuddyStoneParam"] = [tableLoader]() -> auto { return tableLoader(L"BuddyStoneParam"); };
 }
 
 template<> void ParamTableIndexer<BuddyStoneParam>::exportToCsvImpl(const std::wstring &csvPath) {

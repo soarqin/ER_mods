@@ -18,15 +18,16 @@ void registerReverbAuxSendBusParam(sol::state *state, sol::table &paramsTable) {
         auto utReverbAuxSendBusParam = state->new_usertype<ReverbAuxSendBusParam>("ReverbAuxSendBusParam");
         utReverbAuxSendBusParam["ReverbAuxSendBusName"] = sol::property([](ReverbAuxSendBusParam &param) -> std::string { return param.ReverbAuxSendBusName; }, [](ReverbAuxSendBusParam &param, const std::string& value) { cStrToFixedStr(param.ReverbAuxSendBusName, value); });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ReverbAuxSendBusParam>>(state, L"ReverbAuxSendBusParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ReverbAuxSendBusParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ReverbAuxSendBusParam>>(nullptr);
         indexer->setFieldNames({
             {"ReverbAuxSendBusName", true},
         });
         return indexer;
     };
-    paramsTable["ReverbAuxSendBusParam"] = tableLoader;
+    paramsTable["ReverbAuxSendBusParam"] = [tableLoader]() -> auto { return tableLoader(L"ReverbAuxSendBusParam"); };
 }
 
 template<> void ParamTableIndexer<ReverbAuxSendBusParam>::exportToCsvImpl(const std::wstring &csvPath) {

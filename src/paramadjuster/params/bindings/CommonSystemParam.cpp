@@ -18,15 +18,16 @@ void registerCommonSystemParam(sol::state *state, sol::table &paramsTable) {
         auto utCommonSystemParam = state->new_usertype<CommonSystemParam>("CommonSystemParam");
         utCommonSystemParam["mapSaveMapNameIdOnGameStart"] = &CommonSystemParam::mapSaveMapNameIdOnGameStart;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CommonSystemParam>>(state, L"CommonSystemParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CommonSystemParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CommonSystemParam>>(nullptr);
         indexer->setFieldNames({
             {"mapSaveMapNameIdOnGameStart", false},
         });
         return indexer;
     };
-    paramsTable["CommonSystemParam"] = tableLoader;
+    paramsTable["CommonSystemParam"] = [tableLoader]() -> auto { return tableLoader(L"CommonSystemParam"); };
 }
 
 template<> void ParamTableIndexer<CommonSystemParam>::exportToCsvImpl(const std::wstring &csvPath) {

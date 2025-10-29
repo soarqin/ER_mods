@@ -25,9 +25,10 @@ void registerWetAspectParam(sol::state *state, sol::table &paramsTable) {
         utWetAspectParam["shininessRate"] = &WetAspectParam::shininessRate;
         utWetAspectParam["shininess"] = &WetAspectParam::shininess;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WetAspectParam>>(state, L"WetAspectParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WetAspectParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WetAspectParam>>(nullptr);
         indexer->setFieldNames({
             {"baseColorR", false},
             {"baseColorG", false},
@@ -40,7 +41,7 @@ void registerWetAspectParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WetAspectParam"] = tableLoader;
+    paramsTable["WetAspectParam"] = [tableLoader]() -> auto { return tableLoader(L"WetAspectParam"); };
 }
 
 template<> void ParamTableIndexer<WetAspectParam>::exportToCsvImpl(const std::wstring &csvPath) {

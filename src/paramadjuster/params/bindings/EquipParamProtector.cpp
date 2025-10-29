@@ -225,9 +225,10 @@ void registerEquipParamProtector(sol::state *state, sol::table &paramsTable) {
         utEquipParamProtector["invisibleFlag_SexVer94"] = &EquipParamProtector::invisibleFlag_SexVer94;
         utEquipParamProtector["invisibleFlag_SexVer95"] = &EquipParamProtector::invisibleFlag_SexVer95;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EquipParamProtector>>(state, L"EquipParamProtector");
+        auto indexer = std::make_unique<ParamTableIndexer<EquipParamProtector>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EquipParamProtector>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"sortId", false},
@@ -440,7 +441,7 @@ void registerEquipParamProtector(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EquipParamProtector"] = tableLoader;
+    paramsTable["EquipParamProtector"] = [tableLoader]() -> auto { return tableLoader(L"EquipParamProtector"); };
 }
 
 template<> void ParamTableIndexer<EquipParamProtector>::exportToCsvImpl(const std::wstring &csvPath) {

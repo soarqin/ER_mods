@@ -33,9 +33,10 @@ void registerEnvObjLotParam(sol::state *state, sol::table &paramsTable) {
         utEnvObjLotParam["CreateWeight_6"] = &EnvObjLotParam::CreateWeight_6;
         utEnvObjLotParam["CreateWeight_7"] = &EnvObjLotParam::CreateWeight_7;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EnvObjLotParam>>(state, L"EnvObjLotParam");
+        auto indexer = std::make_unique<ParamTableIndexer<EnvObjLotParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EnvObjLotParam>>(nullptr);
         indexer->setFieldNames({
             {"AssetId_0", false},
             {"AssetId_1", false},
@@ -56,7 +57,7 @@ void registerEnvObjLotParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EnvObjLotParam"] = tableLoader;
+    paramsTable["EnvObjLotParam"] = [tableLoader]() -> auto { return tableLoader(L"EnvObjLotParam"); };
 }
 
 template<> void ParamTableIndexer<EnvObjLotParam>::exportToCsvImpl(const std::wstring &csvPath) {

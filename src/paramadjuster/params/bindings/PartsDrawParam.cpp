@@ -55,9 +55,10 @@ void registerPartsDrawParam(sol::state *state, sol::table &paramsTable) {
         utPartsDrawParam["fowardDrawEnvmapBlendType"] = &PartsDrawParam::fowardDrawEnvmapBlendType;
         utPartsDrawParam["LBDrawDistScaleParamID"] = &PartsDrawParam::LBDrawDistScaleParamID;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PartsDrawParam>>(state, L"PartsDrawParam");
+        auto indexer = std::make_unique<ParamTableIndexer<PartsDrawParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PartsDrawParam>>(nullptr);
         indexer->setFieldNames({
             {"lv01_BorderDist", false},
             {"lv01_PlayDist", false},
@@ -100,7 +101,7 @@ void registerPartsDrawParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["PartsDrawParam"] = tableLoader;
+    paramsTable["PartsDrawParam"] = [tableLoader]() -> auto { return tableLoader(L"PartsDrawParam"); };
 }
 
 template<> void ParamTableIndexer<PartsDrawParam>::exportToCsvImpl(const std::wstring &csvPath) {

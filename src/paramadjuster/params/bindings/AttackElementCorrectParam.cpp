@@ -92,9 +92,10 @@ void registerAttackElementCorrectParam(sol::state *state, sol::table &paramsTabl
         utAttackElementCorrectParam["InfluenceFaithCorrectRate_byDark"] = &AttackElementCorrectParam::InfluenceFaithCorrectRate_byDark;
         utAttackElementCorrectParam["InfluenceLuckCorrectRate_byDark"] = &AttackElementCorrectParam::InfluenceLuckCorrectRate_byDark;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<AttackElementCorrectParam>>(state, L"AttackElementCorrectParam");
+        auto indexer = std::make_unique<ParamTableIndexer<AttackElementCorrectParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<AttackElementCorrectParam>>(nullptr);
         indexer->setFieldNames({
             {"isStrengthCorrect_byPhysics", false},
             {"isDexterityCorrect_byPhysics", false},
@@ -174,7 +175,7 @@ void registerAttackElementCorrectParam(sol::state *state, sol::table &paramsTabl
         });
         return indexer;
     };
-    paramsTable["AttackElementCorrectParam"] = tableLoader;
+    paramsTable["AttackElementCorrectParam"] = [tableLoader]() -> auto { return tableLoader(L"AttackElementCorrectParam"); };
 }
 
 template<> void ParamTableIndexer<AttackElementCorrectParam>::exportToCsvImpl(const std::wstring &csvPath) {

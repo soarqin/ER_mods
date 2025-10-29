@@ -27,9 +27,10 @@ void registerNpcAiActionParam(sol::state *state, sol::table &paramsTable) {
         utNpcAiActionParam["gestureId"] = &NpcAiActionParam::gestureId;
         utNpcAiActionParam["bLifeEndSuccess"] = &NpcAiActionParam::bLifeEndSuccess;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<NpcAiActionParam>>(state, L"NpcAiActionParam");
+        auto indexer = std::make_unique<ParamTableIndexer<NpcAiActionParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<NpcAiActionParam>>(nullptr);
         indexer->setFieldNames({
             {"moveDir", false},
             {"key1", false},
@@ -44,7 +45,7 @@ void registerNpcAiActionParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["NpcAiActionParam"] = tableLoader;
+    paramsTable["NpcAiActionParam"] = [tableLoader]() -> auto { return tableLoader(L"NpcAiActionParam"); };
 }
 
 template<> void ParamTableIndexer<NpcAiActionParam>::exportToCsvImpl(const std::wstring &csvPath) {

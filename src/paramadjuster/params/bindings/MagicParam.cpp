@@ -125,9 +125,10 @@ void registerMagicParam(sol::state *state, sol::table &paramsTable) {
         utMagicParam["consumeType10"] = &MagicParam::consumeType10;
         utMagicParam["consumeLoopMP_forMenu"] = &MagicParam::consumeLoopMP_forMenu;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MagicParam>>(state, L"MagicParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MagicParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MagicParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"yesNoDialogMessageId", false},
@@ -240,7 +241,7 @@ void registerMagicParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["Magic"] = tableLoader;
+    paramsTable["Magic"] = [tableLoader]() -> auto { return tableLoader(L"Magic"); };
 }
 
 template<> void ParamTableIndexer<MagicParam>::exportToCsvImpl(const std::wstring &csvPath) {

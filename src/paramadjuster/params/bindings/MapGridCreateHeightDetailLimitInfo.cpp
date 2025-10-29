@@ -38,9 +38,10 @@ void registerMapGridCreateHeightDetailLimitInfo(sol::state *state, sol::table &p
         utMapGridCreateHeightDetailLimitInfo["unknown_0x38"] = &MapGridCreateHeightDetailLimitInfo::unknown_0x38;
         utMapGridCreateHeightDetailLimitInfo["unknown_0x3c"] = &MapGridCreateHeightDetailLimitInfo::unknown_0x3c;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapGridCreateHeightDetailLimitInfo>>(state, L"MapGridCreateHeightDetailLimitInfo");
+        auto indexer = std::make_unique<ParamTableIndexer<MapGridCreateHeightDetailLimitInfo>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapGridCreateHeightDetailLimitInfo>>(nullptr);
         indexer->setFieldNames({
             {"mapId", false},
             {"unknown_0x4", false},
@@ -66,7 +67,7 @@ void registerMapGridCreateHeightDetailLimitInfo(sol::state *state, sol::table &p
         });
         return indexer;
     };
-    paramsTable["MapGridCreateHeightDetailLimitInfo"] = tableLoader;
+    paramsTable["MapGridCreateHeightDetailLimitInfo"] = [tableLoader]() -> auto { return tableLoader(L"MapGridCreateHeightDetailLimitInfo"); };
 }
 
 template<> void ParamTableIndexer<MapGridCreateHeightDetailLimitInfo>::exportToCsvImpl(const std::wstring &csvPath) {

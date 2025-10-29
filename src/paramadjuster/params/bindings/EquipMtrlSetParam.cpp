@@ -41,9 +41,10 @@ void registerEquipMtrlSetParam(sol::state *state, sol::table &paramsTable) {
         utEquipMtrlSetParam["isDisableDispNum05"] = sol::property([](EquipMtrlSetParam &param) -> uint8_t { return param.isDisableDispNum05; }, [](EquipMtrlSetParam &param, uint8_t value) { param.isDisableDispNum05 = value; });
         utEquipMtrlSetParam["isDisableDispNum06"] = sol::property([](EquipMtrlSetParam &param) -> uint8_t { return param.isDisableDispNum06; }, [](EquipMtrlSetParam &param, uint8_t value) { param.isDisableDispNum06 = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EquipMtrlSetParam>>(state, L"EquipMtrlSetParam");
+        auto indexer = std::make_unique<ParamTableIndexer<EquipMtrlSetParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EquipMtrlSetParam>>(nullptr);
         indexer->setFieldNames({
             {"materialId01", false},
             {"materialId02", false},
@@ -72,7 +73,7 @@ void registerEquipMtrlSetParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EquipMtrlSetParam"] = tableLoader;
+    paramsTable["EquipMtrlSetParam"] = [tableLoader]() -> auto { return tableLoader(L"EquipMtrlSetParam"); };
 }
 
 template<> void ParamTableIndexer<EquipMtrlSetParam>::exportToCsvImpl(const std::wstring &csvPath) {

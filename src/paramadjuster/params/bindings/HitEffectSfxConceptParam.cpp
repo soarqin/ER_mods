@@ -29,9 +29,10 @@ void registerHitEffectSfxConceptParam(sol::state *state, sol::table &paramsTable
         utHitEffectSfxConceptParam["atkNone_1"] = &HitEffectSfxConceptParam::atkNone_1;
         utHitEffectSfxConceptParam["atkNone_2"] = &HitEffectSfxConceptParam::atkNone_2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSfxConceptParam>>(state, L"HitEffectSfxConceptParam");
+        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSfxConceptParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<HitEffectSfxConceptParam>>(nullptr);
         indexer->setFieldNames({
             {"atkIron_1", false},
             {"atkIron_2", false},
@@ -48,7 +49,7 @@ void registerHitEffectSfxConceptParam(sol::state *state, sol::table &paramsTable
         });
         return indexer;
     };
-    paramsTable["HitEffectSfxConceptParam"] = tableLoader;
+    paramsTable["HitEffectSfxConceptParam"] = [tableLoader]() -> auto { return tableLoader(L"HitEffectSfxConceptParam"); };
 }
 
 template<> void ParamTableIndexer<HitEffectSfxConceptParam>::exportToCsvImpl(const std::wstring &csvPath) {

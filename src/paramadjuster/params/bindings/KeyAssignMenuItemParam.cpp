@@ -26,9 +26,10 @@ void registerKeyAssignMenuItemParam(sol::state *state, sol::table &paramsTable) 
         utKeyAssignMenuItemParam["viewPad"] = &KeyAssignMenuItemParam::viewPad;
         utKeyAssignMenuItemParam["viewKeyboardMouse"] = &KeyAssignMenuItemParam::viewKeyboardMouse;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<KeyAssignMenuItemParam>>(state, L"KeyAssignMenuItemParam");
+        auto indexer = std::make_unique<ParamTableIndexer<KeyAssignMenuItemParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<KeyAssignMenuItemParam>>(nullptr);
         indexer->setFieldNames({
             {"textID", false},
             {"key", false},
@@ -42,7 +43,7 @@ void registerKeyAssignMenuItemParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["KeyAssignMenuItemParam"] = tableLoader;
+    paramsTable["KeyAssignMenuItemParam"] = [tableLoader]() -> auto { return tableLoader(L"KeyAssignMenuItemParam"); };
 }
 
 template<> void ParamTableIndexer<KeyAssignMenuItemParam>::exportToCsvImpl(const std::wstring &csvPath) {

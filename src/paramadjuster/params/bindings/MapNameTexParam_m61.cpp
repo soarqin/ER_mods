@@ -32,9 +32,10 @@ void registerMapNameTexParam_m61(sol::state *state, sol::table &paramsTable) {
         utMapNameTexParam_m61["unknown_0x20"] = &MapNameTexParam_m61::unknown_0x20;
         utMapNameTexParam_m61["unknown_0x24"] = &MapNameTexParam_m61::unknown_0x24;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapNameTexParam_m61>>(state, L"MapNameTexParam_m61");
+        auto indexer = std::make_unique<ParamTableIndexer<MapNameTexParam_m61>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapNameTexParam_m61>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -54,7 +55,7 @@ void registerMapNameTexParam_m61(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MapNameTexParam_m61"] = tableLoader;
+    paramsTable["MapNameTexParam_m61"] = [tableLoader]() -> auto { return tableLoader(L"MapNameTexParam_m61"); };
 }
 
 template<> void ParamTableIndexer<MapNameTexParam_m61>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -45,9 +45,10 @@ void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
         utPhantomParam["edgePower"] = &PhantomParam::edgePower;
         utPhantomParam["glowScale"] = &PhantomParam::glowScale;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PhantomParam>>(state, L"PhantomParam");
+        auto indexer = std::make_unique<ParamTableIndexer<PhantomParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PhantomParam>>(nullptr);
         indexer->setFieldNames({
             {"edgeColorA", false},
             {"frontColorA", false},
@@ -80,7 +81,7 @@ void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["PhantomParam"] = tableLoader;
+    paramsTable["PhantomParam"] = [tableLoader]() -> auto { return tableLoader(L"PhantomParam"); };
 }
 
 template<> void ParamTableIndexer<PhantomParam>::exportToCsvImpl(const std::wstring &csvPath) {

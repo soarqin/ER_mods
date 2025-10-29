@@ -53,9 +53,10 @@ void registerPostureControlParam_Pro(sol::state *state, sol::table &paramsTable)
         utPostureControlParam_Pro["a016_leftArmIO"] = &PostureControlParam_Pro::a016_leftArmIO;
         utPostureControlParam_Pro["a016_leftArmFB"] = &PostureControlParam_Pro::a016_leftArmFB;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_Pro>>(state, L"PostureControlParam_Pro");
+        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_Pro>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PostureControlParam_Pro>>(nullptr);
         indexer->setFieldNames({
             {"a000_rightArmIO", false},
             {"a000_rightArmFB", false},
@@ -96,7 +97,7 @@ void registerPostureControlParam_Pro(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["PostureControlParam_Pro"] = tableLoader;
+    paramsTable["PostureControlParam_Pro"] = [tableLoader]() -> auto { return tableLoader(L"PostureControlParam_Pro"); };
 }
 
 template<> void ParamTableIndexer<PostureControlParam_Pro>::exportToCsvImpl(const std::wstring &csvPath) {

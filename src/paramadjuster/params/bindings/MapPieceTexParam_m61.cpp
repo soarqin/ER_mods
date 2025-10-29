@@ -29,9 +29,10 @@ void registerMapPieceTexParam_m61(sol::state *state, sol::table &paramsTable) {
         utMapPieceTexParam_m61["unknownPlayRegion_1"] = &MapPieceTexParam_m61::unknownPlayRegion_1;
         utMapPieceTexParam_m61["unknownPlayRegion_2"] = &MapPieceTexParam_m61::unknownPlayRegion_2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapPieceTexParam_m61>>(state, L"MapPieceTexParam_m61");
+        auto indexer = std::make_unique<ParamTableIndexer<MapPieceTexParam_m61>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapPieceTexParam_m61>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -48,7 +49,7 @@ void registerMapPieceTexParam_m61(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MapPieceTexParam_m61"] = tableLoader;
+    paramsTable["MapPieceTexParam_m61"] = [tableLoader]() -> auto { return tableLoader(L"MapPieceTexParam_m61"); };
 }
 
 template<> void ParamTableIndexer<MapPieceTexParam_m61>::exportToCsvImpl(const std::wstring &csvPath) {

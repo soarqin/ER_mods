@@ -48,9 +48,10 @@ void registerClearCountCorrectParam(sol::state *state, sol::table &paramsTable) 
         utClearCountCorrectParam["SleepDamageRate"] = &ClearCountCorrectParam::SleepDamageRate;
         utClearCountCorrectParam["MadnessDamageRate"] = &ClearCountCorrectParam::MadnessDamageRate;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ClearCountCorrectParam>>(state, L"ClearCountCorrectParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ClearCountCorrectParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ClearCountCorrectParam>>(nullptr);
         indexer->setFieldNames({
             {"MaxHpRate", false},
             {"MaxMpRate", false},
@@ -86,7 +87,7 @@ void registerClearCountCorrectParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["ClearCountCorrectParam"] = tableLoader;
+    paramsTable["ClearCountCorrectParam"] = [tableLoader]() -> auto { return tableLoader(L"ClearCountCorrectParam"); };
 }
 
 template<> void ParamTableIndexer<ClearCountCorrectParam>::exportToCsvImpl(const std::wstring &csvPath) {

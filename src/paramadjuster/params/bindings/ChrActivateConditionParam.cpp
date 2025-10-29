@@ -35,9 +35,10 @@ void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTabl
         utChrActivateConditionParam["timeEndHour"] = &ChrActivateConditionParam::timeEndHour;
         utChrActivateConditionParam["timeEndMin"] = &ChrActivateConditionParam::timeEndMin;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ChrActivateConditionParam>>(state, L"ChrActivateConditionParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ChrActivateConditionParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ChrActivateConditionParam>>(nullptr);
         indexer->setFieldNames({
             {"weatherSunny", false},
             {"weatherClearSky", false},
@@ -60,7 +61,7 @@ void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTabl
         });
         return indexer;
     };
-    paramsTable["ChrActivateConditionParam"] = tableLoader;
+    paramsTable["ChrActivateConditionParam"] = [tableLoader]() -> auto { return tableLoader(L"ChrActivateConditionParam"); };
 }
 
 template<> void ParamTableIndexer<ChrActivateConditionParam>::exportToCsvImpl(const std::wstring &csvPath) {

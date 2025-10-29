@@ -132,9 +132,10 @@ void registerBulletParam(sol::state *state, sol::table &paramsTable) {
         utBulletParam["spBulletDistUpRate"] = &BulletParam::spBulletDistUpRate;
         utBulletParam["nolockTargetDist"] = &BulletParam::nolockTargetDist;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BulletParam>>(state, L"BulletParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BulletParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BulletParam>>(nullptr);
         indexer->setFieldNames({
             {"atkId_Bullet", false},
             {"sfxId_Bullet", false},
@@ -254,7 +255,7 @@ void registerBulletParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["Bullet"] = tableLoader;
+    paramsTable["Bullet"] = [tableLoader]() -> auto { return tableLoader(L"Bullet"); };
 }
 
 template<> void ParamTableIndexer<BulletParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -22,9 +22,10 @@ void registerCeremonyParam(sol::state *state, sol::table &paramsTable) {
         utCeremonyParam["overrideMapPlaceNameId"] = &CeremonyParam::overrideMapPlaceNameId;
         utCeremonyParam["overrideSaveMapNameId"] = &CeremonyParam::overrideSaveMapNameId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CeremonyParam>>(state, L"CeremonyParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CeremonyParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CeremonyParam>>(nullptr);
         indexer->setFieldNames({
             {"eventLayerId", false},
             {"mapStudioLayerId", false},
@@ -34,7 +35,7 @@ void registerCeremonyParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["Ceremony"] = tableLoader;
+    paramsTable["Ceremony"] = [tableLoader]() -> auto { return tableLoader(L"Ceremony"); };
 }
 
 template<> void ParamTableIndexer<CeremonyParam>::exportToCsvImpl(const std::wstring &csvPath) {

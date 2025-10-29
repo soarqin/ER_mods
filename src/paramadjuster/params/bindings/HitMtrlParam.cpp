@@ -46,9 +46,10 @@ void registerHitMtrlParam(sol::state *state, sol::table &paramsTable) {
         utHitMtrlParam["spEffectId_forWet03"] = &HitMtrlParam::spEffectId_forWet03;
         utHitMtrlParam["spEffectId_forWet04"] = &HitMtrlParam::spEffectId_forWet04;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<HitMtrlParam>>(state, L"HitMtrlParam");
+        auto indexer = std::make_unique<ParamTableIndexer<HitMtrlParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<HitMtrlParam>>(nullptr);
         indexer->setFieldNames({
             {"aiVolumeRate", false},
             {"spEffectIdOnHit0", false},
@@ -82,7 +83,7 @@ void registerHitMtrlParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["HitMtrlParam"] = tableLoader;
+    paramsTable["HitMtrlParam"] = [tableLoader]() -> auto { return tableLoader(L"HitMtrlParam"); };
 }
 
 template<> void ParamTableIndexer<HitMtrlParam>::exportToCsvImpl(const std::wstring &csvPath) {

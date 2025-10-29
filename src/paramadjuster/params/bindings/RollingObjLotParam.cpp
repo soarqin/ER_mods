@@ -34,9 +34,10 @@ void registerRollingObjLotParam(sol::state *state, sol::table &paramsTable) {
         utRollingObjLotParam["CreateWeight_6"] = &RollingObjLotParam::CreateWeight_6;
         utRollingObjLotParam["CreateWeight_7"] = &RollingObjLotParam::CreateWeight_7;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<RollingObjLotParam>>(state, L"RollingObjLotParam");
+        auto indexer = std::make_unique<ParamTableIndexer<RollingObjLotParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<RollingObjLotParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"AssetId_0", false},
@@ -58,7 +59,7 @@ void registerRollingObjLotParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["RollingObjLotParam"] = tableLoader;
+    paramsTable["RollingObjLotParam"] = [tableLoader]() -> auto { return tableLoader(L"RollingObjLotParam"); };
 }
 
 template<> void ParamTableIndexer<RollingObjLotParam>::exportToCsvImpl(const std::wstring &csvPath) {

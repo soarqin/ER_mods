@@ -27,9 +27,10 @@ void registerSpeedtreeModel(sol::state *state, sol::table &paramsTable) {
         utSpeedtreeModel["MaxTranslucencyBranch"] = &SpeedtreeModel::MaxTranslucencyBranch;
         utSpeedtreeModel["BillboardBackSpecularWeakenParam"] = &SpeedtreeModel::BillboardBackSpecularWeakenParam;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SpeedtreeModel>>(state, L"SpeedtreeModel");
+        auto indexer = std::make_unique<ParamTableIndexer<SpeedtreeModel>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SpeedtreeModel>>(nullptr);
         indexer->setFieldNames({
             {"MinFadeLeaf", false},
             {"MinFadeFrond", false},
@@ -44,7 +45,7 @@ void registerSpeedtreeModel(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SpeedtreeParam"] = tableLoader;
+    paramsTable["SpeedtreeParam"] = [tableLoader]() -> auto { return tableLoader(L"SpeedtreeParam"); };
 }
 
 template<> void ParamTableIndexer<SpeedtreeModel>::exportToCsvImpl(const std::wstring &csvPath) {

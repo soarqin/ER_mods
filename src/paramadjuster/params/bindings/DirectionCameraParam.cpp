@@ -18,15 +18,16 @@ void registerDirectionCameraParam(sol::state *state, sol::table &paramsTable) {
         auto utDirectionCameraParam = state->new_usertype<DirectionCameraParam>("DirectionCameraParam");
         utDirectionCameraParam["isUseOption"] = sol::property([](DirectionCameraParam &param) -> uint8_t { return param.isUseOption; }, [](DirectionCameraParam &param, uint8_t value) { param.isUseOption = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<DirectionCameraParam>>(state, L"DirectionCameraParam");
+        auto indexer = std::make_unique<ParamTableIndexer<DirectionCameraParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<DirectionCameraParam>>(nullptr);
         indexer->setFieldNames({
             {"isUseOption", false},
         });
         return indexer;
     };
-    paramsTable["DirectionCameraParam"] = tableLoader;
+    paramsTable["DirectionCameraParam"] = [tableLoader]() -> auto { return tableLoader(L"DirectionCameraParam"); };
 }
 
 template<> void ParamTableIndexer<DirectionCameraParam>::exportToCsvImpl(const std::wstring &csvPath) {

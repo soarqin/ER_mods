@@ -81,9 +81,10 @@ void registerPlayerCommonParam(sol::state *state, sol::table &paramsTable) {
         utPlayerCommonParam["unknown_0xdc"] = &PlayerCommonParam::unknown_0xdc;
         utPlayerCommonParam["unknown_0xe0"] = &PlayerCommonParam::unknown_0xe0;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PlayerCommonParam>>(state, L"PlayerCommonParam");
+        auto indexer = std::make_unique<ParamTableIndexer<PlayerCommonParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PlayerCommonParam>>(nullptr);
         indexer->setFieldNames({
             {"playerFootEffect_bySFX", false},
             {"snipeModeDrawAlpha_FadeTime", false},
@@ -152,7 +153,7 @@ void registerPlayerCommonParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["PlayerCommonParam"] = tableLoader;
+    paramsTable["PlayerCommonParam"] = [tableLoader]() -> auto { return tableLoader(L"PlayerCommonParam"); };
 }
 
 template<> void ParamTableIndexer<PlayerCommonParam>::exportToCsvImpl(const std::wstring &csvPath) {

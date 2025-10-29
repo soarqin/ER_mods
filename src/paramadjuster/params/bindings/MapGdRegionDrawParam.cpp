@@ -19,16 +19,17 @@ void registerMapGdRegionDrawParam(sol::state *state, sol::table &paramsTable) {
         utMapGdRegionDrawParam["disableParam_NT"] = sol::property([](MapGdRegionDrawParam &param) -> uint8_t { return param.disableParam_NT; }, [](MapGdRegionDrawParam &param, uint8_t value) { param.disableParam_NT = value; });
         utMapGdRegionDrawParam["overrideIVLocalLightScale"] = &MapGdRegionDrawParam::overrideIVLocalLightScale;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapGdRegionDrawParam>>(state, L"MapGdRegionDrawParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MapGdRegionDrawParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapGdRegionDrawParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"overrideIVLocalLightScale", false},
         });
         return indexer;
     };
-    paramsTable["MapGdRegionDrawParam"] = tableLoader;
+    paramsTable["MapGdRegionDrawParam"] = [tableLoader]() -> auto { return tableLoader(L"MapGdRegionDrawParam"); };
 }
 
 template<> void ParamTableIndexer<MapGdRegionDrawParam>::exportToCsvImpl(const std::wstring &csvPath) {

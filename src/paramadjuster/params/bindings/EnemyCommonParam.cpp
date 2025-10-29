@@ -23,9 +23,10 @@ void registerEnemyCommonParam(sol::state *state, sol::table &paramsTable) {
         utEnemyCommonParam["findUnfavorableFailedPointDist"] = &EnemyCommonParam::findUnfavorableFailedPointDist;
         utEnemyCommonParam["findUnfavorableFailedPointHeight"] = &EnemyCommonParam::findUnfavorableFailedPointHeight;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EnemyCommonParam>>(state, L"EnemyCommonParam");
+        auto indexer = std::make_unique<ParamTableIndexer<EnemyCommonParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EnemyCommonParam>>(nullptr);
         indexer->setFieldNames({
             {"soundTargetTryApproachTime", false},
             {"searchTargetTryApproachTime", false},
@@ -36,7 +37,7 @@ void registerEnemyCommonParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EnemyCommonParam"] = tableLoader;
+    paramsTable["EnemyCommonParam"] = [tableLoader]() -> auto { return tableLoader(L"EnemyCommonParam"); };
 }
 
 template<> void ParamTableIndexer<EnemyCommonParam>::exportToCsvImpl(const std::wstring &csvPath) {

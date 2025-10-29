@@ -21,9 +21,10 @@ void registerSpEffectSetParam(sol::state *state, sol::table &paramsTable) {
         utSpEffectSetParam["spEffectId3"] = &SpEffectSetParam::spEffectId3;
         utSpEffectSetParam["spEffectId4"] = &SpEffectSetParam::spEffectId4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SpEffectSetParam>>(state, L"SpEffectSetParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SpEffectSetParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SpEffectSetParam>>(nullptr);
         indexer->setFieldNames({
             {"spEffectId1", false},
             {"spEffectId2", false},
@@ -32,7 +33,7 @@ void registerSpEffectSetParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SpEffectSetParam"] = tableLoader;
+    paramsTable["SpEffectSetParam"] = [tableLoader]() -> auto { return tableLoader(L"SpEffectSetParam"); };
 }
 
 template<> void ParamTableIndexer<SpEffectSetParam>::exportToCsvImpl(const std::wstring &csvPath) {

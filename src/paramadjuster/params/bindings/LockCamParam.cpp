@@ -37,9 +37,10 @@ void registerLockCamParam(sol::state *state, sol::table &paramsTable) {
         utLockCamParam["lockTgtKeepTime"] = &LockCamParam::lockTgtKeepTime;
         utLockCamParam["chrTransChaseRateForNormal"] = &LockCamParam::chrTransChaseRateForNormal;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<LockCamParam>>(state, L"LockCamParam");
+        auto indexer = std::make_unique<ParamTableIndexer<LockCamParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<LockCamParam>>(nullptr);
         indexer->setFieldNames({
             {"camDistTarget", false},
             {"rotRangeMinX", false},
@@ -64,7 +65,7 @@ void registerLockCamParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["LockCamParam"] = tableLoader;
+    paramsTable["LockCamParam"] = [tableLoader]() -> auto { return tableLoader(L"LockCamParam"); };
 }
 
 template<> void ParamTableIndexer<LockCamParam>::exportToCsvImpl(const std::wstring &csvPath) {

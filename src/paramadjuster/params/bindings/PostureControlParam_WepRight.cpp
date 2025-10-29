@@ -89,9 +89,10 @@ void registerPostureControlParam_WepRight(sol::state *state, sol::table &paramsT
         utPostureControlParam_WepRight["a016_leftWristIO"] = &PostureControlParam_WepRight::a016_leftWristIO;
         utPostureControlParam_WepRight["a016_lefttWeaponRotation"] = &PostureControlParam_WepRight::a016_lefttWeaponRotation;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_WepRight>>(state, L"PostureControlParam_WepRight");
+        auto indexer = std::make_unique<ParamTableIndexer<PostureControlParam_WepRight>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<PostureControlParam_WepRight>>(nullptr);
         indexer->setFieldNames({
             {"a000_rightArmFB", false},
             {"a000_rightWristFB", false},
@@ -168,7 +169,7 @@ void registerPostureControlParam_WepRight(sol::state *state, sol::table &paramsT
         });
         return indexer;
     };
-    paramsTable["PostureControlParam_WepRight"] = tableLoader;
+    paramsTable["PostureControlParam_WepRight"] = [tableLoader]() -> auto { return tableLoader(L"PostureControlParam_WepRight"); };
 }
 
 template<> void ParamTableIndexer<PostureControlParam_WepRight>::exportToCsvImpl(const std::wstring &csvPath) {

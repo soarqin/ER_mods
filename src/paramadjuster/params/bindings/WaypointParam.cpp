@@ -21,9 +21,10 @@ void registerWaypointParam(sol::state *state, sol::table &paramsTable) {
         utWaypointParam["attribute3"] = &WaypointParam::attribute3;
         utWaypointParam["attribute4"] = &WaypointParam::attribute4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WaypointParam>>(state, L"WaypointParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WaypointParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WaypointParam>>(nullptr);
         indexer->setFieldNames({
             {"attribute1", false},
             {"attribute2", false},
@@ -32,7 +33,7 @@ void registerWaypointParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WaypointParam"] = tableLoader;
+    paramsTable["WaypointParam"] = [tableLoader]() -> auto { return tableLoader(L"WaypointParam"); };
 }
 
 template<> void ParamTableIndexer<WaypointParam>::exportToCsvImpl(const std::wstring &csvPath) {

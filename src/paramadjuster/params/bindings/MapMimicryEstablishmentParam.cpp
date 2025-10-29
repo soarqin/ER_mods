@@ -29,9 +29,10 @@ void registerMapMimicryEstablishmentParam(sol::state *state, sol::table &paramsT
         utMapMimicryEstablishmentParam["mimicrySfxId2"] = &MapMimicryEstablishmentParam::mimicrySfxId2;
         utMapMimicryEstablishmentParam["mimicryEndSfxId2"] = &MapMimicryEstablishmentParam::mimicryEndSfxId2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapMimicryEstablishmentParam>>(state, L"MapMimicryEstablishmentParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MapMimicryEstablishmentParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapMimicryEstablishmentParam>>(nullptr);
         indexer->setFieldNames({
             {"mimicryEstablishment0", false},
             {"mimicryEstablishment1", false},
@@ -48,7 +49,7 @@ void registerMapMimicryEstablishmentParam(sol::state *state, sol::table &paramsT
         });
         return indexer;
     };
-    paramsTable["MapMimicryEstablishmentParam"] = tableLoader;
+    paramsTable["MapMimicryEstablishmentParam"] = [tableLoader]() -> auto { return tableLoader(L"MapMimicryEstablishmentParam"); };
 }
 
 template<> void ParamTableIndexer<MapMimicryEstablishmentParam>::exportToCsvImpl(const std::wstring &csvPath) {

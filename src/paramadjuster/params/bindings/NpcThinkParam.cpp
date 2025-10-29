@@ -114,9 +114,10 @@ void registerNpcThinkParam(sol::state *state, sol::table &paramsTable) {
         utNpcThinkParam["weaponOnAnimId"] = &NpcThinkParam::weaponOnAnimId;
         utNpcThinkParam["surpriseAnimId"] = &NpcThinkParam::surpriseAnimId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<NpcThinkParam>>(state, L"NpcThinkParam");
+        auto indexer = std::make_unique<ParamTableIndexer<NpcThinkParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<NpcThinkParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"logicId", false},
@@ -218,7 +219,7 @@ void registerNpcThinkParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["NpcThinkParam"] = tableLoader;
+    paramsTable["NpcThinkParam"] = [tableLoader]() -> auto { return tableLoader(L"NpcThinkParam"); };
 }
 
 template<> void ParamTableIndexer<NpcThinkParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -223,9 +223,10 @@ void registerFaceRangeParam(sol::state *state, sol::table &paramsTable) {
         utFaceRangeParam["faceTexData35"] = &FaceRangeParam::faceTexData35;
         utFaceRangeParam["burn_scar"] = &FaceRangeParam::burn_scar;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<FaceRangeParam>>(state, L"FaceRangeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<FaceRangeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<FaceRangeParam>>(nullptr);
         indexer->setFieldNames({
             {"face_partsId", false},
             {"skin_color_R", false},
@@ -436,7 +437,7 @@ void registerFaceRangeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["FaceRangeParam"] = tableLoader;
+    paramsTable["FaceRangeParam"] = [tableLoader]() -> auto { return tableLoader(L"FaceRangeParam"); };
 }
 
 template<> void ParamTableIndexer<FaceRangeParam>::exportToCsvImpl(const std::wstring &csvPath) {

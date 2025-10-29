@@ -27,9 +27,10 @@ void registerCutsceneGparamTimeParam(sol::state *state, sol::table &paramsTable)
         utCutsceneGparamTimeParam["DstTimezone_DeepNightB"] = &CutsceneGparamTimeParam::DstTimezone_DeepNightB;
         utCutsceneGparamTimeParam["PostPlayIngameTime"] = &CutsceneGparamTimeParam::PostPlayIngameTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CutsceneGparamTimeParam>>(state, L"CutsceneGparamTimeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CutsceneGparamTimeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CutsceneGparamTimeParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"disableParam_Debug", false},
@@ -44,7 +45,7 @@ void registerCutsceneGparamTimeParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["CutsceneGparamTimeParam"] = tableLoader;
+    paramsTable["CutsceneGparamTimeParam"] = [tableLoader]() -> auto { return tableLoader(L"CutsceneGparamTimeParam"); };
 }
 
 template<> void ParamTableIndexer<CutsceneGparamTimeParam>::exportToCsvImpl(const std::wstring &csvPath) {

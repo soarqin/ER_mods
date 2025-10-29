@@ -333,9 +333,10 @@ void registerNpcParam(sol::state *state, sol::table &paramsTable) {
         utNpcParam["lockScoreOffset"] = &NpcParam::lockScoreOffset;
         utNpcParam["dlcGameClearSpEffectID"] = &NpcParam::dlcGameClearSpEffectID;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<NpcParam>>(state, L"NpcParam");
+        auto indexer = std::make_unique<ParamTableIndexer<NpcParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<NpcParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"behaviorVariationId", false},
@@ -656,7 +657,7 @@ void registerNpcParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["NpcParam"] = tableLoader;
+    paramsTable["NpcParam"] = [tableLoader]() -> auto { return tableLoader(L"NpcParam"); };
 }
 
 template<> void ParamTableIndexer<NpcParam>::exportToCsvImpl(const std::wstring &csvPath) {

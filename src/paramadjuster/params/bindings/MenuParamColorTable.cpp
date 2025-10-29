@@ -25,9 +25,10 @@ void registerMenuParamColorTable(sol::state *state, sol::table &paramsTable) {
         utMenuParamColorTable["s3"] = &MenuParamColorTable::s3;
         utMenuParamColorTable["v3"] = &MenuParamColorTable::v3;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuParamColorTable>>(state, L"MenuParamColorTable");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuParamColorTable>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuParamColorTable>>(nullptr);
         indexer->setFieldNames({
             {"lerpMode", false},
             {"h", false},
@@ -40,7 +41,7 @@ void registerMenuParamColorTable(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MenuColorTableParam"] = tableLoader;
+    paramsTable["MenuColorTableParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuColorTableParam"); };
 }
 
 template<> void ParamTableIndexer<MenuParamColorTable>::exportToCsvImpl(const std::wstring &csvPath) {

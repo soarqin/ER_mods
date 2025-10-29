@@ -28,9 +28,10 @@ void registerCharMakeMenuTopParam(sol::state *state, sol::table &paramsTable) {
         utCharMakeMenuTopParam["helpTextId"] = &CharMakeMenuTopParam::helpTextId;
         utCharMakeMenuTopParam["unlockEventFlagId"] = &CharMakeMenuTopParam::unlockEventFlagId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CharMakeMenuTopParam>>(state, L"CharMakeMenuTopParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CharMakeMenuTopParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CharMakeMenuTopParam>>(nullptr);
         indexer->setFieldNames({
             {"commandType", false},
             {"captionId", false},
@@ -46,7 +47,7 @@ void registerCharMakeMenuTopParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CharMakeMenuTopParam"] = tableLoader;
+    paramsTable["CharMakeMenuTopParam"] = [tableLoader]() -> auto { return tableLoader(L"CharMakeMenuTopParam"); };
 }
 
 template<> void ParamTableIndexer<CharMakeMenuTopParam>::exportToCsvImpl(const std::wstring &csvPath) {

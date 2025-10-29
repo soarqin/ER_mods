@@ -18,15 +18,16 @@ void registerSeActivationRangeParam(sol::state *state, sol::table &paramsTable) 
         auto utSeActivationRangeParam = state->new_usertype<SeActivationRangeParam>("SeActivationRangeParam");
         utSeActivationRangeParam["activateRange"] = &SeActivationRangeParam::activateRange;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SeActivationRangeParam>>(state, L"SeActivationRangeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SeActivationRangeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SeActivationRangeParam>>(nullptr);
         indexer->setFieldNames({
             {"activateRange", false},
         });
         return indexer;
     };
-    paramsTable["SeActivationRangeParam"] = tableLoader;
+    paramsTable["SeActivationRangeParam"] = [tableLoader]() -> auto { return tableLoader(L"SeActivationRangeParam"); };
 }
 
 template<> void ParamTableIndexer<SeActivationRangeParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -18,15 +18,16 @@ void registerSfxBlockResShareParam(sol::state *state, sol::table &paramsTable) {
         auto utSfxBlockResShareParam = state->new_usertype<SfxBlockResShareParam>("SfxBlockResShareParam");
         utSfxBlockResShareParam["shareBlockRsMapUidVal"] = &SfxBlockResShareParam::shareBlockRsMapUidVal;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SfxBlockResShareParam>>(state, L"SfxBlockResShareParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SfxBlockResShareParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SfxBlockResShareParam>>(nullptr);
         indexer->setFieldNames({
             {"shareBlockRsMapUidVal", false},
         });
         return indexer;
     };
-    paramsTable["SfxBlockResShareParam"] = tableLoader;
+    paramsTable["SfxBlockResShareParam"] = [tableLoader]() -> auto { return tableLoader(L"SfxBlockResShareParam"); };
 }
 
 template<> void ParamTableIndexer<SfxBlockResShareParam>::exportToCsvImpl(const std::wstring &csvPath) {

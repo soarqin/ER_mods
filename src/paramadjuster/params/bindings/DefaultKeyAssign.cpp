@@ -137,9 +137,10 @@ void registerDefaultKeyAssign(sol::state *state, sol::table &paramsTable) {
         utDefaultKeyAssign["time2_7"] = &DefaultKeyAssign::time2_7;
         utDefaultKeyAssign["a2dThreshold_7"] = &DefaultKeyAssign::a2dThreshold_7;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<DefaultKeyAssign>>(state, L"DefaultKeyAssign");
+        auto indexer = std::make_unique<ParamTableIndexer<DefaultKeyAssign>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<DefaultKeyAssign>>(nullptr);
         indexer->setFieldNames({
             {"priority0", false},
             {"priority1", false},
@@ -264,7 +265,7 @@ void registerDefaultKeyAssign(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["DefaultKeyAssign"] = tableLoader;
+    paramsTable["DefaultKeyAssign"] = [tableLoader]() -> auto { return tableLoader(L"DefaultKeyAssign"); };
 }
 
 template<> void ParamTableIndexer<DefaultKeyAssign>::exportToCsvImpl(const std::wstring &csvPath) {

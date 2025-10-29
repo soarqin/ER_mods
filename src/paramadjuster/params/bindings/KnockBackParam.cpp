@@ -47,9 +47,10 @@ void registerKnockBackParam(sol::state *state, sol::table &paramsTable) {
         utKnockBackParam["guard_LL_DecTime"] = &KnockBackParam::guard_LL_DecTime;
         utKnockBackParam["guardBrake_DecTime"] = &KnockBackParam::guardBrake_DecTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<KnockBackParam>>(state, L"KnockBackParam");
+        auto indexer = std::make_unique<ParamTableIndexer<KnockBackParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<KnockBackParam>>(nullptr);
         indexer->setFieldNames({
             {"damage_Min_ContTime", false},
             {"damage_S_ContTime", false},
@@ -84,7 +85,7 @@ void registerKnockBackParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["KnockBackParam"] = tableLoader;
+    paramsTable["KnockBackParam"] = [tableLoader]() -> auto { return tableLoader(L"KnockBackParam"); };
 }
 
 template<> void ParamTableIndexer<KnockBackParam>::exportToCsvImpl(const std::wstring &csvPath) {

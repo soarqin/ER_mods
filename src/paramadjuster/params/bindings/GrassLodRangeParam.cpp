@@ -23,9 +23,10 @@ void registerGrassLodRangeParam(sol::state *state, sol::table &paramsTable) {
         utGrassLodRangeParam["LOD2_range"] = &GrassLodRangeParam::LOD2_range;
         utGrassLodRangeParam["LOD2_play"] = &GrassLodRangeParam::LOD2_play;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<GrassLodRangeParam>>(state, L"GrassLodRangeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<GrassLodRangeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<GrassLodRangeParam>>(nullptr);
         indexer->setFieldNames({
             {"LOD0_range", false},
             {"LOD0_play", false},
@@ -36,7 +37,7 @@ void registerGrassLodRangeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["GrassLodRangeParam"] = tableLoader;
+    paramsTable["GrassLodRangeParam"] = [tableLoader]() -> auto { return tableLoader(L"GrassLodRangeParam"); };
 }
 
 template<> void ParamTableIndexer<GrassLodRangeParam>::exportToCsvImpl(const std::wstring &csvPath) {

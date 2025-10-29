@@ -28,9 +28,10 @@ void registerCutsceneMapIdParam(sol::state *state, sol::table &paramsTable) {
         utCutsceneMapIdParam["HitParts_0"] = &CutsceneMapIdParam::HitParts_0;
         utCutsceneMapIdParam["HitParts_1"] = &CutsceneMapIdParam::HitParts_1;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CutsceneMapIdParam>>(state, L"CutsceneMapIdParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CutsceneMapIdParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CutsceneMapIdParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"disableParam_Debug", false},
@@ -46,7 +47,7 @@ void registerCutsceneMapIdParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CutsceneMapIdParam"] = tableLoader;
+    paramsTable["CutsceneMapIdParam"] = [tableLoader]() -> auto { return tableLoader(L"CutsceneMapIdParam"); };
 }
 
 template<> void ParamTableIndexer<CutsceneMapIdParam>::exportToCsvImpl(const std::wstring &csvPath) {

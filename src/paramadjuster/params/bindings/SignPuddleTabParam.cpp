@@ -21,9 +21,10 @@ void registerSignPuddleTabParam(sol::state *state, sol::table &paramsTable) {
         utSignPuddleTabParam["unknown_0x8"] = &SignPuddleTabParam::unknown_0x8;
         utSignPuddleTabParam["unknown_0xc"] = &SignPuddleTabParam::unknown_0xc;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleTabParam>>(state, L"SignPuddleTabParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleTabParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SignPuddleTabParam>>(nullptr);
         indexer->setFieldNames({
             {"isDlcTab", false},
             {"tabTextId", false},
@@ -32,7 +33,7 @@ void registerSignPuddleTabParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SignPuddleTabParam"] = tableLoader;
+    paramsTable["SignPuddleTabParam"] = [tableLoader]() -> auto { return tableLoader(L"SignPuddleTabParam"); };
 }
 
 template<> void ParamTableIndexer<SignPuddleTabParam>::exportToCsvImpl(const std::wstring &csvPath) {

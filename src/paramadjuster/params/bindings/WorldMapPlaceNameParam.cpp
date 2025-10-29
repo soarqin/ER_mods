@@ -26,9 +26,10 @@ void registerWorldMapPlaceNameParam(sol::state *state, sol::table &paramsTable) 
         utWorldMapPlaceNameParam["posY"] = &WorldMapPlaceNameParam::posY;
         utWorldMapPlaceNameParam["posZ"] = &WorldMapPlaceNameParam::posZ;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPlaceNameParam>>(state, L"WorldMapPlaceNameParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPlaceNameParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WorldMapPlaceNameParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"worldMapPieceId", false},
@@ -42,7 +43,7 @@ void registerWorldMapPlaceNameParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["WorldMapPlaceNameParam"] = tableLoader;
+    paramsTable["WorldMapPlaceNameParam"] = [tableLoader]() -> auto { return tableLoader(L"WorldMapPlaceNameParam"); };
 }
 
 template<> void ParamTableIndexer<WorldMapPlaceNameParam>::exportToCsvImpl(const std::wstring &csvPath) {

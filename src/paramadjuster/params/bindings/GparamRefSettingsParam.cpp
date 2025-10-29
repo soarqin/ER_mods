@@ -19,16 +19,17 @@ void registerGparamRefSettingsParam(sol::state *state, sol::table &paramsTable) 
         utGparamRefSettingsParam["disableParam_NT"] = sol::property([](GparamRefSettingsParam &param) -> uint8_t { return param.disableParam_NT; }, [](GparamRefSettingsParam &param, uint8_t value) { param.disableParam_NT = value; });
         utGparamRefSettingsParam["RefTargetMapId"] = &GparamRefSettingsParam::RefTargetMapId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<GparamRefSettingsParam>>(state, L"GparamRefSettingsParam");
+        auto indexer = std::make_unique<ParamTableIndexer<GparamRefSettingsParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<GparamRefSettingsParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"RefTargetMapId", false},
         });
         return indexer;
     };
-    paramsTable["GparamRefSettings"] = tableLoader;
+    paramsTable["GparamRefSettings"] = [tableLoader]() -> auto { return tableLoader(L"GparamRefSettings"); };
 }
 
 template<> void ParamTableIndexer<GparamRefSettingsParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -24,9 +24,10 @@ void registerFinalDamageRateParam(sol::state *state, sol::table &paramsTable) {
         utFinalDamageRateParam["staminaRate"] = &FinalDamageRateParam::staminaRate;
         utFinalDamageRateParam["saRate"] = &FinalDamageRateParam::saRate;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<FinalDamageRateParam>>(state, L"FinalDamageRateParam");
+        auto indexer = std::make_unique<ParamTableIndexer<FinalDamageRateParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<FinalDamageRateParam>>(nullptr);
         indexer->setFieldNames({
             {"physRate", false},
             {"magRate", false},
@@ -38,7 +39,7 @@ void registerFinalDamageRateParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["FinalDamageRateParam"] = tableLoader;
+    paramsTable["FinalDamageRateParam"] = [tableLoader]() -> auto { return tableLoader(L"FinalDamageRateParam"); };
 }
 
 template<> void ParamTableIndexer<FinalDamageRateParam>::exportToCsvImpl(const std::wstring &csvPath) {

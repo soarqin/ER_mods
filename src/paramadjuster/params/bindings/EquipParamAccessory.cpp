@@ -55,9 +55,10 @@ void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
         utEquipParamAccessory["residentSpEffectId3"] = &EquipParamAccessory::residentSpEffectId3;
         utEquipParamAccessory["residentSpEffectId4"] = &EquipParamAccessory::residentSpEffectId4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EquipParamAccessory>>(state, L"EquipParamAccessory");
+        auto indexer = std::make_unique<ParamTableIndexer<EquipParamAccessory>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EquipParamAccessory>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"refId", false},
@@ -100,7 +101,7 @@ void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["EquipParamAccessory"] = tableLoader;
+    paramsTable["EquipParamAccessory"] = [tableLoader]() -> auto { return tableLoader(L"EquipParamAccessory"); };
 }
 
 template<> void ParamTableIndexer<EquipParamAccessory>::exportToCsvImpl(const std::wstring &csvPath) {

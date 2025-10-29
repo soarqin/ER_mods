@@ -257,9 +257,10 @@ void registerFaceParam(sol::state *state, sol::table &paramsTable) {
         utFaceParam["faceGeoAsymData24"] = &FaceParam::faceGeoAsymData24;
         utFaceParam["faceGeoAsymData25"] = &FaceParam::faceGeoAsymData25;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<FaceParam>>(state, L"FaceParam");
+        auto indexer = std::make_unique<ParamTableIndexer<FaceParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<FaceParam>>(nullptr);
         indexer->setFieldNames({
             {"face_partsId", false},
             {"skin_color_R", false},
@@ -504,7 +505,7 @@ void registerFaceParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["FaceParam"] = tableLoader;
+    paramsTable["FaceParam"] = [tableLoader]() -> auto { return tableLoader(L"FaceParam"); };
 }
 
 template<> void ParamTableIndexer<FaceParam>::exportToCsvImpl(const std::wstring &csvPath) {

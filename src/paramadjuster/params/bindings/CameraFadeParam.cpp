@@ -22,9 +22,10 @@ void registerCameraFadeParam(sol::state *state, sol::table &paramsTable) {
         utCameraFadeParam["FarMaxDist"] = &CameraFadeParam::FarMaxDist;
         utCameraFadeParam["MiddleAlpha"] = &CameraFadeParam::MiddleAlpha;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CameraFadeParam>>(state, L"CameraFadeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CameraFadeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CameraFadeParam>>(nullptr);
         indexer->setFieldNames({
             {"NearMinDist", false},
             {"NearMaxDist", false},
@@ -34,7 +35,7 @@ void registerCameraFadeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CameraFadeParam"] = tableLoader;
+    paramsTable["CameraFadeParam"] = [tableLoader]() -> auto { return tableLoader(L"CameraFadeParam"); };
 }
 
 template<> void ParamTableIndexer<CameraFadeParam>::exportToCsvImpl(const std::wstring &csvPath) {

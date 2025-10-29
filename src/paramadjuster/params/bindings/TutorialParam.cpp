@@ -26,9 +26,10 @@ void registerTutorialParam(sol::state *state, sol::table &paramsTable) {
         utTutorialParam["displayMinTime"] = &TutorialParam::displayMinTime;
         utTutorialParam["displayTime"] = &TutorialParam::displayTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<TutorialParam>>(state, L"TutorialParam");
+        auto indexer = std::make_unique<ParamTableIndexer<TutorialParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<TutorialParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"menuType", false},
@@ -42,7 +43,7 @@ void registerTutorialParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["TutorialParam"] = tableLoader;
+    paramsTable["TutorialParam"] = [tableLoader]() -> auto { return tableLoader(L"TutorialParam"); };
 }
 
 template<> void ParamTableIndexer<TutorialParam>::exportToCsvImpl(const std::wstring &csvPath) {

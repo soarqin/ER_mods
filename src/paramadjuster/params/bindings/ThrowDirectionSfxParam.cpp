@@ -48,9 +48,10 @@ void registerThrowDirectionSfxParam(sol::state *state, sol::table &paramsTable) 
         utThrowDirectionSfxParam["sfxId_29"] = &ThrowDirectionSfxParam::sfxId_29;
         utThrowDirectionSfxParam["sfxId_30"] = &ThrowDirectionSfxParam::sfxId_30;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ThrowDirectionSfxParam>>(state, L"ThrowDirectionSfxParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ThrowDirectionSfxParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ThrowDirectionSfxParam>>(nullptr);
         indexer->setFieldNames({
             {"sfxId_00", false},
             {"sfxId_01", false},
@@ -86,7 +87,7 @@ void registerThrowDirectionSfxParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["ThrowDirectionSfxParam"] = tableLoader;
+    paramsTable["ThrowDirectionSfxParam"] = [tableLoader]() -> auto { return tableLoader(L"ThrowDirectionSfxParam"); };
 }
 
 template<> void ParamTableIndexer<ThrowDirectionSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -19,16 +19,17 @@ void registerMapGridCreateHeightLimitInfo(sol::state *state, sol::table &paramsT
         utMapGridCreateHeightLimitInfo["GridEnableCreateHeightMin"] = &MapGridCreateHeightLimitInfo::GridEnableCreateHeightMin;
         utMapGridCreateHeightLimitInfo["GridEnableCreateHeightMax"] = &MapGridCreateHeightLimitInfo::GridEnableCreateHeightMax;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapGridCreateHeightLimitInfo>>(state, L"MapGridCreateHeightLimitInfo");
+        auto indexer = std::make_unique<ParamTableIndexer<MapGridCreateHeightLimitInfo>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapGridCreateHeightLimitInfo>>(nullptr);
         indexer->setFieldNames({
             {"GridEnableCreateHeightMin", false},
             {"GridEnableCreateHeightMax", false},
         });
         return indexer;
     };
-    paramsTable["MapGridCreateHeightLimitInfoParam"] = tableLoader;
+    paramsTable["MapGridCreateHeightLimitInfoParam"] = [tableLoader]() -> auto { return tableLoader(L"MapGridCreateHeightLimitInfoParam"); };
 }
 
 template<> void ParamTableIndexer<MapGridCreateHeightLimitInfo>::exportToCsvImpl(const std::wstring &csvPath) {

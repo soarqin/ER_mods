@@ -124,9 +124,10 @@ void registerCharaInitParam(sol::state *state, sol::table &paramsTable) {
         utCharaInitParam["MpEstMax"] = &CharaInitParam::MpEstMax;
         utCharaInitParam["voiceType"] = &CharaInitParam::voiceType;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CharaInitParam>>(state, L"CharaInitParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CharaInitParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CharaInitParam>>(nullptr);
         indexer->setFieldNames({
             {"baseRec_mp", false},
             {"baseRec_sp", false},
@@ -238,7 +239,7 @@ void registerCharaInitParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["CharaInitParam"] = tableLoader;
+    paramsTable["CharaInitParam"] = [tableLoader]() -> auto { return tableLoader(L"CharaInitParam"); };
 }
 
 template<> void ParamTableIndexer<CharaInitParam>::exportToCsvImpl(const std::wstring &csvPath) {

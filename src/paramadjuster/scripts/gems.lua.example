@@ -1,13 +1,15 @@
 -- This script enables all gems for all weapons (including those that normally can't use gems).
 -- Exception: Shields and torches.
-print('loading gems.lua...')
 
 local epwTable = Params.EquipParamWeapon()
 for i = 0, epwTable.count - 1 do
-    local entry = epwTable[i]
-    entry.gemMountType = 2   -- enable AoW attaching
-    entry.disableGemAttr = 0 -- enable AoW affinity changing
-    entry.isEnhance = 1      -- can be buffed with greases/magics/incantations
+    local id = epwTable:id(i)
+    if (id >= 1000000 and id < 43100000) or id >= 60000000 then
+        local entry = epwTable[i]
+        entry.gemMountType = 2   -- enable AoW attaching
+        entry.disableGemAttr = 0 -- enable AoW affinity changing
+        entry.isEnhance = 1      -- can be buffed with greases/magics/incantations
+    end
 end
 
 local epgTable = Params.EquipParamGem()

@@ -90,9 +90,10 @@ void registerItemLotParam(sol::state *state, sol::table &paramsTable) {
         utItemLotParam["PAD1"] = sol::property([](ItemLotParam &param) -> uint8_t { return param.PAD1; }, [](ItemLotParam &param, uint8_t value) { param.PAD1 = value; });
         utItemLotParam["PAD2"] = &ItemLotParam::PAD2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ItemLotParam>>(state, L"ItemLotParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ItemLotParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ItemLotParam>>(nullptr);
         indexer->setFieldNames({
             {"lotItemId01", false},
             {"lotItemId02", false},
@@ -170,8 +171,8 @@ void registerItemLotParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ItemLotParam_enemy"] = tableLoader;
-    paramsTable["ItemLotParam_map"] = tableLoader;
+    paramsTable["ItemLotParam_enemy"] = [tableLoader]() -> auto { return tableLoader(L"ItemLotParam_enemy"); };
+    paramsTable["ItemLotParam_map"] = [tableLoader]() -> auto { return tableLoader(L"ItemLotParam_map"); };
 }
 
 template<> void ParamTableIndexer<ItemLotParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -56,9 +56,10 @@ void registerMoveParam(sol::state *state, sol::table &paramsTable) {
         utMoveParam["turn90Angle"] = &MoveParam::turn90Angle;
         utMoveParam["turnWaitNoAnimAngle"] = &MoveParam::turnWaitNoAnimAngle;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MoveParam>>(state, L"MoveParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MoveParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MoveParam>>(nullptr);
         indexer->setFieldNames({
             {"stayId", false},
             {"walkF", false},
@@ -102,7 +103,7 @@ void registerMoveParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MoveParam"] = tableLoader;
+    paramsTable["MoveParam"] = [tableLoader]() -> auto { return tableLoader(L"MoveParam"); };
 }
 
 template<> void ParamTableIndexer<MoveParam>::exportToCsvImpl(const std::wstring &csvPath) {

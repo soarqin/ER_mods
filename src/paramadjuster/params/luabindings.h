@@ -16,6 +16,7 @@ namespace paramadjuster::params {
 template<typename T>
 struct ParamTableIndexer: ParamTableIndexerBase {
     ParamTableIndexer(sol::state *state, const wchar_t *tableName) : ParamTableIndexerBase(state, tableName) {
+        if (table_ == nullptr) return;
         for (int i = 0; i < table_->count; i++) {
             const ParamEntryOffset *entry = &table_->entries[i];
             auto *ptr = (T*)((uintptr_t)table_ + entry->offset);
@@ -32,6 +33,9 @@ struct ParamTableIndexer: ParamTableIndexerBase {
             return nullptr;
         }
         return it->second;
+    }
+    bool isValid() const {
+        return table_ != nullptr;
     }
 
 protected:

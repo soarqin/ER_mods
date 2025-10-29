@@ -21,9 +21,10 @@ void registerMenuPropertyLayoutParam(sol::state *state, sol::table &paramsTable)
         utMenuPropertyLayoutParam["CaptionTextID"] = &MenuPropertyLayoutParam::CaptionTextID;
         utMenuPropertyLayoutParam["HelpTextID"] = &MenuPropertyLayoutParam::HelpTextID;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuPropertyLayoutParam>>(state, L"MenuPropertyLayoutParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuPropertyLayoutParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuPropertyLayoutParam>>(nullptr);
         indexer->setFieldNames({
             {"LayoutPath", true},
             {"PropertyID", false},
@@ -32,7 +33,7 @@ void registerMenuPropertyLayoutParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["MenuPropertyLayoutParam"] = tableLoader;
+    paramsTable["MenuPropertyLayoutParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuPropertyLayoutParam"); };
 }
 
 template<> void ParamTableIndexer<MenuPropertyLayoutParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -19,16 +19,17 @@ void registerBulletCreateLimitParam(sol::state *state, sol::table &paramsTable) 
         utBulletCreateLimitParam["limitNum_byGroup"] = &BulletCreateLimitParam::limitNum_byGroup;
         utBulletCreateLimitParam["isLimitEachOwner"] = sol::property([](BulletCreateLimitParam &param) -> uint8_t { return param.isLimitEachOwner; }, [](BulletCreateLimitParam &param, uint8_t value) { param.isLimitEachOwner = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BulletCreateLimitParam>>(state, L"BulletCreateLimitParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BulletCreateLimitParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BulletCreateLimitParam>>(nullptr);
         indexer->setFieldNames({
             {"limitNum_byGroup", false},
             {"isLimitEachOwner", false},
         });
         return indexer;
     };
-    paramsTable["BulletCreateLimitParam"] = tableLoader;
+    paramsTable["BulletCreateLimitParam"] = [tableLoader]() -> auto { return tableLoader(L"BulletCreateLimitParam"); };
 }
 
 template<> void ParamTableIndexer<BulletCreateLimitParam>::exportToCsvImpl(const std::wstring &csvPath) {

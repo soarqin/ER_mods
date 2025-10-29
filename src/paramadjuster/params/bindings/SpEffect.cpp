@@ -386,9 +386,10 @@ void registerSpEffect(sol::state *state, sol::table &paramsTable) {
         utSpEffect["guardStaminaMult"] = &SpEffect::guardStaminaMult;
         utSpEffect["spiritDeathSpEffectId"] = &SpEffect::spiritDeathSpEffectId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SpEffect>>(state, L"SpEffect");
+        auto indexer = std::make_unique<ParamTableIndexer<SpEffect>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SpEffect>>(nullptr);
         indexer->setFieldNames({
             {"iconId", false},
             {"conditionHp", false},
@@ -762,7 +763,7 @@ void registerSpEffect(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SpEffectParam"] = tableLoader;
+    paramsTable["SpEffectParam"] = [tableLoader]() -> auto { return tableLoader(L"SpEffectParam"); };
 }
 
 template<> void ParamTableIndexer<SpEffect>::exportToCsvImpl(const std::wstring &csvPath) {

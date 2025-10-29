@@ -22,9 +22,10 @@ void registerBaseChrSelectMenuParam(sol::state *state, sol::table &paramsTable) 
         utBaseChrSelectMenuParam["imageId"] = &BaseChrSelectMenuParam::imageId;
         utBaseChrSelectMenuParam["textId"] = &BaseChrSelectMenuParam::textId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BaseChrSelectMenuParam>>(state, L"BaseChrSelectMenuParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BaseChrSelectMenuParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BaseChrSelectMenuParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"chrInitParam", false},
@@ -34,7 +35,7 @@ void registerBaseChrSelectMenuParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["BaseChrSelectMenuParam"] = tableLoader;
+    paramsTable["BaseChrSelectMenuParam"] = [tableLoader]() -> auto { return tableLoader(L"BaseChrSelectMenuParam"); };
 }
 
 template<> void ParamTableIndexer<BaseChrSelectMenuParam>::exportToCsvImpl(const std::wstring &csvPath) {

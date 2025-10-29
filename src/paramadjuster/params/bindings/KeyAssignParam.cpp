@@ -22,9 +22,10 @@ void registerKeyAssignParam(sol::state *state, sol::table &paramsTable) {
         utKeyAssignParam["mouseModifyKey"] = &KeyAssignParam::mouseModifyKey;
         utKeyAssignParam["mouseKeyId"] = &KeyAssignParam::mouseKeyId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<KeyAssignParam>>(state, L"KeyAssignParam");
+        auto indexer = std::make_unique<ParamTableIndexer<KeyAssignParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<KeyAssignParam>>(nullptr);
         indexer->setFieldNames({
             {"padKeyId", false},
             {"keyboardModifyKey", false},
@@ -34,9 +35,9 @@ void registerKeyAssignParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["KeyAssignParam_TypeA"] = tableLoader;
-    paramsTable["KeyAssignParam_TypeB"] = tableLoader;
-    paramsTable["KeyAssignParam_TypeC"] = tableLoader;
+    paramsTable["KeyAssignParam_TypeA"] = [tableLoader]() -> auto { return tableLoader(L"KeyAssignParam_TypeA"); };
+    paramsTable["KeyAssignParam_TypeB"] = [tableLoader]() -> auto { return tableLoader(L"KeyAssignParam_TypeB"); };
+    paramsTable["KeyAssignParam_TypeC"] = [tableLoader]() -> auto { return tableLoader(L"KeyAssignParam_TypeC"); };
 }
 
 template<> void ParamTableIndexer<KeyAssignParam>::exportToCsvImpl(const std::wstring &csvPath) {

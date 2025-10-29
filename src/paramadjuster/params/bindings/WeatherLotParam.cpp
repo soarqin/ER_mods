@@ -55,9 +55,10 @@ void registerWeatherLotParam(sol::state *state, sol::table &paramsTable) {
         utWeatherLotParam["timezoneEndHour"] = &WeatherLotParam::timezoneEndHour;
         utWeatherLotParam["timezoneEndMinute"] = &WeatherLotParam::timezoneEndMinute;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WeatherLotParam>>(state, L"WeatherLotParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WeatherLotParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WeatherLotParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"weatherType0", false},
@@ -100,7 +101,7 @@ void registerWeatherLotParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WeatherLotParam"] = tableLoader;
+    paramsTable["WeatherLotParam"] = [tableLoader]() -> auto { return tableLoader(L"WeatherLotParam"); };
 }
 
 template<> void ParamTableIndexer<WeatherLotParam>::exportToCsvImpl(const std::wstring &csvPath) {

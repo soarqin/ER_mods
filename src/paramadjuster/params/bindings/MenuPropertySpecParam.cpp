@@ -22,9 +22,10 @@ void registerMenuPropertySpecParam(sol::state *state, sol::table &paramsTable) {
         utMenuPropertySpecParam["CompareType"] = &MenuPropertySpecParam::CompareType;
         utMenuPropertySpecParam["FormatType"] = &MenuPropertySpecParam::FormatType;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuPropertySpecParam>>(state, L"MenuPropertySpecParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuPropertySpecParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuPropertySpecParam>>(nullptr);
         indexer->setFieldNames({
             {"CaptionTextID", false},
             {"IconID", false},
@@ -34,7 +35,7 @@ void registerMenuPropertySpecParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MenuPropertySpecParam"] = tableLoader;
+    paramsTable["MenuPropertySpecParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuPropertySpecParam"); };
 }
 
 template<> void ParamTableIndexer<MenuPropertySpecParam>::exportToCsvImpl(const std::wstring &csvPath) {

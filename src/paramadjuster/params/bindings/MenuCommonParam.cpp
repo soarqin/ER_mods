@@ -86,9 +86,10 @@ void registerMenuCommonParam(sol::state *state, sol::table &paramsTable) {
         utMenuCommonParam["unknown_0xed"] = &MenuCommonParam::unknown_0xed;
         utMenuCommonParam["unknown_0xee"] = &MenuCommonParam::unknown_0xee;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuCommonParam>>(state, L"MenuCommonParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuCommonParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuCommonParam>>(nullptr);
         indexer->setFieldNames({
             {"soloPlayDeath_ToFadeOutTime", false},
             {"partyGhostDeath_ToFadeOutTime", false},
@@ -162,7 +163,7 @@ void registerMenuCommonParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MenuCommonParam"] = tableLoader;
+    paramsTable["MenuCommonParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuCommonParam"); };
 }
 
 template<> void ParamTableIndexer<MenuCommonParam>::exportToCsvImpl(const std::wstring &csvPath) {

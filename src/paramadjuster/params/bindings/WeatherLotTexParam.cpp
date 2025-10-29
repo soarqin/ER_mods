@@ -22,9 +22,10 @@ void registerWeatherLotTexParam(sol::state *state, sol::table &paramsTable) {
         utWeatherLotTexParam["srcB"] = &WeatherLotTexParam::srcB;
         utWeatherLotTexParam["weatherLogId"] = &WeatherLotTexParam::weatherLogId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WeatherLotTexParam>>(state, L"WeatherLotTexParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WeatherLotTexParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WeatherLotTexParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"srcR", false},
@@ -34,7 +35,7 @@ void registerWeatherLotTexParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WeatherLotTexParam"] = tableLoader;
+    paramsTable["WeatherLotTexParam"] = [tableLoader]() -> auto { return tableLoader(L"WeatherLotTexParam"); };
 }
 
 template<> void ParamTableIndexer<WeatherLotTexParam>::exportToCsvImpl(const std::wstring &csvPath) {

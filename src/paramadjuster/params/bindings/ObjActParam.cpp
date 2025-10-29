@@ -40,9 +40,10 @@ void registerObjActParam(sol::state *state, sol::table &paramsTable) {
         utObjActParam["spQualifiedId_new"] = &ObjActParam::spQualifiedId_new;
         utObjActParam["spQualifiedId2_new"] = &ObjActParam::spQualifiedId2_new;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ObjActParam>>(state, L"ObjActParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ObjActParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ObjActParam>>(nullptr);
         indexer->setFieldNames({
             {"actionEnableMsgId", false},
             {"actionFailedMsgId", false},
@@ -70,7 +71,7 @@ void registerObjActParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ObjActParam"] = tableLoader;
+    paramsTable["ObjActParam"] = [tableLoader]() -> auto { return tableLoader(L"ObjActParam"); };
 }
 
 template<> void ParamTableIndexer<ObjActParam>::exportToCsvImpl(const std::wstring &csvPath) {

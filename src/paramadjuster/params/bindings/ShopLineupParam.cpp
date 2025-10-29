@@ -32,9 +32,10 @@ void registerShopLineupParam(sol::state *state, sol::table &paramsTable) {
         utShopLineupParam["menuTitleMsgId"] = &ShopLineupParam::menuTitleMsgId;
         utShopLineupParam["menuIconId"] = &ShopLineupParam::menuIconId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ShopLineupParam>>(state, L"ShopLineupParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ShopLineupParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ShopLineupParam>>(nullptr);
         indexer->setFieldNames({
             {"equipId", false},
             {"value", false},
@@ -54,8 +55,8 @@ void registerShopLineupParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ShopLineupParam"] = tableLoader;
-    paramsTable["ShopLineupParam_Recipe"] = tableLoader;
+    paramsTable["ShopLineupParam"] = [tableLoader]() -> auto { return tableLoader(L"ShopLineupParam"); };
+    paramsTable["ShopLineupParam_Recipe"] = [tableLoader]() -> auto { return tableLoader(L"ShopLineupParam_Recipe"); };
 }
 
 template<> void ParamTableIndexer<ShopLineupParam>::exportToCsvImpl(const std::wstring &csvPath) {

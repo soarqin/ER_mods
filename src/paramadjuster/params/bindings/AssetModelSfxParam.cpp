@@ -34,9 +34,10 @@ void registerAssetModelSfxParam(sol::state *state, sol::table &paramsTable) {
         utAssetModelSfxParam["dmypolyId_7"] = &AssetModelSfxParam::dmypolyId_7;
         utAssetModelSfxParam["isDisableIV"] = &AssetModelSfxParam::isDisableIV;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<AssetModelSfxParam>>(state, L"AssetModelSfxParam");
+        auto indexer = std::make_unique<ParamTableIndexer<AssetModelSfxParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<AssetModelSfxParam>>(nullptr);
         indexer->setFieldNames({
             {"sfxId_0", false},
             {"dmypolyId_0", false},
@@ -58,7 +59,7 @@ void registerAssetModelSfxParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["AssetModelSfxParam"] = tableLoader;
+    paramsTable["AssetModelSfxParam"] = [tableLoader]() -> auto { return tableLoader(L"AssetModelSfxParam"); };
 }
 
 template<> void ParamTableIndexer<AssetModelSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -86,9 +86,10 @@ void registerSpEffectVfx(sol::state *state, sol::table &paramsTable) {
         utSpEffectVfx["unknown_0x99"] = &SpEffectVfx::unknown_0x99;
         utSpEffectVfx["unknown_0x9a"] = &SpEffectVfx::unknown_0x9a;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SpEffectVfx>>(state, L"SpEffectVfx");
+        auto indexer = std::make_unique<ParamTableIndexer<SpEffectVfx>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SpEffectVfx>>(nullptr);
         indexer->setFieldNames({
             {"midstSfxId", false},
             {"midstSeId", false},
@@ -162,7 +163,7 @@ void registerSpEffectVfx(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SpEffectVfxParam"] = tableLoader;
+    paramsTable["SpEffectVfxParam"] = [tableLoader]() -> auto { return tableLoader(L"SpEffectVfxParam"); };
 }
 
 template<> void ParamTableIndexer<SpEffectVfx>::exportToCsvImpl(const std::wstring &csvPath) {

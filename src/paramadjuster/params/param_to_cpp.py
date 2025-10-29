@@ -306,9 +306,10 @@ for path in pathlist:
             else:
                 inc.write(f'        ut{type_name}["{r[1]}"] = sol::property([]({type_name} &param) -> {rtp} {{ return param.{r[1]}; }}, []({type_name} &param, {itp} value) {{ {to_func}(param.{r[1]}, value); }});\n')
     inc.write('    };\n')
-    inc.write(f'    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {{\n')
+    inc.write(f'    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {{\n')
     inc.write(f'        delayInit();\n')
-    inc.write(f'        auto indexer = std::make_unique<ParamTableIndexer<{type_name}>>(state, L"{type_name}");\n')
+    inc.write(f'        auto indexer = std::make_unique<ParamTableIndexer<{type_name}>>(state, tableName);\n')
+    inc.write(f'        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<{type_name}>>(nullptr);\n')
     inc.write(f'        indexer->setFieldNames({{\n')
     for fname, ftype in field_names:
         inc.write(f'            {{"{fname}", {str(param_type_is_str(ftype)).lower()}}},\n')
@@ -316,7 +317,7 @@ for path in pathlist:
     inc.write(f'        return indexer;\n')
     inc.write(f'    }};\n')
     for mapping_name in mapping_list:
-        inc.write(f'    paramsTable["{mapping_name}"] = tableLoader;\n')
+        inc.write(f'    paramsTable["{mapping_name}"] = [tableLoader]() -> auto {{ return tableLoader(L"{mapping_name}"); }};\n')
     inc.write('}\n')
     inc.write(f'\ntemplate<> void ParamTableIndexer<{type_name}>::exportToCsvImpl(const std::wstring &csvPath) {{\n')
     inc.write('    FILE *f = _wfopen(csvPath.c_str(), L"wt");\n')

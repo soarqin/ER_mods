@@ -38,9 +38,10 @@ void registerWeatherAssetCreateParam(sol::state *state, sol::table &paramsTable)
         utWeatherAssetCreateParam["CreateAssetLimitId2"] = &WeatherAssetCreateParam::CreateAssetLimitId2;
         utWeatherAssetCreateParam["CreateAssetLimitId3"] = &WeatherAssetCreateParam::CreateAssetLimitId3;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WeatherAssetCreateParam>>(state, L"WeatherAssetCreateParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WeatherAssetCreateParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WeatherAssetCreateParam>>(nullptr);
         indexer->setFieldNames({
             {"AssetId", false},
             {"SlotNo", false},
@@ -66,7 +67,7 @@ void registerWeatherAssetCreateParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["WeatherAssetCreateParam"] = tableLoader;
+    paramsTable["WeatherAssetCreateParam"] = [tableLoader]() -> auto { return tableLoader(L"WeatherAssetCreateParam"); };
 }
 
 template<> void ParamTableIndexer<WeatherAssetCreateParam>::exportToCsvImpl(const std::wstring &csvPath) {

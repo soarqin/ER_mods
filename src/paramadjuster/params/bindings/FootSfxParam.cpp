@@ -217,9 +217,10 @@ void registerFootSfxParam(sol::state *state, sol::table &paramsTable) {
         utFootSfxParam["sfxId_198"] = &FootSfxParam::sfxId_198;
         utFootSfxParam["sfxId_199"] = &FootSfxParam::sfxId_199;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<FootSfxParam>>(state, L"FootSfxParam");
+        auto indexer = std::make_unique<ParamTableIndexer<FootSfxParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<FootSfxParam>>(nullptr);
         indexer->setFieldNames({
             {"sfxId_00", false},
             {"sfxId_01", false},
@@ -424,7 +425,7 @@ void registerFootSfxParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["FootSfxParam"] = tableLoader;
+    paramsTable["FootSfxParam"] = [tableLoader]() -> auto { return tableLoader(L"FootSfxParam"); };
 }
 
 template<> void ParamTableIndexer<FootSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {

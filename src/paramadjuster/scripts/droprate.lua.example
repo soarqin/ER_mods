@@ -1,0 +1,85 @@
+-- This script sets drop rate to 100% for all randomly droppable weapons/armors from enemies.
+
+local is_missable_equipment = function(base_point, category, item_id)
+    return (category == 3 or (category == 2 and ((item_id >= 1000000 and item_id < 43100000) or item_id >= 60000000))) and base_point > 0 and base_point < 1000
+end
+
+local ilpTable = Params.ItemLotParam_enemy()
+for i = 0, ilpTable.count - 1 do
+    local entry = ilpTable[i]
+    local is_missable_01 = is_missable_equipment(entry.lotItemBasePoint01,entry.lotItemCategory01, entry.lotItemId01)
+    local is_missable_02 = is_missable_equipment(entry.lotItemBasePoint02,entry.lotItemCategory02, entry.lotItemId02)
+    local is_missable_03 = is_missable_equipment(entry.lotItemBasePoint03,entry.lotItemCategory03, entry.lotItemId03)
+    local is_missable_04 = is_missable_equipment(entry.lotItemBasePoint04,entry.lotItemCategory04, entry.lotItemId04)
+    local is_missable_05 = is_missable_equipment(entry.lotItemBasePoint05,entry.lotItemCategory05, entry.lotItemId05)
+    local is_missable_06 = is_missable_equipment(entry.lotItemBasePoint06,entry.lotItemCategory06, entry.lotItemId06)
+    local is_missable_07 = is_missable_equipment(entry.lotItemBasePoint07,entry.lotItemCategory07, entry.lotItemId07)
+    local is_missable_08 = is_missable_equipment(entry.lotItemBasePoint08,entry.lotItemCategory08, entry.lotItemId08)
+    if is_missable_01 or is_missable_02 or is_missable_03 or is_missable_04 or is_missable_05 or is_missable_06 or is_missable_07 or is_missable_08 then
+        if is_missable_01 then
+            entry.lotItemBasePoint01 = 1000
+        else
+            entry.lotItemBasePoint01 = 0
+        end
+        if is_missable_02 then
+            entry.lotItemBasePoint02 = 1000
+        else
+            entry.lotItemBasePoint02 = 0
+        end
+        if is_missable_03 then
+            entry.lotItemBasePoint03 = 1000
+        else
+            entry.lotItemBasePoint03 = 0
+        end
+        if is_missable_04 then
+            entry.lotItemBasePoint04 = 1000
+        else
+            entry.lotItemBasePoint04 = 0
+        end
+        if is_missable_05 then
+            entry.lotItemBasePoint05 = 1000
+        else
+            entry.lotItemBasePoint05 = 0
+        end
+        if is_missable_06 then
+            entry.lotItemBasePoint06 = 1000
+        else
+            entry.lotItemBasePoint06 = 0
+        end
+        if is_missable_07 then
+            entry.lotItemBasePoint07 = 1000
+        else
+            entry.lotItemBasePoint07 = 0
+        end
+        if is_missable_08 then
+            entry.lotItemBasePoint08 = 1000
+        else
+            entry.lotItemBasePoint08 = 0
+        end
+        entry.enableLuck01 = 0
+        entry.cumulateLotPoint01 = 0
+        entry.cumulateReset01 = 0
+        entry.enableLuck02 = 0
+        entry.cumulateLotPoint02 = 0
+        entry.cumulateReset02 = 0
+        entry.enableLuck03 = 0
+        entry.cumulateLotPoint03 = 0
+        entry.cumulateReset03 = 0
+        entry.enableLuck04 = 0
+        entry.cumulateLotPoint04 = 0
+        entry.cumulateReset04 = 0
+        entry.enableLuck05 = 0
+        entry.cumulateLotPoint05 = 0
+        entry.cumulateReset05 = 0
+        entry.enableLuck06 = 0
+        entry.cumulateLotPoint06 = 0
+        entry.cumulateReset06 = 0
+        entry.enableLuck07 = 0
+        entry.cumulateLotPoint07 = 0
+        entry.cumulateReset07 = 0
+        entry.enableLuck08 = 0
+        entry.cumulateLotPoint08 = 0
+        entry.cumulateReset08 = 0
+        entry.cumulateNumMax = 0
+    end
+end

@@ -23,9 +23,10 @@ void registerChrModelParam(sol::state *state, sol::table &paramsTable) {
         utChrModelParam["reportAnimMemSizeMb"] = &ChrModelParam::reportAnimMemSizeMb;
         utChrModelParam["unk"] = &ChrModelParam::unk;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ChrModelParam>>(state, L"ChrModelParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ChrModelParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ChrModelParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"modelMemoryType", false},
@@ -36,7 +37,7 @@ void registerChrModelParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ChrModelParam"] = tableLoader;
+    paramsTable["ChrModelParam"] = [tableLoader]() -> auto { return tableLoader(L"ChrModelParam"); };
 }
 
 template<> void ParamTableIndexer<ChrModelParam>::exportToCsvImpl(const std::wstring &csvPath) {

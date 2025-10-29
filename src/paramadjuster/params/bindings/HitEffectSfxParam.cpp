@@ -37,9 +37,10 @@ void registerHitEffectSfxParam(sol::state *state, sol::table &paramsTable) {
         utHitEffectSfxParam["Neutral_Specific1"] = &HitEffectSfxParam::Neutral_Specific1;
         utHitEffectSfxParam["Neutral_Specific2"] = &HitEffectSfxParam::Neutral_Specific2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSfxParam>>(state, L"HitEffectSfxParam");
+        auto indexer = std::make_unique<ParamTableIndexer<HitEffectSfxParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<HitEffectSfxParam>>(nullptr);
         indexer->setFieldNames({
             {"Slash_Normal", false},
             {"Slash_S", false},
@@ -64,7 +65,7 @@ void registerHitEffectSfxParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["HitEffectSfxParam"] = tableLoader;
+    paramsTable["HitEffectSfxParam"] = [tableLoader]() -> auto { return tableLoader(L"HitEffectSfxParam"); };
 }
 
 template<> void ParamTableIndexer<HitEffectSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {

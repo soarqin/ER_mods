@@ -21,9 +21,10 @@ void registerFeTextEffectParam(sol::state *state, sol::table &paramsTable) {
         utFeTextEffectParam["seId"] = &FeTextEffectParam::seId;
         utFeTextEffectParam["canMixMapName"] = sol::property([](FeTextEffectParam &param) -> uint8_t { return param.canMixMapName; }, [](FeTextEffectParam &param, uint8_t value) { param.canMixMapName = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<FeTextEffectParam>>(state, L"FeTextEffectParam");
+        auto indexer = std::make_unique<ParamTableIndexer<FeTextEffectParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<FeTextEffectParam>>(nullptr);
         indexer->setFieldNames({
             {"resId", false},
             {"textId", false},
@@ -32,7 +33,7 @@ void registerFeTextEffectParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["FeTextEffectParam"] = tableLoader;
+    paramsTable["FeTextEffectParam"] = [tableLoader]() -> auto { return tableLoader(L"FeTextEffectParam"); };
 }
 
 template<> void ParamTableIndexer<FeTextEffectParam>::exportToCsvImpl(const std::wstring &csvPath) {

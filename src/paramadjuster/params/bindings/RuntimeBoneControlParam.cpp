@@ -22,9 +22,10 @@ void registerRuntimeBoneControlParam(sol::state *state, sol::table &paramsTable)
         utRuntimeBoneControlParam["targetBone1"] = sol::property([](RuntimeBoneControlParam &param) -> std::string { return param.targetBone1; }, [](RuntimeBoneControlParam &param, const std::string& value) { cStrToFixedStr(param.targetBone1, value); });
         utRuntimeBoneControlParam["targetBone2"] = sol::property([](RuntimeBoneControlParam &param) -> std::string { return param.targetBone2; }, [](RuntimeBoneControlParam &param, const std::string& value) { cStrToFixedStr(param.targetBone2, value); });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<RuntimeBoneControlParam>>(state, L"RuntimeBoneControlParam");
+        auto indexer = std::make_unique<ParamTableIndexer<RuntimeBoneControlParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<RuntimeBoneControlParam>>(nullptr);
         indexer->setFieldNames({
             {"chrId", false},
             {"ctrlType", false},
@@ -34,7 +35,7 @@ void registerRuntimeBoneControlParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["RuntimeBoneControlParam"] = tableLoader;
+    paramsTable["RuntimeBoneControlParam"] = [tableLoader]() -> auto { return tableLoader(L"RuntimeBoneControlParam"); };
 }
 
 template<> void ParamTableIndexer<RuntimeBoneControlParam>::exportToCsvImpl(const std::wstring &csvPath) {

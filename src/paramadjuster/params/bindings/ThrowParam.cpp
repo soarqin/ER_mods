@@ -56,9 +56,10 @@ void registerThrowParam(sol::state *state, sol::table &paramsTable) {
         utThrowParam["adsrobModelPosInterpolationTime"] = &ThrowParam::adsrobModelPosInterpolationTime;
         utThrowParam["throwFollowingEndEasingTime"] = &ThrowParam::throwFollowingEndEasingTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ThrowParam>>(state, L"ThrowParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ThrowParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ThrowParam>>(nullptr);
         indexer->setFieldNames({
             {"AtkChrId", false},
             {"DefChrId", false},
@@ -102,7 +103,7 @@ void registerThrowParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ThrowParam"] = tableLoader;
+    paramsTable["ThrowParam"] = [tableLoader]() -> auto { return tableLoader(L"ThrowParam"); };
 }
 
 template<> void ParamTableIndexer<ThrowParam>::exportToCsvImpl(const std::wstring &csvPath) {

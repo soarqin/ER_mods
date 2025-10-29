@@ -46,9 +46,10 @@ void registerRoleParam(sol::state *state, sol::table &paramsTable) {
         utRoleParam["signPhantomId"] = &RoleParam::signPhantomId;
         utRoleParam["nonPlayerSummonStartAnimId"] = &RoleParam::nonPlayerSummonStartAnimId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<RoleParam>>(state, L"RoleParam");
+        auto indexer = std::make_unique<ParamTableIndexer<RoleParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<RoleParam>>(nullptr);
         indexer->setFieldNames({
             {"teamType", false},
             {"phantomParamId", false},
@@ -82,7 +83,7 @@ void registerRoleParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["RoleParam"] = tableLoader;
+    paramsTable["RoleParam"] = [tableLoader]() -> auto { return tableLoader(L"RoleParam"); };
 }
 
 template<> void ParamTableIndexer<RoleParam>::exportToCsvImpl(const std::wstring &csvPath) {

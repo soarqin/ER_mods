@@ -20,9 +20,10 @@ void registerEquipParamCustomWeapon(sol::state *state, sol::table &paramsTable) 
         utEquipParamCustomWeapon["gemId"] = &EquipParamCustomWeapon::gemId;
         utEquipParamCustomWeapon["reinforceLv"] = &EquipParamCustomWeapon::reinforceLv;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<EquipParamCustomWeapon>>(state, L"EquipParamCustomWeapon");
+        auto indexer = std::make_unique<ParamTableIndexer<EquipParamCustomWeapon>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<EquipParamCustomWeapon>>(nullptr);
         indexer->setFieldNames({
             {"baseWepId", false},
             {"gemId", false},
@@ -30,7 +31,7 @@ void registerEquipParamCustomWeapon(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["EquipParamCustomWeapon"] = tableLoader;
+    paramsTable["EquipParamCustomWeapon"] = [tableLoader]() -> auto { return tableLoader(L"EquipParamCustomWeapon"); };
 }
 
 template<> void ParamTableIndexer<EquipParamCustomWeapon>::exportToCsvImpl(const std::wstring &csvPath) {

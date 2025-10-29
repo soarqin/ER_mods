@@ -35,9 +35,10 @@ void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &p
         utLegacyDistantViewPartsReplaceParam["LimitedMapRegioAssetIdRangeMin"] = &LegacyDistantViewPartsReplaceParam::LimitedMapRegioAssetIdRangeMin;
         utLegacyDistantViewPartsReplaceParam["LimitedMapRegioAssetIdRangeMax"] = &LegacyDistantViewPartsReplaceParam::LimitedMapRegioAssetIdRangeMax;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<LegacyDistantViewPartsReplaceParam>>(state, L"LegacyDistantViewPartsReplaceParam");
+        auto indexer = std::make_unique<ParamTableIndexer<LegacyDistantViewPartsReplaceParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<LegacyDistantViewPartsReplaceParam>>(nullptr);
         indexer->setFieldNames({
             {"TargetMapId", false},
             {"TargetEventId", false},
@@ -60,7 +61,7 @@ void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &p
         });
         return indexer;
     };
-    paramsTable["LegacyDistantViewPartsReplaceParam"] = tableLoader;
+    paramsTable["LegacyDistantViewPartsReplaceParam"] = [tableLoader]() -> auto { return tableLoader(L"LegacyDistantViewPartsReplaceParam"); };
 }
 
 template<> void ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::exportToCsvImpl(const std::wstring &csvPath) {

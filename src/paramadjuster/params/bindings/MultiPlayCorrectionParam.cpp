@@ -22,9 +22,10 @@ void registerMultiPlayCorrectionParam(sol::state *state, sol::table &paramsTable
         utMultiPlayCorrectionParam["client3SpEffectId"] = &MultiPlayCorrectionParam::client3SpEffectId;
         utMultiPlayCorrectionParam["bOverrideSpEffect"] = &MultiPlayCorrectionParam::bOverrideSpEffect;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MultiPlayCorrectionParam>>(state, L"MultiPlayCorrectionParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MultiPlayCorrectionParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MultiPlayCorrectionParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"client1SpEffectId", false},
@@ -34,7 +35,7 @@ void registerMultiPlayCorrectionParam(sol::state *state, sol::table &paramsTable
         });
         return indexer;
     };
-    paramsTable["MultiPlayCorrectionParam"] = tableLoader;
+    paramsTable["MultiPlayCorrectionParam"] = [tableLoader]() -> auto { return tableLoader(L"MultiPlayCorrectionParam"); };
 }
 
 template<> void ParamTableIndexer<MultiPlayCorrectionParam>::exportToCsvImpl(const std::wstring &csvPath) {

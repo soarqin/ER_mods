@@ -20,9 +20,10 @@ void registerCharMakeMenuListItemParam(sol::state *state, sol::table &paramsTabl
         utCharMakeMenuListItemParam["captionId"] = &CharMakeMenuListItemParam::captionId;
         utCharMakeMenuListItemParam["iconId"] = &CharMakeMenuListItemParam::iconId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CharMakeMenuListItemParam>>(state, L"CharMakeMenuListItemParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CharMakeMenuListItemParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CharMakeMenuListItemParam>>(nullptr);
         indexer->setFieldNames({
             {"value", false},
             {"captionId", false},
@@ -30,7 +31,7 @@ void registerCharMakeMenuListItemParam(sol::state *state, sol::table &paramsTabl
         });
         return indexer;
     };
-    paramsTable["CharMakeMenuListItemParam"] = tableLoader;
+    paramsTable["CharMakeMenuListItemParam"] = [tableLoader]() -> auto { return tableLoader(L"CharMakeMenuListItemParam"); };
 }
 
 template<> void ParamTableIndexer<CharMakeMenuListItemParam>::exportToCsvImpl(const std::wstring &csvPath) {

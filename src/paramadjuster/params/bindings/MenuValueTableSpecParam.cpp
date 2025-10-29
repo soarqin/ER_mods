@@ -20,9 +20,10 @@ void registerMenuValueTableSpecParam(sol::state *state, sol::table &paramsTable)
         utMenuValueTableSpecParam["textId"] = &MenuValueTableSpecParam::textId;
         utMenuValueTableSpecParam["compareType"] = &MenuValueTableSpecParam::compareType;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuValueTableSpecParam>>(state, L"MenuValueTableSpecParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuValueTableSpecParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuValueTableSpecParam>>(nullptr);
         indexer->setFieldNames({
             {"value", false},
             {"textId", false},
@@ -30,7 +31,7 @@ void registerMenuValueTableSpecParam(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["MenuValueTableParam"] = tableLoader;
+    paramsTable["MenuValueTableParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuValueTableParam"); };
 }
 
 template<> void ParamTableIndexer<MenuValueTableSpecParam>::exportToCsvImpl(const std::wstring &csvPath) {

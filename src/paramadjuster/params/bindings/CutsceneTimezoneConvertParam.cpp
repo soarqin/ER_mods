@@ -19,16 +19,17 @@ void registerCutsceneTimezoneConvertParam(sol::state *state, sol::table &paramsT
         utCutsceneTimezoneConvertParam["SrcTimezoneStart"] = &CutsceneTimezoneConvertParam::SrcTimezoneStart;
         utCutsceneTimezoneConvertParam["DstCutscenTime"] = &CutsceneTimezoneConvertParam::DstCutscenTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CutsceneTimezoneConvertParam>>(state, L"CutsceneTimezoneConvertParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CutsceneTimezoneConvertParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CutsceneTimezoneConvertParam>>(nullptr);
         indexer->setFieldNames({
             {"SrcTimezoneStart", false},
             {"DstCutscenTime", false},
         });
         return indexer;
     };
-    paramsTable["CutsceneTimezoneConvertParam"] = tableLoader;
+    paramsTable["CutsceneTimezoneConvertParam"] = [tableLoader]() -> auto { return tableLoader(L"CutsceneTimezoneConvertParam"); };
 }
 
 template<> void ParamTableIndexer<CutsceneTimezoneConvertParam>::exportToCsvImpl(const std::wstring &csvPath) {

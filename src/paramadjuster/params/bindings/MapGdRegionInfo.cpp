@@ -19,16 +19,17 @@ void registerMapGdRegionInfo(sol::state *state, sol::table &paramsTable) {
         utMapGdRegionInfo["disableParam_NT"] = sol::property([](MapGdRegionInfo &param) -> uint8_t { return param.disableParam_NT; }, [](MapGdRegionInfo &param, uint8_t value) { param.disableParam_NT = value; });
         utMapGdRegionInfo["mapRegionId"] = &MapGdRegionInfo::mapRegionId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MapGdRegionInfo>>(state, L"MapGdRegionInfo");
+        auto indexer = std::make_unique<ParamTableIndexer<MapGdRegionInfo>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MapGdRegionInfo>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"mapRegionId", false},
         });
         return indexer;
     };
-    paramsTable["MapGdRegionInfoParam"] = tableLoader;
+    paramsTable["MapGdRegionInfoParam"] = [tableLoader]() -> auto { return tableLoader(L"MapGdRegionInfoParam"); };
 }
 
 template<> void ParamTableIndexer<MapGdRegionInfo>::exportToCsvImpl(const std::wstring &csvPath) {

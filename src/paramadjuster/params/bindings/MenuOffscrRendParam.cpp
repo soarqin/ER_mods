@@ -32,9 +32,10 @@ void registerMenuOffscrRendParam(sol::state *state, sol::table &paramsTable) {
         utMenuOffscrRendParam["Grapm_ID_forPS4"] = &MenuOffscrRendParam::Grapm_ID_forPS4;
         utMenuOffscrRendParam["Grapm_ID_forXB1"] = &MenuOffscrRendParam::Grapm_ID_forXB1;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MenuOffscrRendParam>>(state, L"MenuOffscrRendParam");
+        auto indexer = std::make_unique<ParamTableIndexer<MenuOffscrRendParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MenuOffscrRendParam>>(nullptr);
         indexer->setFieldNames({
             {"camAtPosX", false},
             {"camAtPosY", false},
@@ -54,7 +55,7 @@ void registerMenuOffscrRendParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MenuOffscrRendParam"] = tableLoader;
+    paramsTable["MenuOffscrRendParam"] = [tableLoader]() -> auto { return tableLoader(L"MenuOffscrRendParam"); };
 }
 
 template<> void ParamTableIndexer<MenuOffscrRendParam>::exportToCsvImpl(const std::wstring &csvPath) {

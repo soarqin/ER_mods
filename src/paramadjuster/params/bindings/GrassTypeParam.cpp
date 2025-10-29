@@ -52,9 +52,10 @@ void registerGrassTypeParam(sol::state *state, sol::table &paramsTable) {
         utGrassTypeParam["simpleModelName"] = sol::property([](GrassTypeParam &param) -> std::wstring { return param.simpleModelName; }, [](GrassTypeParam &param, const std::wstring& value) { cStrToFixedStrW(param.simpleModelName, value); });
         utGrassTypeParam["model1Name"] = sol::property([](GrassTypeParam &param) -> std::wstring { return param.model1Name; }, [](GrassTypeParam &param, const std::wstring& value) { cStrToFixedStrW(param.model1Name, value); });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<GrassTypeParam>>(state, L"GrassTypeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<GrassTypeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<GrassTypeParam>>(nullptr);
         indexer->setFieldNames({
             {"lodRange", false},
             {"lod0ClusterType", false},
@@ -94,9 +95,9 @@ void registerGrassTypeParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["GrassTypeParam"] = tableLoader;
-    paramsTable["GrassTypeParam_Lv1"] = tableLoader;
-    paramsTable["GrassTypeParam_Lv2"] = tableLoader;
+    paramsTable["GrassTypeParam"] = [tableLoader]() -> auto { return tableLoader(L"GrassTypeParam"); };
+    paramsTable["GrassTypeParam_Lv1"] = [tableLoader]() -> auto { return tableLoader(L"GrassTypeParam_Lv1"); };
+    paramsTable["GrassTypeParam_Lv2"] = [tableLoader]() -> auto { return tableLoader(L"GrassTypeParam_Lv2"); };
 }
 
 template<> void ParamTableIndexer<GrassTypeParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -20,9 +20,10 @@ void registerSignPuddleSubCategoryParam(sol::state *state, sol::table &paramsTab
         utSignPuddleSubCategoryParam["signPuddleTabId"] = &SignPuddleSubCategoryParam::signPuddleTabId;
         utSignPuddleSubCategoryParam["unknown_0xa"] = &SignPuddleSubCategoryParam::unknown_0xa;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleSubCategoryParam>>(state, L"SignPuddleSubCategoryParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleSubCategoryParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SignPuddleSubCategoryParam>>(nullptr);
         indexer->setFieldNames({
             {"signPuddleCategoryText", false},
             {"signPuddleTabId", false},
@@ -30,7 +31,7 @@ void registerSignPuddleSubCategoryParam(sol::state *state, sol::table &paramsTab
         });
         return indexer;
     };
-    paramsTable["SignPuddleSubCategoryParam"] = tableLoader;
+    paramsTable["SignPuddleSubCategoryParam"] = [tableLoader]() -> auto { return tableLoader(L"SignPuddleSubCategoryParam"); };
 }
 
 template<> void ParamTableIndexer<SignPuddleSubCategoryParam>::exportToCsvImpl(const std::wstring &csvPath) {

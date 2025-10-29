@@ -30,9 +30,10 @@ void registerWorldMapPieceParam(sol::state *state, sol::table &paramsTable) {
         utWorldMapPieceParam["acquisitionEventResOffsetX"] = &WorldMapPieceParam::acquisitionEventResOffsetX;
         utWorldMapPieceParam["acquisitionEventResOffsetY"] = &WorldMapPieceParam::acquisitionEventResOffsetY;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPieceParam>>(state, L"WorldMapPieceParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WorldMapPieceParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WorldMapPieceParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"openEventFlagId", false},
@@ -50,7 +51,7 @@ void registerWorldMapPieceParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["WorldMapPieceParam"] = tableLoader;
+    paramsTable["WorldMapPieceParam"] = [tableLoader]() -> auto { return tableLoader(L"WorldMapPieceParam"); };
 }
 
 template<> void ParamTableIndexer<WorldMapPieceParam>::exportToCsvImpl(const std::wstring &csvPath) {

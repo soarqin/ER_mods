@@ -24,9 +24,10 @@ void registerToughnessParam(sol::state *state, sol::table &paramsTable) {
         utToughnessParam["unk1"] = &ToughnessParam::unk1;
         utToughnessParam["unk2"] = &ToughnessParam::unk2;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ToughnessParam>>(state, L"ToughnessParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ToughnessParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ToughnessParam>>(nullptr);
         indexer->setFieldNames({
             {"correctionRate", false},
             {"minToughness", false},
@@ -38,7 +39,7 @@ void registerToughnessParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ToughnessParam"] = tableLoader;
+    paramsTable["ToughnessParam"] = [tableLoader]() -> auto { return tableLoader(L"ToughnessParam"); };
 }
 
 template<> void ParamTableIndexer<ToughnessParam>::exportToCsvImpl(const std::wstring &csvPath) {

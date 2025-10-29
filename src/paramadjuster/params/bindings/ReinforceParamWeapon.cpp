@@ -55,9 +55,10 @@ void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
         utReinforceParamWeapon["madnessGuardDefRate"] = &ReinforceParamWeapon::madnessGuardDefRate;
         utReinforceParamWeapon["baseAtkRate"] = &ReinforceParamWeapon::baseAtkRate;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ReinforceParamWeapon>>(state, L"ReinforceParamWeapon");
+        auto indexer = std::make_unique<ParamTableIndexer<ReinforceParamWeapon>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ReinforceParamWeapon>>(nullptr);
         indexer->setFieldNames({
             {"physicsAtkRate", false},
             {"magicAtkRate", false},
@@ -100,7 +101,7 @@ void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ReinforceParamWeapon"] = tableLoader;
+    paramsTable["ReinforceParamWeapon"] = [tableLoader]() -> auto { return tableLoader(L"ReinforceParamWeapon"); };
 }
 
 template<> void ParamTableIndexer<ReinforceParamWeapon>::exportToCsvImpl(const std::wstring &csvPath) {

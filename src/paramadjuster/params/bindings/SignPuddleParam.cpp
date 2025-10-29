@@ -30,9 +30,10 @@ void registerSignPuddleParam(sol::state *state, sol::table &paramsTable) {
         utSignPuddleParam["locationTextId"] = &SignPuddleParam::locationTextId;
         utSignPuddleParam["sortId"] = &SignPuddleParam::sortId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleParam>>(state, L"SignPuddleParam");
+        auto indexer = std::make_unique<ParamTableIndexer<SignPuddleParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<SignPuddleParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"matchAreaId", false},
@@ -50,7 +51,7 @@ void registerSignPuddleParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["SignPuddleParam"] = tableLoader;
+    paramsTable["SignPuddleParam"] = [tableLoader]() -> auto { return tableLoader(L"SignPuddleParam"); };
 }
 
 template<> void ParamTableIndexer<SignPuddleParam>::exportToCsvImpl(const std::wstring &csvPath) {

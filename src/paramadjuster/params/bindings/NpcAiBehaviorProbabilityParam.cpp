@@ -217,9 +217,10 @@ void registerNpcAiBehaviorProbabilityParam(sol::state *state, sol::table &params
         utNpcAiBehaviorProbabilityParam["param198"] = &NpcAiBehaviorProbabilityParam::param198;
         utNpcAiBehaviorProbabilityParam["param199"] = &NpcAiBehaviorProbabilityParam::param199;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<NpcAiBehaviorProbabilityParam>>(state, L"NpcAiBehaviorProbabilityParam");
+        auto indexer = std::make_unique<ParamTableIndexer<NpcAiBehaviorProbabilityParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<NpcAiBehaviorProbabilityParam>>(nullptr);
         indexer->setFieldNames({
             {"param000", false},
             {"param001", false},
@@ -424,7 +425,7 @@ void registerNpcAiBehaviorProbabilityParam(sol::state *state, sol::table &params
         });
         return indexer;
     };
-    paramsTable["NpcAiBehaviorProbability"] = tableLoader;
+    paramsTable["NpcAiBehaviorProbability"] = [tableLoader]() -> auto { return tableLoader(L"NpcAiBehaviorProbability"); };
 }
 
 template<> void ParamTableIndexer<NpcAiBehaviorProbabilityParam>::exportToCsvImpl(const std::wstring &csvPath) {

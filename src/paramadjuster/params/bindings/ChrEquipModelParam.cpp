@@ -20,9 +20,10 @@ void registerChrEquipModelParam(sol::state *state, sol::table &paramsTable) {
         utChrEquipModelParam["unknown_0x4"] = &ChrEquipModelParam::unknown_0x4;
         utChrEquipModelParam["unknown_0x8"] = &ChrEquipModelParam::unknown_0x8;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ChrEquipModelParam>>(state, L"ChrEquipModelParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ChrEquipModelParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ChrEquipModelParam>>(nullptr);
         indexer->setFieldNames({
             {"unknown_0x0", false},
             {"unknown_0x4", false},
@@ -30,7 +31,7 @@ void registerChrEquipModelParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ChrEquipModelParam"] = tableLoader;
+    paramsTable["ChrEquipModelParam"] = [tableLoader]() -> auto { return tableLoader(L"ChrEquipModelParam"); };
 }
 
 template<> void ParamTableIndexer<ChrEquipModelParam>::exportToCsvImpl(const std::wstring &csvPath) {

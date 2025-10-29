@@ -222,9 +222,10 @@ void registerAtkParam(sol::state *state, sol::table &paramsTable) {
         utAtkParam["subCategory3"] = &AtkParam::subCategory3;
         utAtkParam["subCategory4"] = &AtkParam::subCategory4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<AtkParam>>(state, L"AtkParam");
+        auto indexer = std::make_unique<ParamTableIndexer<AtkParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<AtkParam>>(nullptr);
         indexer->setFieldNames({
             {"hit0_Radius", false},
             {"hit1_Radius", false},
@@ -434,8 +435,8 @@ void registerAtkParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["AtkParam_Npc"] = tableLoader;
-    paramsTable["AtkParam_Pc"] = tableLoader;
+    paramsTable["AtkParam_Npc"] = [tableLoader]() -> auto { return tableLoader(L"AtkParam_Npc"); };
+    paramsTable["AtkParam_Pc"] = [tableLoader]() -> auto { return tableLoader(L"AtkParam_Pc"); };
 }
 
 template<> void ParamTableIndexer<AtkParam>::exportToCsvImpl(const std::wstring &csvPath) {

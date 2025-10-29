@@ -21,9 +21,10 @@ void registerBonfireWarpSubCategoryParam(sol::state *state, sol::table &paramsTa
         utBonfireWarpSubCategoryParam["tabId"] = &BonfireWarpSubCategoryParam::tabId;
         utBonfireWarpSubCategoryParam["sortId"] = &BonfireWarpSubCategoryParam::sortId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BonfireWarpSubCategoryParam>>(state, L"BonfireWarpSubCategoryParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BonfireWarpSubCategoryParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BonfireWarpSubCategoryParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"textId", false},
@@ -32,7 +33,7 @@ void registerBonfireWarpSubCategoryParam(sol::state *state, sol::table &paramsTa
         });
         return indexer;
     };
-    paramsTable["BonfireWarpSubCategoryParam"] = tableLoader;
+    paramsTable["BonfireWarpSubCategoryParam"] = [tableLoader]() -> auto { return tableLoader(L"BonfireWarpSubCategoryParam"); };
 }
 
 template<> void ParamTableIndexer<BonfireWarpSubCategoryParam>::exportToCsvImpl(const std::wstring &csvPath) {

@@ -40,9 +40,10 @@ void registerActionButtonParam(sol::state *state, sol::table &paramsTable) {
         utActionButtonParam["overrideActionButtonIdForRide"] = &ActionButtonParam::overrideActionButtonIdForRide;
         utActionButtonParam["execInvalidTime"] = &ActionButtonParam::execInvalidTime;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ActionButtonParam>>(state, L"ActionButtonParam");
+        auto indexer = std::make_unique<ParamTableIndexer<ActionButtonParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ActionButtonParam>>(nullptr);
         indexer->setFieldNames({
             {"regionType", false},
             {"category", false},
@@ -70,7 +71,7 @@ void registerActionButtonParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["ActionButtonParam"] = tableLoader;
+    paramsTable["ActionButtonParam"] = [tableLoader]() -> auto { return tableLoader(L"ActionButtonParam"); };
 }
 
 template<> void ParamTableIndexer<ActionButtonParam>::exportToCsvImpl(const std::wstring &csvPath) {

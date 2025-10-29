@@ -104,9 +104,10 @@ void registerDecalParam(sol::state *state, sol::table &paramsTable) {
         utDecalParam["emissiveColorB"] = &DecalParam::emissiveColorB;
         utDecalParam["maxDecalSfxCreatableSlopeAngleDeg"] = &DecalParam::maxDecalSfxCreatableSlopeAngleDeg;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<DecalParam>>(state, L"DecalParam");
+        auto indexer = std::make_unique<ParamTableIndexer<DecalParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<DecalParam>>(nullptr);
         indexer->setFieldNames({
             {"textureId", false},
             {"dmypolyId", false},
@@ -198,7 +199,7 @@ void registerDecalParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["DecalParam"] = tableLoader;
+    paramsTable["DecalParam"] = [tableLoader]() -> auto { return tableLoader(L"DecalParam"); };
 }
 
 template<> void ParamTableIndexer<DecalParam>::exportToCsvImpl(const std::wstring &csvPath) {

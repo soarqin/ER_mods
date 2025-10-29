@@ -21,9 +21,10 @@ void registerWhiteSignCoolTimeParam(sol::state *state, sol::table &paramsTable) 
         utWhiteSignCoolTimeParam["limitationTime_Guardian"] = &WhiteSignCoolTimeParam::limitationTime_Guardian;
         utWhiteSignCoolTimeParam["limitationTime_GuardianDriedFinger"] = &WhiteSignCoolTimeParam::limitationTime_GuardianDriedFinger;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<WhiteSignCoolTimeParam>>(state, L"WhiteSignCoolTimeParam");
+        auto indexer = std::make_unique<ParamTableIndexer<WhiteSignCoolTimeParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<WhiteSignCoolTimeParam>>(nullptr);
         indexer->setFieldNames({
             {"limitationTime_Normal", false},
             {"limitationTime_NormalDriedFinger", false},
@@ -32,7 +33,7 @@ void registerWhiteSignCoolTimeParam(sol::state *state, sol::table &paramsTable) 
         });
         return indexer;
     };
-    paramsTable["WhiteSignCoolTimeParam"] = tableLoader;
+    paramsTable["WhiteSignCoolTimeParam"] = [tableLoader]() -> auto { return tableLoader(L"WhiteSignCoolTimeParam"); };
 }
 
 template<> void ParamTableIndexer<WhiteSignCoolTimeParam>::exportToCsvImpl(const std::wstring &csvPath) {

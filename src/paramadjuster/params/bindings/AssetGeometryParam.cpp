@@ -145,9 +145,10 @@ void registerAssetGeometryParam(sol::state *state, sol::table &paramsTable) {
         utAssetGeometryParam["unknown_0x124"] = &AssetGeometryParam::unknown_0x124;
         utAssetGeometryParam["unknown_0x125"] = &AssetGeometryParam::unknown_0x125;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<AssetGeometryParam>>(state, L"AssetGeometryParam");
+        auto indexer = std::make_unique<ParamTableIndexer<AssetGeometryParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<AssetGeometryParam>>(nullptr);
         indexer->setFieldNames({
             {"soundBankId", false},
             {"soundBreakSEId", false},
@@ -280,7 +281,7 @@ void registerAssetGeometryParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["AssetEnvironmentGeometryParam"] = tableLoader;
+    paramsTable["AssetEnvironmentGeometryParam"] = [tableLoader]() -> auto { return tableLoader(L"AssetEnvironmentGeometryParam"); };
 }
 
 template<> void ParamTableIndexer<AssetGeometryParam>::exportToCsvImpl(const std::wstring &csvPath) {

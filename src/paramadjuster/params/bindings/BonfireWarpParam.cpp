@@ -90,9 +90,10 @@ void registerBonfireWarpParam(sol::state *state, sol::table &paramsTable) {
         utBonfireWarpParam["altIconId"] = &BonfireWarpParam::altIconId;
         utBonfireWarpParam["altForbiddenIconId"] = &BonfireWarpParam::altForbiddenIconId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<BonfireWarpParam>>(state, L"BonfireWarpParam");
+        auto indexer = std::make_unique<ParamTableIndexer<BonfireWarpParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<BonfireWarpParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"eventflagId", false},
@@ -170,7 +171,7 @@ void registerBonfireWarpParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["BonfireWarpParam"] = tableLoader;
+    paramsTable["BonfireWarpParam"] = [tableLoader]() -> auto { return tableLoader(L"BonfireWarpParam"); };
 }
 
 template<> void ParamTableIndexer<BonfireWarpParam>::exportToCsvImpl(const std::wstring &csvPath) {

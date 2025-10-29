@@ -24,9 +24,10 @@ void registerMaterialEx(sol::state *state, sol::table &paramsTable) {
         utMaterialEx["materialParamValue3"] = &MaterialEx::materialParamValue3;
         utMaterialEx["materialParamValue4"] = &MaterialEx::materialParamValue4;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<MaterialEx>>(state, L"MaterialEx");
+        auto indexer = std::make_unique<ParamTableIndexer<MaterialEx>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<MaterialEx>>(nullptr);
         indexer->setFieldNames({
             {"paramName", true},
             {"materialId", false},
@@ -38,7 +39,7 @@ void registerMaterialEx(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["MaterialExParam"] = tableLoader;
+    paramsTable["MaterialExParam"] = [tableLoader]() -> auto { return tableLoader(L"MaterialExParam"); };
 }
 
 template<> void ParamTableIndexer<MaterialEx>::exportToCsvImpl(const std::wstring &csvPath) {

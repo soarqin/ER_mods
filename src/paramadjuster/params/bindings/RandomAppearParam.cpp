@@ -117,9 +117,10 @@ void registerRandomAppearParam(sol::state *state, sol::table &paramsTable) {
         utRandomAppearParam["slot98"] = sol::property([](RandomAppearParam &param) -> uint8_t { return param.slot98; }, [](RandomAppearParam &param, uint8_t value) { param.slot98 = value; });
         utRandomAppearParam["slot99"] = sol::property([](RandomAppearParam &param) -> uint8_t { return param.slot99; }, [](RandomAppearParam &param, uint8_t value) { param.slot99 = value; });
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<RandomAppearParam>>(state, L"RandomAppearParam");
+        auto indexer = std::make_unique<ParamTableIndexer<RandomAppearParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<RandomAppearParam>>(nullptr);
         indexer->setFieldNames({
             {"slot0", false},
             {"slot1", false},
@@ -224,7 +225,7 @@ void registerRandomAppearParam(sol::state *state, sol::table &paramsTable) {
         });
         return indexer;
     };
-    paramsTable["RandomAppearParam"] = tableLoader;
+    paramsTable["RandomAppearParam"] = [tableLoader]() -> auto { return tableLoader(L"RandomAppearParam"); };
 }
 
 template<> void ParamTableIndexer<RandomAppearParam>::exportToCsvImpl(const std::wstring &csvPath) {

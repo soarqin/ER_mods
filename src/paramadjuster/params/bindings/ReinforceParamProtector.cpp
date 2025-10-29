@@ -36,9 +36,10 @@ void registerReinforceParamProtector(sol::state *state, sol::table &paramsTable)
         utReinforceParamProtector["resistSleepRate"] = &ReinforceParamProtector::resistSleepRate;
         utReinforceParamProtector["resistMadnessRate"] = &ReinforceParamProtector::resistMadnessRate;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<ReinforceParamProtector>>(state, L"ReinforceParamProtector");
+        auto indexer = std::make_unique<ParamTableIndexer<ReinforceParamProtector>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<ReinforceParamProtector>>(nullptr);
         indexer->setFieldNames({
             {"physicsDefRate", false},
             {"magicDefRate", false},
@@ -62,7 +63,7 @@ void registerReinforceParamProtector(sol::state *state, sol::table &paramsTable)
         });
         return indexer;
     };
-    paramsTable["ReinforceParamProtector"] = tableLoader;
+    paramsTable["ReinforceParamProtector"] = [tableLoader]() -> auto { return tableLoader(L"ReinforceParamProtector"); };
 }
 
 template<> void ParamTableIndexer<ReinforceParamProtector>::exportToCsvImpl(const std::wstring &csvPath) {

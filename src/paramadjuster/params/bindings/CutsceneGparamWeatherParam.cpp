@@ -67,9 +67,10 @@ void registerCutsceneGparamWeatherParam(sol::state *state, sol::table &paramsTab
         utCutsceneGparamWeatherParam["IsEnableApplyMapGdRegionIdForGparam"] = &CutsceneGparamWeatherParam::IsEnableApplyMapGdRegionIdForGparam;
         utCutsceneGparamWeatherParam["OverrideMapGdRegionId"] = &CutsceneGparamWeatherParam::OverrideMapGdRegionId;
     };
-    auto tableLoader = [delayInit = std::move(delayInit), state]() -> auto {
+    auto tableLoader = [delayInit = std::move(delayInit), state](const wchar_t *tableName) -> auto {
         delayInit();
-        auto indexer = std::make_unique<ParamTableIndexer<CutsceneGparamWeatherParam>>(state, L"CutsceneGparamWeatherParam");
+        auto indexer = std::make_unique<ParamTableIndexer<CutsceneGparamWeatherParam>>(state, tableName);
+        if (!indexer->isValid()) return std::unique_ptr<ParamTableIndexer<CutsceneGparamWeatherParam>>(nullptr);
         indexer->setFieldNames({
             {"disableParam_NT", false},
             {"disableParam_Debug", false},
@@ -124,7 +125,7 @@ void registerCutsceneGparamWeatherParam(sol::state *state, sol::table &paramsTab
         });
         return indexer;
     };
-    paramsTable["CutsceneGparamWeatherParam"] = tableLoader;
+    paramsTable["CutsceneGparamWeatherParam"] = [tableLoader]() -> auto { return tableLoader(L"CutsceneGparamWeatherParam"); };
 }
 
 template<> void ParamTableIndexer<CutsceneGparamWeatherParam>::exportToCsvImpl(const std::wstring &csvPath) {
