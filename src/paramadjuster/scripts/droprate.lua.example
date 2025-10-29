@@ -1,6 +1,7 @@
 -- This script sets drop rate to 100% for all randomly droppable weapons/armors from enemies.
 
 local is_missable_equipment = function(base_point, category, item_id)
+    -- If the category is 3(Protector) or 2 (Weapon)(except darts and arrows), and drop rate is in (0, 1000)
     return (category == 3 or (category == 2 and ((item_id >= 1000000 and item_id < 43100000) or item_id >= 60000000))) and base_point > 0 and base_point < 1000
 end
 
@@ -15,7 +16,9 @@ for i = 0, ilpTable.count - 1 do
     local is_missable_06 = is_missable_equipment(entry.lotItemBasePoint06,entry.lotItemCategory06, entry.lotItemId06)
     local is_missable_07 = is_missable_equipment(entry.lotItemBasePoint07,entry.lotItemCategory07, entry.lotItemId07)
     local is_missable_08 = is_missable_equipment(entry.lotItemBasePoint08,entry.lotItemCategory08, entry.lotItemId08)
+    -- If any slot is missable
     if is_missable_01 or is_missable_02 or is_missable_03 or is_missable_04 or is_missable_05 or is_missable_06 or is_missable_07 or is_missable_08 then
+        -- Set missable item drop rate to 1000, and othter items to 0
         if is_missable_01 then
             entry.lotItemBasePoint01 = 1000
         else
@@ -56,6 +59,7 @@ for i = 0, ilpTable.count - 1 do
         else
             entry.lotItemBasePoint08 = 0
         end
+        -- Set other affecting fields to zero
         entry.enableLuck01 = 0
         entry.cumulateLotPoint01 = 0
         entry.cumulateReset01 = 0
