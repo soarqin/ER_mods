@@ -62,7 +62,8 @@ void registerWeatherAssetReplaceParam(sol::state *state, sol::table &paramsTable
 
 template<> void ParamTableIndexer<WeatherAssetReplaceParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,mapId,TransitionSrcWeather,isFireAsh,reserved2,AssetId0,AssetId1,AssetId2,AssetId3,AssetId4,AssetId5,AssetId6,AssetId7,CreateAssetLimitId0,CreateAssetLimitId1,CreateAssetLimitId2,CreateAssetLimitId3\n");
+    fwprintf(f, L"ID,mapId,TransitionSrcWeather,isFireAsh,reserved2,AssetId0,AssetId1,AssetId2,AssetId3,AssetId4,AssetId5,AssetId6,AssetId7,CreateAssetLimitId0,CreateAssetLimitId1,CreateAssetLimitId2");
+    fwprintf(f, L",CreateAssetLimitId3\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

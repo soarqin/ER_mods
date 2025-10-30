@@ -86,7 +86,8 @@ void registerPhantomParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<PhantomParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,edgeColorA,frontColorA,diffMulColorA,specMulColorA,lightColorA,edgeColorR,edgeColorG,edgeColorB,frontColorR,frontColorG,frontColorB,diffMulColorR,diffMulColorG,diffMulColorB,specMulColorR,specMulColorG,specMulColorB,lightColorR,lightColorG,lightColorB,alpha,blendRate,blendType,isEdgeSubtract,isFrontSubtract,isNo2Pass,edgePower,glowScale\n");
+    fwprintf(f, L"ID,edgeColorA,frontColorA,diffMulColorA,specMulColorA,lightColorA,edgeColorR,edgeColorG,edgeColorB,frontColorR,frontColorG,frontColorB,diffMulColorR,diffMulColorG,diffMulColorB,specMulColorR");
+    fwprintf(f, L",specMulColorG,specMulColorB,lightColorR,lightColorG,lightColorB,alpha,blendRate,blendType,isEdgeSubtract,isFrontSubtract,isNo2Pass,edgePower,glowScale\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

@@ -53,6 +53,7 @@
 #include "defs/FinalDamageRateParam.h"
 #include "defs/FootSfxParam.h"
 #include "defs/GameAreaParam.h"
+#include "defs/GameSystemCommonParam.h"
 #include "defs/GestureParam.h"
 #include "defs/GparamRefSettingsParam.h"
 #include "defs/GrassLodRangeParam.h"

@@ -55,6 +55,7 @@ extern void registerFeTextEffectParam(sol::state *state, sol::table &paramsTable
 extern void registerFinalDamageRateParam(sol::state *state, sol::table &paramsTable);
 extern void registerFootSfxParam(sol::state *state, sol::table &paramsTable);
 extern void registerGameAreaParam(sol::state *state, sol::table &paramsTable);
+extern void registerGameSystemCommonParam(sol::state *state, sol::table &paramsTable);
 extern void registerGestureParam(sol::state *state, sol::table &paramsTable);
 extern void registerGparamRefSettingsParam(sol::state *state, sol::table &paramsTable);
 extern void registerGrassLodRangeParam(sol::state *state, sol::table &paramsTable);
@@ -202,6 +203,7 @@ void registerAll(sol::state *state, sol::table &paramsTable) {
     registerFinalDamageRateParam(state, paramsTable);
     registerFootSfxParam(state, paramsTable);
     registerGameAreaParam(state, paramsTable);
+    registerGameSystemCommonParam(state, paramsTable);
     registerGestureParam(state, paramsTable);
     registerGparamRefSettingsParam(state, paramsTable);
     registerGrassLodRangeParam(state, paramsTable);

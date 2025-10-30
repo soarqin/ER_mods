@@ -64,7 +64,8 @@ void registerAssetModelSfxParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<AssetModelSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,sfxId_0,dmypolyId_0,sfxId_1,dmypolyId_1,sfxId_2,dmypolyId_2,sfxId_3,dmypolyId_3,sfxId_4,dmypolyId_4,sfxId_5,dmypolyId_5,sfxId_6,dmypolyId_6,sfxId_7,dmypolyId_7,isDisableIV\n");
+    fwprintf(f, L"ID,sfxId_0,dmypolyId_0,sfxId_1,dmypolyId_1,sfxId_2,dmypolyId_2,sfxId_3,dmypolyId_3,sfxId_4,dmypolyId_4,sfxId_5,dmypolyId_5,sfxId_6,dmypolyId_6,sfxId_7");
+    fwprintf(f, L",dmypolyId_7,isDisableIV\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

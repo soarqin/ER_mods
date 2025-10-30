@@ -68,7 +68,8 @@ void registerCalcCorrectGraph(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<CalcCorrectGraph>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,stageMaxVal0,stageMaxVal1,stageMaxVal2,stageMaxVal3,stageMaxVal4,stageMaxGrowVal0,stageMaxGrowVal1,stageMaxGrowVal2,stageMaxGrowVal3,stageMaxGrowVal4,adjPt_maxGrowVal0,adjPt_maxGrowVal1,adjPt_maxGrowVal2,adjPt_maxGrowVal3,adjPt_maxGrowVal4,init_inclination_soul,adjustment_value,boundry_inclination_soul,boundry_value\n");
+    fwprintf(f, L"ID,stageMaxVal0,stageMaxVal1,stageMaxVal2,stageMaxVal3,stageMaxVal4,stageMaxGrowVal0,stageMaxGrowVal1,stageMaxGrowVal2,stageMaxGrowVal3,stageMaxGrowVal4,adjPt_maxGrowVal0,adjPt_maxGrowVal1,adjPt_maxGrowVal2,adjPt_maxGrowVal3,adjPt_maxGrowVal4");
+    fwprintf(f, L",init_inclination_soul,adjustment_value,boundry_inclination_soul,boundry_value\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

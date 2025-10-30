@@ -82,7 +82,8 @@ void registerBudgetParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<BudgetParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,vram_all,vram_mapobj_tex,vram_mapobj_mdl,vram_map,vram_chr,vram_parts,vram_sfx,vram_chr_tex,vram_chr_mdl,vram_parts_tex,vram_parts_mdl,vram_sfx_tex,vram_sfx_mdl,vram_gi,vram_menu_tex,vram_decal_rt,vram_decal,vram_other_tex,vram_other_mdl,havok_anim,havok_ins,havok_hit,vram_other,vram_detail_all,vram_chr_and_parts,havok_navimesh\n");
+    fwprintf(f, L"ID,vram_all,vram_mapobj_tex,vram_mapobj_mdl,vram_map,vram_chr,vram_parts,vram_sfx,vram_chr_tex,vram_chr_mdl,vram_parts_tex,vram_parts_mdl,vram_sfx_tex,vram_sfx_mdl,vram_gi,vram_menu_tex");
+    fwprintf(f, L",vram_decal_rt,vram_decal,vram_other_tex,vram_other_mdl,havok_anim,havok_ins,havok_hit,vram_other,vram_detail_all,vram_chr_and_parts,havok_navimesh\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

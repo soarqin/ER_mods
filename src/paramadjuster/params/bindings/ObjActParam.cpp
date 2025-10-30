@@ -76,7 +76,8 @@ void registerObjActParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<ObjActParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,actionEnableMsgId,actionFailedMsgId,spQualifiedPassEventFlag,playerAnimId,chrAnimId,validDist,spQualifiedId_old,spQualifiedId2_old,objDummyId,isEventKickSync,objAnimId,validPlayerAngle,spQualifiedType,spQualifiedType2,validObjAngle,chrSorbType,eventKickTiming,actionButtonParamId,enableTreasureDelaySec,preActionSfxDmypolyId,preActionSfxId,spQualifiedId_new,spQualifiedId2_new\n");
+    fwprintf(f, L"ID,actionEnableMsgId,actionFailedMsgId,spQualifiedPassEventFlag,playerAnimId,chrAnimId,validDist,spQualifiedId_old,spQualifiedId2_old,objDummyId,isEventKickSync,objAnimId,validPlayerAngle,spQualifiedType,spQualifiedType2,validObjAngle");
+    fwprintf(f, L",chrSorbType,eventKickTiming,actionButtonParamId,enableTreasureDelaySec,preActionSfxDmypolyId,preActionSfxId,spQualifiedId_new,spQualifiedId2_new\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

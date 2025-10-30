@@ -94,7 +94,9 @@ void registerAssetMaterialSfxParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<AssetMaterialSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,sfxId_00,sfxId_01,sfxId_02,sfxId_03,sfxId_04,sfxId_05,sfxId_06,sfxId_07,sfxId_08,sfxId_09,sfxId_10,sfxId_11,sfxId_12,sfxId_13,sfxId_14,sfxId_15,sfxId_16,sfxId_17,sfxId_18,sfxId_19,sfxId_20,sfxId_21,sfxId_22,sfxId_23,sfxId_24,sfxId_25,sfxId_26,sfxId_27,sfxId_28,sfxId_29,sfxId_30,sfxId_31\n");
+    fwprintf(f, L"ID,sfxId_00,sfxId_01,sfxId_02,sfxId_03,sfxId_04,sfxId_05,sfxId_06,sfxId_07,sfxId_08,sfxId_09,sfxId_10,sfxId_11,sfxId_12,sfxId_13,sfxId_14");
+    fwprintf(f, L",sfxId_15,sfxId_16,sfxId_17,sfxId_18,sfxId_19,sfxId_20,sfxId_21,sfxId_22,sfxId_23,sfxId_24,sfxId_25,sfxId_26,sfxId_27,sfxId_28,sfxId_29,sfxId_30");
+    fwprintf(f, L",sfxId_31\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

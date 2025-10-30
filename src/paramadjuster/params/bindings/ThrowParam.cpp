@@ -108,7 +108,9 @@ void registerThrowParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<ThrowParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,AtkChrId,DefChrId,Dist,DiffAngMin,DiffAngMax,upperYRange,lowerYRange,diffAngMyToDef,throwTypeId,atkAnimId,defAnimId,escHp,selfEscCycleTime,sphereCastRadiusRateTop,sphereCastRadiusRateLow,PadType,AtkEnableState,throwFollowingType,throwType,selfEscCycleCnt,dmyHasChrDirType,isTurnAtker,isSkipWepCate,isSkipSphereCast,isEnableCorrectPos_forThrowAdjust,isEnableThrowFollowingFallAssist,isEnableThrowFollowingFeedback,atkSorbDmyId,defSorbDmyId,Dist_start,DiffAngMin_start,DiffAngMax_start,upperYRange_start,lowerYRange_start,diffAngMyToDef_start,judgeRangeBasePosDmyId1,judgeRangeBasePosDmyId2,adsrobModelPosInterpolationTime,throwFollowingEndEasingTime\n");
+    fwprintf(f, L"ID,AtkChrId,DefChrId,Dist,DiffAngMin,DiffAngMax,upperYRange,lowerYRange,diffAngMyToDef,throwTypeId,atkAnimId,defAnimId,escHp,selfEscCycleTime,sphereCastRadiusRateTop,sphereCastRadiusRateLow");
+    fwprintf(f, L",PadType,AtkEnableState,throwFollowingType,throwType,selfEscCycleCnt,dmyHasChrDirType,isTurnAtker,isSkipWepCate,isSkipSphereCast,isEnableCorrectPos_forThrowAdjust,isEnableThrowFollowingFallAssist,isEnableThrowFollowingFeedback,atkSorbDmyId,defSorbDmyId,Dist_start,DiffAngMin_start");
+    fwprintf(f, L",DiffAngMax_start,upperYRange_start,lowerYRange_start,diffAngMyToDef_start,judgeRangeBasePosDmyId1,judgeRangeBasePosDmyId2,adsrobModelPosInterpolationTime,throwFollowingEndEasingTime\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

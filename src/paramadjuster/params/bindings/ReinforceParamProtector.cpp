@@ -68,7 +68,8 @@ void registerReinforceParamProtector(sol::state *state, sol::table &paramsTable)
 
 template<> void ParamTableIndexer<ReinforceParamProtector>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,physicsDefRate,magicDefRate,fireDefRate,thunderDefRate,slashDefRate,blowDefRate,thrustDefRate,resistPoisonRate,resistDiseaseRate,resistBloodRate,resistCurseRate,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,materialSetId,darkDefRate,resistFreezeRate,resistSleepRate,resistMadnessRate\n");
+    fwprintf(f, L"ID,physicsDefRate,magicDefRate,fireDefRate,thunderDefRate,slashDefRate,blowDefRate,thrustDefRate,resistPoisonRate,resistDiseaseRate,resistBloodRate,resistCurseRate,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,materialSetId");
+    fwprintf(f, L",darkDefRate,resistFreezeRate,resistSleepRate,resistMadnessRate\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

@@ -108,7 +108,9 @@ void registerMoveParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<MoveParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,stayId,walkF,walkB,walkL,walkR,dashF,dashB,dashL,dashR,superDash,escapeF,escapeB,escapeL,escapeR,turnL,trunR,largeTurnL,largeTurnR,stepMove,flyStay,flyWalkF,flyWalkFL,flyWalkFR,flyWalkFL2,flyWalkFR2,flyDashF,flyDashFL,flyDashFR,flyDashFL2,flyDashFR2,dashEscapeF,dashEscapeB,dashEscapeL,dashEscapeR,analogMoveParamId,turnNoAnimAngle,turn45Angle,turn90Angle,turnWaitNoAnimAngle\n");
+    fwprintf(f, L"ID,stayId,walkF,walkB,walkL,walkR,dashF,dashB,dashL,dashR,superDash,escapeF,escapeB,escapeL,escapeR,turnL");
+    fwprintf(f, L",trunR,largeTurnL,largeTurnR,stepMove,flyStay,flyWalkF,flyWalkFL,flyWalkFR,flyWalkFL2,flyWalkFR2,flyDashF,flyDashFL,flyDashFR,flyDashFL2,flyDashFR2,dashEscapeF");
+    fwprintf(f, L",dashEscapeB,dashEscapeL,dashEscapeR,analogMoveParamId,turnNoAnimAngle,turn45Angle,turn90Angle,turnWaitNoAnimAngle\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

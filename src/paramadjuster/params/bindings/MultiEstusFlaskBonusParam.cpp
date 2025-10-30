@@ -63,7 +63,8 @@ void registerMultiEstusFlaskBonusParam(sol::state *state, sol::table &paramsTabl
 
 template<> void ParamTableIndexer<MultiEstusFlaskBonusParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,host,WhiteGhost_None,WhiteGhost_Umbasa,WhiteGhost_Berserker,BlackGhost_None_Sign,BlackGhost_Umbasa_Sign,BlackGhost_Berserker_Sign,BlackGhost_None_Invade,BlackGhost_Umbasa_Invade,BlackGhost_Berserker_Invade,RedHunter1,RedHunter2,GuardianOfForest,GuardianOfAnor,BattleRoyal,YellowMonk\n");
+    fwprintf(f, L"ID,host,WhiteGhost_None,WhiteGhost_Umbasa,WhiteGhost_Berserker,BlackGhost_None_Sign,BlackGhost_Umbasa_Sign,BlackGhost_Berserker_Sign,BlackGhost_None_Invade,BlackGhost_Umbasa_Invade,BlackGhost_Berserker_Invade,RedHunter1,RedHunter2,GuardianOfForest,GuardianOfAnor,BattleRoyal");
+    fwprintf(f, L",YellowMonk\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

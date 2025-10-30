@@ -148,7 +148,10 @@ void registerWepAbsorpPosParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<WepAbsorpPosParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,hangPosType,isSkeletonBind,right_0,left_0,both_0,leftHang_0,rightHang_0,right_1,left_1,both_1,leftHang_1,rightHang_1,right_2,left_2,both_2,leftHang_2,rightHang_2,right_3,left_3,both_3,leftHang_3,rightHang_3,wepInvisibleType_0,wepInvisibleType_1,wepInvisibleType_2,wepInvisibleType_3,leftBoth_0,leftBoth_1,leftBoth_2,leftBoth_3,dispPosType_right_0,dispPosType_left_0,dispPosType_rightBoth_0,dispPosType_leftBoth_0,dispPosType_rightHang_0,dispPosType_leftHang_0,dispPosType_right_1,dispPosType_left_1,dispPosType_rightBoth_1,dispPosType_leftBoth_1,dispPosType_rightHang_1,dispPosType_leftHang_1,dispPosType_right_2,dispPosType_left_2,dispPosType_rightBoth_2,dispPosType_leftBoth_2,dispPosType_rightHang_2,dispPosType_leftHang_2,dispPosType_right_3,dispPosType_left_3,dispPosType_rightBoth_3,dispPosType_leftBoth_3,dispPosType_rightHang_3,dispPosType_leftHang_3,unknown_0x54,unknown_0x55,unknown_0x56,unknown_0x57\n");
+    fwprintf(f, L"ID,disableParam_NT,hangPosType,isSkeletonBind,right_0,left_0,both_0,leftHang_0,rightHang_0,right_1,left_1,both_1,leftHang_1,rightHang_1,right_2,left_2");
+    fwprintf(f, L",both_2,leftHang_2,rightHang_2,right_3,left_3,both_3,leftHang_3,rightHang_3,wepInvisibleType_0,wepInvisibleType_1,wepInvisibleType_2,wepInvisibleType_3,leftBoth_0,leftBoth_1,leftBoth_2,leftBoth_3");
+    fwprintf(f, L",dispPosType_right_0,dispPosType_left_0,dispPosType_rightBoth_0,dispPosType_leftBoth_0,dispPosType_rightHang_0,dispPosType_leftHang_0,dispPosType_right_1,dispPosType_left_1,dispPosType_rightBoth_1,dispPosType_leftBoth_1,dispPosType_rightHang_1,dispPosType_leftHang_1,dispPosType_right_2,dispPosType_left_2,dispPosType_rightBoth_2,dispPosType_leftBoth_2");
+    fwprintf(f, L",dispPosType_rightHang_2,dispPosType_leftHang_2,dispPosType_right_3,dispPosType_left_3,dispPosType_rightBoth_3,dispPosType_leftBoth_3,dispPosType_rightHang_3,dispPosType_leftHang_3,unknown_0x54,unknown_0x55,unknown_0x56,unknown_0x57\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

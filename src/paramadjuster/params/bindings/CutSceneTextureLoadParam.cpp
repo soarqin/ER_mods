@@ -66,7 +66,8 @@ void registerCutSceneTextureLoadParam(sol::state *state, sol::table &paramsTable
 
 template<> void ParamTableIndexer<CutSceneTextureLoadParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,disableParam_Debug,texName_00,texName_01,texName_02,texName_03,texName_04,texName_05,texName_06,texName_07,texName_08,texName_09,texName_10,texName_11,texName_12,texName_13,texName_14,texName_15\n");
+    fwprintf(f, L"ID,disableParam_NT,disableParam_Debug,texName_00,texName_01,texName_02,texName_03,texName_04,texName_05,texName_06,texName_07,texName_08,texName_09,texName_10,texName_11,texName_12");
+    fwprintf(f, L",texName_13,texName_14,texName_15\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

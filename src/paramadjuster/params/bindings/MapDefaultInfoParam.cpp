@@ -76,7 +76,8 @@ void registerMapDefaultInfoParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<MapDefaultInfoParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,EnableFastTravelEventFlagId,WeatherLotTimeOffsetIngameSeconds,WeatherCreateAssetLimitId,MapAiSightType,SoundIndoorType,ReverbDefaultType,BgmPlaceInfo,EnvPlaceInfo,MapAdditionalSoundBankId,MapHeightForSound,IsEnableBlendTimezoneEnvmap,OverrideGIResolution_XSS,MapLoHiChangeBorderDist_XZ,MapLoHiChangeBorderDist_Y,MapLoHiChangePlayDist,MapAutoDrawGroupBackFacePixelNum,PlayerLigntScale,IsEnableTimezonnePlayerLigntScale,isDisableAutoCliffWind,OpenChrActivateThreshold,MapMimicryEstablishmentParamId,OverrideGIResolution_XSX\n");
+    fwprintf(f, L"ID,disableParam_NT,EnableFastTravelEventFlagId,WeatherLotTimeOffsetIngameSeconds,WeatherCreateAssetLimitId,MapAiSightType,SoundIndoorType,ReverbDefaultType,BgmPlaceInfo,EnvPlaceInfo,MapAdditionalSoundBankId,MapHeightForSound,IsEnableBlendTimezoneEnvmap,OverrideGIResolution_XSS,MapLoHiChangeBorderDist_XZ,MapLoHiChangeBorderDist_Y");
+    fwprintf(f, L",MapLoHiChangePlayDist,MapAutoDrawGroupBackFacePixelNum,PlayerLigntScale,IsEnableTimezonnePlayerLigntScale,isDisableAutoCliffWind,OpenChrActivateThreshold,MapMimicryEstablishmentParamId,OverrideGIResolution_XSX\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

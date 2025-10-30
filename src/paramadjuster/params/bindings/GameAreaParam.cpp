@@ -88,7 +88,8 @@ void registerGameAreaParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<GameAreaParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,bonusSoul_single,bonusSoul_multi,humanityPointCountFlagIdTop,humanityDropPoint1,humanityDropPoint2,humanityDropPoint3,humanityDropPoint4,humanityDropPoint5,humanityDropPoint6,humanityDropPoint7,humanityDropPoint8,humanityDropPoint9,humanityDropPoint10,soloBreakInPoint_Min,soloBreakInPoint_Max,defeatBossFlagId_forSignAimList,displayAimFlagId,foundBossFlagId,foundBossTextId,notFindBossTextId,bossChallengeFlagId,defeatBossFlagId,bossPosX,bossPosY,bossPosZ,bossMapAreaNo,bossMapBlockNo,bossMapMapNo\n");
+    fwprintf(f, L"ID,disableParam_NT,bonusSoul_single,bonusSoul_multi,humanityPointCountFlagIdTop,humanityDropPoint1,humanityDropPoint2,humanityDropPoint3,humanityDropPoint4,humanityDropPoint5,humanityDropPoint6,humanityDropPoint7,humanityDropPoint8,humanityDropPoint9,humanityDropPoint10,soloBreakInPoint_Min");
+    fwprintf(f, L",soloBreakInPoint_Max,defeatBossFlagId_forSignAimList,displayAimFlagId,foundBossFlagId,foundBossTextId,notFindBossTextId,bossChallengeFlagId,defeatBossFlagId,bossPosX,bossPosY,bossPosZ,bossMapAreaNo,bossMapBlockNo,bossMapMapNo\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

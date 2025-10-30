@@ -88,7 +88,8 @@ void registerRoleParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<RoleParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,teamType,phantomParamId,spEffectID0,spEffectID1,spEffectID2,spEffectID3,spEffectID4,spEffectID5,spEffectID6,spEffectID7,spEffectID8,spEffectID9,sosSignSfxId,mySosSignSfxId,summonStartAnimId,itemlotParamId,voiceChatGroup,roleNameColor,roleNameId,threatLv,phantomParamId_vowRank1,phantomParamId_vowRank2,phantomParamId_vowRank3,spEffectID_vowRank0,spEffectID_vowRank1,spEffectID_vowRank2,spEffectID_vowRank3,signPhantomId,nonPlayerSummonStartAnimId\n");
+    fwprintf(f, L"ID,teamType,phantomParamId,spEffectID0,spEffectID1,spEffectID2,spEffectID3,spEffectID4,spEffectID5,spEffectID6,spEffectID7,spEffectID8,spEffectID9,sosSignSfxId,mySosSignSfxId,summonStartAnimId");
+    fwprintf(f, L",itemlotParamId,voiceChatGroup,roleNameColor,roleNameId,threatLv,phantomParamId_vowRank1,phantomParamId_vowRank2,phantomParamId_vowRank3,spEffectID_vowRank0,spEffectID_vowRank1,spEffectID_vowRank2,spEffectID_vowRank3,signPhantomId,nonPlayerSummonStartAnimId\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

@@ -230,7 +230,13 @@ void registerRandomAppearParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<RandomAppearParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,slot0,slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9,slot10,slot11,slot12,slot13,slot14,slot15,slot16,slot17,slot18,slot19,slot20,slot21,slot22,slot23,slot24,slot25,slot26,slot27,slot28,slot29,slot30,slot31,slot32,slot33,slot34,slot35,slot36,slot37,slot38,slot39,slot40,slot41,slot42,slot43,slot44,slot45,slot46,slot47,slot48,slot49,slot50,slot51,slot52,slot53,slot54,slot55,slot56,slot57,slot58,slot59,slot60,slot61,slot62,slot63,slot64,slot65,slot66,slot67,slot68,slot69,slot70,slot71,slot72,slot73,slot74,slot75,slot76,slot77,slot78,slot79,slot80,slot81,slot82,slot83,slot84,slot85,slot86,slot87,slot88,slot89,slot90,slot91,slot92,slot93,slot94,slot95,slot96,slot97,slot98,slot99\n");
+    fwprintf(f, L"ID,slot0,slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8,slot9,slot10,slot11,slot12,slot13,slot14");
+    fwprintf(f, L",slot15,slot16,slot17,slot18,slot19,slot20,slot21,slot22,slot23,slot24,slot25,slot26,slot27,slot28,slot29,slot30");
+    fwprintf(f, L",slot31,slot32,slot33,slot34,slot35,slot36,slot37,slot38,slot39,slot40,slot41,slot42,slot43,slot44,slot45,slot46");
+    fwprintf(f, L",slot47,slot48,slot49,slot50,slot51,slot52,slot53,slot54,slot55,slot56,slot57,slot58,slot59,slot60,slot61,slot62");
+    fwprintf(f, L",slot63,slot64,slot65,slot66,slot67,slot68,slot69,slot70,slot71,slot72,slot73,slot74,slot75,slot76,slot77,slot78");
+    fwprintf(f, L",slot79,slot80,slot81,slot82,slot83,slot84,slot85,slot86,slot87,slot88,slot89,slot90,slot91,slot92,slot93,slot94");
+    fwprintf(f, L",slot95,slot96,slot97,slot98,slot99\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

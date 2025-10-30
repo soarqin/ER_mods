@@ -78,7 +78,8 @@ void registerEquipMtrlSetParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<EquipMtrlSetParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,materialId01,materialId02,materialId03,materialId04,materialId05,materialId06,itemNum01,itemNum02,itemNum03,itemNum04,itemNum05,itemNum06,materialCate01,materialCate02,materialCate03,materialCate04,materialCate05,materialCate06,isDisableDispNum01,isDisableDispNum02,isDisableDispNum03,isDisableDispNum04,isDisableDispNum05,isDisableDispNum06\n");
+    fwprintf(f, L"ID,materialId01,materialId02,materialId03,materialId04,materialId05,materialId06,itemNum01,itemNum02,itemNum03,itemNum04,itemNum05,itemNum06,materialCate01,materialCate02,materialCate03");
+    fwprintf(f, L",materialCate04,materialCate05,materialCate06,isDisableDispNum01,isDisableDispNum02,isDisableDispNum03,isDisableDispNum04,isDisableDispNum05,isDisableDispNum06\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

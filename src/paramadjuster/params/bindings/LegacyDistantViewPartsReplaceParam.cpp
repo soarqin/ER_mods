@@ -66,7 +66,8 @@ void registerLegacyDistantViewPartsReplaceParam(sol::state *state, sol::table &p
 
 template<> void ParamTableIndexer<LegacyDistantViewPartsReplaceParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,TargetMapId,TargetEventId,SrcAssetId,SrcAssetPartsNo,DstAssetId,DstAssetPartsNo,SrcAssetIdRangeMin,SrcAssetIdRangeMax,DstAssetIdRangeMin,DstAssetIdRangeMax,LimitedMapRegionId0,LimitedMapRegionId1,LimitedMapRegionId2,LimitedMapRegionId3,LimitedMapRegionAssetId,LimitedMapRegioAssetPartsNo,LimitedMapRegioAssetIdRangeMin,LimitedMapRegioAssetIdRangeMax\n");
+    fwprintf(f, L"ID,TargetMapId,TargetEventId,SrcAssetId,SrcAssetPartsNo,DstAssetId,DstAssetPartsNo,SrcAssetIdRangeMin,SrcAssetIdRangeMax,DstAssetIdRangeMin,DstAssetIdRangeMax,LimitedMapRegionId0,LimitedMapRegionId1,LimitedMapRegionId2,LimitedMapRegionId3,LimitedMapRegionAssetId");
+    fwprintf(f, L",LimitedMapRegioAssetPartsNo,LimitedMapRegioAssetIdRangeMin,LimitedMapRegioAssetIdRangeMax\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

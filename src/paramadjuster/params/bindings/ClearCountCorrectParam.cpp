@@ -92,7 +92,8 @@ void registerClearCountCorrectParam(sol::state *state, sol::table &paramsTable) 
 
 template<> void ParamTableIndexer<ClearCountCorrectParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,MaxHpRate,MaxMpRate,MaxStaminaRate,PhysicsAttackRate,SlashAttackRate,BlowAttackRate,ThrustAttackRate,NeturalAttackRate,MagicAttackRate,FireAttackRate,ThunderAttackRate,DarkAttackRate,PhysicsDefenseRate,MagicDefenseRate,FireDefenseRate,ThunderDefenseRate,DarkDefenseRate,StaminaAttackRate,SoulRate,PoisionResistRate,DiseaseResistRate,BloodResistRate,CurseResistRate,FreezeResistRate,BloodDamageRate,SuperArmorDamageRate,FreezeDamageRate,SleepResistRate,MadnessResistRate,SleepDamageRate,MadnessDamageRate\n");
+    fwprintf(f, L"ID,MaxHpRate,MaxMpRate,MaxStaminaRate,PhysicsAttackRate,SlashAttackRate,BlowAttackRate,ThrustAttackRate,NeturalAttackRate,MagicAttackRate,FireAttackRate,ThunderAttackRate,DarkAttackRate,PhysicsDefenseRate,MagicDefenseRate,FireDefenseRate");
+    fwprintf(f, L",ThunderDefenseRate,DarkDefenseRate,StaminaAttackRate,SoulRate,PoisionResistRate,DiseaseResistRate,BloodResistRate,CurseResistRate,FreezeResistRate,BloodDamageRate,SuperArmorDamageRate,FreezeDamageRate,SleepResistRate,MadnessResistRate,SleepDamageRate,MadnessDamageRate\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

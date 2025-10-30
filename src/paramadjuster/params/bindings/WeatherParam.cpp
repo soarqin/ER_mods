@@ -64,7 +64,8 @@ void registerWeatherParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<WeatherParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,SfxId,WindSfxId,GroundHitSfxId,SoundId,WetTime,GparamId,NextLotIngameSecondsMin,NextLotIngameSecondsMax,WetSpEffectId00,WetSpEffectId01,WetSpEffectId02,WetSpEffectId03,WetSpEffectId04,SfxIdInoor,SfxIdOutdoor,aiSightRate,DistViewWeatherGparamOverrideWeight\n");
+    fwprintf(f, L"ID,SfxId,WindSfxId,GroundHitSfxId,SoundId,WetTime,GparamId,NextLotIngameSecondsMin,NextLotIngameSecondsMax,WetSpEffectId00,WetSpEffectId01,WetSpEffectId02,WetSpEffectId03,WetSpEffectId04,SfxIdInoor,SfxIdOutdoor");
+    fwprintf(f, L",aiSightRate,DistViewWeatherGparamOverrideWeight\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

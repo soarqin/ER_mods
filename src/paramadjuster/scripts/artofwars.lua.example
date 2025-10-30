@@ -1,4 +1,4 @@
--- This script enables all gems for all weapons (including those that normally can't use gems).
+-- This script enables all AoWs for all weapons (including those that normally can't attach AoWs) and enables all affinities.
 -- Exception: Shields and torches.
 
 local epwTable = Params.EquipParamWeapon()

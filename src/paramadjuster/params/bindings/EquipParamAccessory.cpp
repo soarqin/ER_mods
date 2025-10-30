@@ -106,7 +106,9 @@ void registerEquipParamAccessory(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<EquipParamAccessory>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,refId,sfxVariationId,weight,behaviorId,basicPrice,sellValue,sortId,qwcId,equipModelId,iconId,shopLv,trophySGradeId,trophySeqId,equipModelCategory,equipModelGender,accessoryCategory,refCategory,spEffectCategory,sortGroupId,vagrantItemLotId,vagrantBonusEneDropItemLotId,vagrantItemEneDropItemLotId,isDeposit,isEquipOutBrake,disableMultiDropShare,isDiscard,isDrop,showLogCondType,showDialogCondType,rarity,saleValue,accessoryGroup,compTrophySedId,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,residentSpEffectId4\n");
+    fwprintf(f, L"ID,disableParam_NT,refId,sfxVariationId,weight,behaviorId,basicPrice,sellValue,sortId,qwcId,equipModelId,iconId,shopLv,trophySGradeId,trophySeqId,equipModelCategory");
+    fwprintf(f, L",equipModelGender,accessoryCategory,refCategory,spEffectCategory,sortGroupId,vagrantItemLotId,vagrantBonusEneDropItemLotId,vagrantItemEneDropItemLotId,isDeposit,isEquipOutBrake,disableMultiDropShare,isDiscard,isDrop,showLogCondType,showDialogCondType,rarity");
+    fwprintf(f, L",saleValue,accessoryGroup,compTrophySedId,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,residentSpEffectId4\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

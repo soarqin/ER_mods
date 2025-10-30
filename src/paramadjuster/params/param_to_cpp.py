@@ -7,7 +7,6 @@ import os
 
 pattern_def = re.compile(r'([\w]+)[\s]+([\w]+)(:[0-9]+|\[[0-9]+\])?([\s]+=[\s]+[\S]+)?')
 except_param_tables = {
-    "GameSystemCommonParam",
     "NetworkAreaParam",
     "NetworkMsgParam",
     "NetworkParam",
@@ -322,8 +321,12 @@ for path in pathlist:
     inc.write(f'\ntemplate<> void ParamTableIndexer<{type_name}>::exportToCsvImpl(const std::wstring &csvPath) {{\n')
     inc.write('    FILE *f = _wfopen(csvPath.c_str(), L"wt");\n')
     inc.write(f'    fwprintf(f, L"ID')
+    field_cnt = 0
     for fname, ftype in field_names:
+        if field_cnt % 16 == 15:
+            inc.write('");\n    fwprintf(f, L"')
         inc.write(f',{fname}')
+        field_cnt += 1
     inc.write('\\n");\n')
     inc.write('    auto cnt = this->count();\n')
     inc.write('    for (int i = 0; i < cnt; i++) {\n')

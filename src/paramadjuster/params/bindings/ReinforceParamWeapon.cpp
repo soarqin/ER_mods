@@ -106,7 +106,9 @@ void registerReinforceParamWeapon(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<ReinforceParamWeapon>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,physicsAtkRate,magicAtkRate,fireAtkRate,thunderAtkRate,staminaAtkRate,saWeaponAtkRate,saDurabilityRate,correctStrengthRate,correctAgilityRate,correctMagicRate,correctFaithRate,physicsGuardCutRate,magicGuardCutRate,fireGuardCutRate,thunderGuardCutRate,poisonGuardResistRate,diseaseGuardResistRate,bloodGuardResistRate,curseGuardResistRate,staminaGuardDefRate,spEffectId1,spEffectId2,spEffectId3,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,materialSetId,maxReinforceLevel,darkAtkRate,darkGuardCutRate,correctLuckRate,freezeGuardDefRate,reinforcePriceRate,baseChangePriceRate,enableGemRank,sleepGuardDefRate,madnessGuardDefRate,baseAtkRate\n");
+    fwprintf(f, L"ID,physicsAtkRate,magicAtkRate,fireAtkRate,thunderAtkRate,staminaAtkRate,saWeaponAtkRate,saDurabilityRate,correctStrengthRate,correctAgilityRate,correctMagicRate,correctFaithRate,physicsGuardCutRate,magicGuardCutRate,fireGuardCutRate,thunderGuardCutRate");
+    fwprintf(f, L",poisonGuardResistRate,diseaseGuardResistRate,bloodGuardResistRate,curseGuardResistRate,staminaGuardDefRate,spEffectId1,spEffectId2,spEffectId3,residentSpEffectId1,residentSpEffectId2,residentSpEffectId3,materialSetId,maxReinforceLevel,darkAtkRate,darkGuardCutRate,correctLuckRate");
+    fwprintf(f, L",freezeGuardDefRate,reinforcePriceRate,baseChangePriceRate,enableGemRank,sleepGuardDefRate,madnessGuardDefRate,baseAtkRate\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

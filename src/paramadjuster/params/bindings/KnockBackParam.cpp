@@ -90,7 +90,8 @@ void registerKnockBackParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<KnockBackParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,damage_Min_ContTime,damage_S_ContTime,damage_M_ContTime,damage_L_ContTime,damage_BlowS_ContTime,damage_BlowM_ContTime,damage_Strike_ContTime,damage_Uppercut_ContTime,damage_Push_ContTime,damage_Breath_ContTime,damage_HeadShot_ContTime,guard_S_ContTime,guard_L_ContTime,guard_LL_ContTime,guardBrake_ContTime,damage_Min_DecTime,damage_S_DecTime,damage_M_DecTime,damage_L_DecTime,damage_BlowS_DecTime,damage_BlowM_DecTime,damage_Strike_DecTime,damage_Uppercut_DecTime,damage_Push_DecTime,damage_Breath_DecTime,damage_HeadShot_DecTime,guard_S_DecTime,guard_L_DecTime,guard_LL_DecTime,guardBrake_DecTime\n");
+    fwprintf(f, L"ID,damage_Min_ContTime,damage_S_ContTime,damage_M_ContTime,damage_L_ContTime,damage_BlowS_ContTime,damage_BlowM_ContTime,damage_Strike_ContTime,damage_Uppercut_ContTime,damage_Push_ContTime,damage_Breath_ContTime,damage_HeadShot_ContTime,guard_S_ContTime,guard_L_ContTime,guard_LL_ContTime,guardBrake_ContTime");
+    fwprintf(f, L",damage_Min_DecTime,damage_S_DecTime,damage_M_DecTime,damage_L_DecTime,damage_BlowS_DecTime,damage_BlowM_DecTime,damage_Strike_DecTime,damage_Uppercut_DecTime,damage_Push_DecTime,damage_Breath_DecTime,damage_HeadShot_DecTime,guard_S_DecTime,guard_L_DecTime,guard_LL_DecTime,guardBrake_DecTime\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

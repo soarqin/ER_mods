@@ -114,7 +114,9 @@ void registerBuddyParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<BuddyParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,triggerSpEffectId,npcParamId,npcThinkParamId,npcParamId_ridden,npcThinkParamId_ridden,x_offset,z_offset,y_angle,appearOnAroundSekihi,disablePCTargetShare,pcFollowType,dopingSpEffect_lv0,dopingSpEffect_lv1,dopingSpEffect_lv2,dopingSpEffect_lv3,dopingSpEffect_lv4,dopingSpEffect_lv5,dopingSpEffect_lv6,dopingSpEffect_lv7,dopingSpEffect_lv8,dopingSpEffect_lv9,dopingSpEffect_lv10,npcPlayerInitParamId,generateAnimId,unknown_0x5c,unknown_0x60,unknown_0x64,unknown_0x68,unknown_0x6c,unknown_0x70,unknown_0x74,unknown_0x78,unknown_0x7c,unknown_0x80,unknown_0x84,unknown_0x88,unknown_0x8c,unknown_0x90,unknown_0x94,unknown_0x98,unknown_0x9c\n");
+    fwprintf(f, L"ID,disableParam_NT,triggerSpEffectId,npcParamId,npcThinkParamId,npcParamId_ridden,npcThinkParamId_ridden,x_offset,z_offset,y_angle,appearOnAroundSekihi,disablePCTargetShare,pcFollowType,dopingSpEffect_lv0,dopingSpEffect_lv1,dopingSpEffect_lv2");
+    fwprintf(f, L",dopingSpEffect_lv3,dopingSpEffect_lv4,dopingSpEffect_lv5,dopingSpEffect_lv6,dopingSpEffect_lv7,dopingSpEffect_lv8,dopingSpEffect_lv9,dopingSpEffect_lv10,npcPlayerInitParamId,generateAnimId,unknown_0x5c,unknown_0x60,unknown_0x64,unknown_0x68,unknown_0x6c,unknown_0x70");
+    fwprintf(f, L",unknown_0x74,unknown_0x78,unknown_0x7c,unknown_0x80,unknown_0x84,unknown_0x88,unknown_0x8c,unknown_0x90,unknown_0x94,unknown_0x98,unknown_0x9c\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

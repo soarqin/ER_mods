@@ -102,7 +102,9 @@ void registerGrassTypeParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<GrassTypeParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,lodRange,lod0ClusterType,lod1ClusterType,lod2ClusterType,distributionType,baseDensity,model0Name,flatTextureName,billboardTextureName,normalInfluence,inclinationMax,inclinationJitter,scaleBaseMin,scaleBaseMax,scaleHeightMin,scaleHeightMax,colorShade1_r,colorShade1_g,colorShade1_b,colorShade2_r,colorShade2_g,colorShade2_b,flatSplitType,flatBladeCount,flatSlant,flatRadius,castShadow,windAmplitude,windCycle,orientationAngle,orientationRange,spacing,dithering,simpleModelName,model1Name\n");
+    fwprintf(f, L"ID,lodRange,lod0ClusterType,lod1ClusterType,lod2ClusterType,distributionType,baseDensity,model0Name,flatTextureName,billboardTextureName,normalInfluence,inclinationMax,inclinationJitter,scaleBaseMin,scaleBaseMax,scaleHeightMin");
+    fwprintf(f, L",scaleHeightMax,colorShade1_r,colorShade1_g,colorShade1_b,colorShade2_r,colorShade2_g,colorShade2_b,flatSplitType,flatBladeCount,flatSlant,flatRadius,castShadow,windAmplitude,windCycle,orientationAngle,orientationRange");
+    fwprintf(f, L",spacing,dithering,simpleModelName,model1Name\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

@@ -102,7 +102,9 @@ void registerPostureControlParam_Pro(sol::state *state, sol::table &paramsTable)
 
 template<> void ParamTableIndexer<PostureControlParam_Pro>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,a000_rightArmIO,a000_rightArmFB,a000_leftArmIO,a000_leftArmFB,a002_rightArmIO,a002_rightArmFB,a002_leftArmIO,a002_leftArmFB,a003_rightArmIO,a003_rightArmFB,a003_leftArmIO,a003_leftArmFB,a010_rightArmIO,a010_rightArmFB,a010_leftArmIO,a010_leftArmFB,a012_rightArmIO,a012_rightArmFB,a012_leftArmIO,a012_leftArmFB,a013_rightArmIO,a013_rightArmFB,a013_leftArmIO,a013_leftArmFB,a014_rightArmIO,a014_rightArmFB,a014_leftArmIO,a014_leftArmFB,a015_rightArmIO,a015_rightArmFB,a015_leftArmIO,a015_leftArmFB,a016_rightArmIO,a016_rightArmFB,a016_leftArmIO,a016_leftArmFB\n");
+    fwprintf(f, L"ID,a000_rightArmIO,a000_rightArmFB,a000_leftArmIO,a000_leftArmFB,a002_rightArmIO,a002_rightArmFB,a002_leftArmIO,a002_leftArmFB,a003_rightArmIO,a003_rightArmFB,a003_leftArmIO,a003_leftArmFB,a010_rightArmIO,a010_rightArmFB,a010_leftArmIO");
+    fwprintf(f, L",a010_leftArmFB,a012_rightArmIO,a012_rightArmFB,a012_leftArmIO,a012_leftArmFB,a013_rightArmIO,a013_rightArmFB,a013_leftArmIO,a013_leftArmFB,a014_rightArmIO,a014_rightArmFB,a014_leftArmIO,a014_leftArmFB,a015_rightArmIO,a015_rightArmFB,a015_leftArmIO");
+    fwprintf(f, L",a015_leftArmFB,a016_rightArmIO,a016_rightArmFB,a016_leftArmIO,a016_leftArmFB\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

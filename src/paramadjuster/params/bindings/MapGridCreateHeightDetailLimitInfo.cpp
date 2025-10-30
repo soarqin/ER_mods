@@ -72,7 +72,8 @@ void registerMapGridCreateHeightDetailLimitInfo(sol::state *state, sol::table &p
 
 template<> void ParamTableIndexer<MapGridCreateHeightDetailLimitInfo>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,mapId,unknown_0x4,unknown_0x8,unknown_0xc,unknown_0x10,unknown_0x14,unknown_0x18,unknown_0x1c,unknown_0x20,unknown_0x24,unknown_0x28,unknown_0x2c,unknown_0x2d,unknown_0x2e,unknown_0x2f,unknown_0x30,unknown_0x31,unknown_0x32,unknown_0x34,unknown_0x38,unknown_0x3c\n");
+    fwprintf(f, L"ID,mapId,unknown_0x4,unknown_0x8,unknown_0xc,unknown_0x10,unknown_0x14,unknown_0x18,unknown_0x1c,unknown_0x20,unknown_0x24,unknown_0x28,unknown_0x2c,unknown_0x2d,unknown_0x2e,unknown_0x2f");
+    fwprintf(f, L",unknown_0x30,unknown_0x31,unknown_0x32,unknown_0x34,unknown_0x38,unknown_0x3c\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

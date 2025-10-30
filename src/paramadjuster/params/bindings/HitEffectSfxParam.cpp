@@ -70,7 +70,8 @@ void registerHitEffectSfxParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<HitEffectSfxParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,Slash_Normal,Slash_S,Slash_L,Slash_Specific1,Slash_Specific2,Blow_Normal,Blow_S,Blow_L,Blow_Specific1,Blow_Specific2,Thrust_Normal,Thrust_S,Thrust_L,Thrust_Specific1,Thrust_Specific2,Neutral_Normal,Neutral_S,Neutral_L,Neutral_Specific1,Neutral_Specific2\n");
+    fwprintf(f, L"ID,Slash_Normal,Slash_S,Slash_L,Slash_Specific1,Slash_Specific2,Blow_Normal,Blow_S,Blow_L,Blow_Specific1,Blow_Specific2,Thrust_Normal,Thrust_S,Thrust_L,Thrust_Specific1,Thrust_Specific2");
+    fwprintf(f, L",Neutral_Normal,Neutral_S,Neutral_L,Neutral_Specific1,Neutral_Specific2\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

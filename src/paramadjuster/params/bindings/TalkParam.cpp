@@ -64,7 +64,8 @@ void registerTalkParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<TalkParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,msgId,voiceId,spEffectId0,motionId0,spEffectId1,motionId1,returnPos,reactionId,eventId,msgId_female,voiceId_female,lipSyncStart,lipSyncTime,timeout,talkAnimationId,isForceDisp\n");
+    fwprintf(f, L"ID,disableParam_NT,msgId,voiceId,spEffectId0,motionId0,spEffectId1,motionId1,returnPos,reactionId,eventId,msgId_female,voiceId_female,lipSyncStart,lipSyncTime,timeout");
+    fwprintf(f, L",talkAnimationId,isForceDisp\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

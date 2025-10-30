@@ -106,7 +106,9 @@ void registerWeatherLotParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<WeatherLotParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,weatherType0,weatherType1,weatherType2,weatherType3,weatherType4,weatherType5,weatherType6,weatherType7,weatherType8,weatherType9,weatherType10,weatherType11,weatherType12,weatherType13,weatherType14,weatherType15,lotteryWeight0,lotteryWeight1,lotteryWeight2,lotteryWeight3,lotteryWeight4,lotteryWeight5,lotteryWeight6,lotteryWeight7,lotteryWeight8,lotteryWeight9,lotteryWeight10,lotteryWeight11,lotteryWeight12,lotteryWeight13,lotteryWeight14,lotteryWeight15,timezoneLimit,timezoneStartHour,timezoneStartMinute,timezoneEndHour,timezoneEndMinute\n");
+    fwprintf(f, L"ID,disableParam_NT,weatherType0,weatherType1,weatherType2,weatherType3,weatherType4,weatherType5,weatherType6,weatherType7,weatherType8,weatherType9,weatherType10,weatherType11,weatherType12,weatherType13");
+    fwprintf(f, L",weatherType14,weatherType15,lotteryWeight0,lotteryWeight1,lotteryWeight2,lotteryWeight3,lotteryWeight4,lotteryWeight5,lotteryWeight6,lotteryWeight7,lotteryWeight8,lotteryWeight9,lotteryWeight10,lotteryWeight11,lotteryWeight12,lotteryWeight13");
+    fwprintf(f, L",lotteryWeight14,lotteryWeight15,timezoneLimit,timezoneStartHour,timezoneStartMinute,timezoneEndHour,timezoneEndMinute\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

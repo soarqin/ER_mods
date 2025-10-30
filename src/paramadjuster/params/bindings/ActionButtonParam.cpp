@@ -76,7 +76,8 @@ void registerActionButtonParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<ActionButtonParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,regionType,category,dummyPoly1,dummyPoly2,radius,angle,depth,width,height,baseHeightOffset,angleCheckType,allowAngle,spotDummyPoly,textBoxType,isInvalidForRide,isGrayoutForRide,isInvalidForCrouching,isGrayoutForCrouching,textId,invalidFlag,grayoutFlag,overrideActionButtonIdForRide,execInvalidTime\n");
+    fwprintf(f, L"ID,regionType,category,dummyPoly1,dummyPoly2,radius,angle,depth,width,height,baseHeightOffset,angleCheckType,allowAngle,spotDummyPoly,textBoxType,isInvalidForRide");
+    fwprintf(f, L",isGrayoutForRide,isInvalidForCrouching,isGrayoutForCrouching,textId,invalidFlag,grayoutFlag,overrideActionButtonIdForRide,execInvalidTime\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

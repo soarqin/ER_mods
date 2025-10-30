@@ -66,7 +66,8 @@ void registerChrActivateConditionParam(sol::state *state, sol::table &paramsTabl
 
 template<> void ParamTableIndexer<ChrActivateConditionParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,weatherSunny,weatherClearSky,weatherWeakCloudy,weatherCloudy,weatherRain,weatherHeavyRain,weatherStorm,weatherStormForBattle,weatherSnow,weatherHeavySnow,weatherFog,weatherHeavyFog,weatherHeavyFogRain,weatherSandStorm,timeStartHour,timeStartMin,timeEndHour,timeEndMin\n");
+    fwprintf(f, L"ID,weatherSunny,weatherClearSky,weatherWeakCloudy,weatherCloudy,weatherRain,weatherHeavyRain,weatherStorm,weatherStormForBattle,weatherSnow,weatherHeavySnow,weatherFog,weatherHeavyFog,weatherHeavyFogRain,weatherSandStorm,timeStartHour");
+    fwprintf(f, L",timeStartMin,timeEndHour,timeEndMin\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

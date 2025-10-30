@@ -88,7 +88,8 @@ void registerHitMtrlParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<HitMtrlParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,aiVolumeRate,spEffectIdOnHit0,spEffectIdOnHit1,footEffectHeightType,footEffectDirType,floorHeightType,disableFallDamage,isHardnessForSoundReverb,hardnessType,spEffectIdOnHit0_ClearCount_2,spEffectIdOnHit0_ClearCount_3,spEffectIdOnHit0_ClearCount_4,spEffectIdOnHit0_ClearCount_5,spEffectIdOnHit0_ClearCount_6,spEffectIdOnHit0_ClearCount_7,spEffectIdOnHit0_ClearCount_8,spEffectIdOnHit1_ClearCount_2,spEffectIdOnHit1_ClearCount_3,spEffectIdOnHit1_ClearCount_4,spEffectIdOnHit1_ClearCount_5,spEffectIdOnHit1_ClearCount_6,spEffectIdOnHit1_ClearCount_7,spEffectIdOnHit1_ClearCount_8,replaceMateiralId_Rain,spEffectId_forWet00,spEffectId_forWet01,spEffectId_forWet02,spEffectId_forWet03,spEffectId_forWet04\n");
+    fwprintf(f, L"ID,aiVolumeRate,spEffectIdOnHit0,spEffectIdOnHit1,footEffectHeightType,footEffectDirType,floorHeightType,disableFallDamage,isHardnessForSoundReverb,hardnessType,spEffectIdOnHit0_ClearCount_2,spEffectIdOnHit0_ClearCount_3,spEffectIdOnHit0_ClearCount_4,spEffectIdOnHit0_ClearCount_5,spEffectIdOnHit0_ClearCount_6,spEffectIdOnHit0_ClearCount_7");
+    fwprintf(f, L",spEffectIdOnHit0_ClearCount_8,spEffectIdOnHit1_ClearCount_2,spEffectIdOnHit1_ClearCount_3,spEffectIdOnHit1_ClearCount_4,spEffectIdOnHit1_ClearCount_5,spEffectIdOnHit1_ClearCount_6,spEffectIdOnHit1_ClearCount_7,spEffectIdOnHit1_ClearCount_8,replaceMateiralId_Rain,spEffectId_forWet00,spEffectId_forWet01,spEffectId_forWet02,spEffectId_forWet03,spEffectId_forWet04\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

@@ -106,7 +106,9 @@ void registerPartsDrawParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<PartsDrawParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,lv01_BorderDist,lv01_PlayDist,lv12_BorderDist,lv12_PlayDist,lv23_BorderDist,lv23_PlayDist,lv34_BorderDist,lv34_PlayDist,lv45_BorderDist,lv45_PlayDist,tex_lv01_BorderDist,tex_lv01_PlayDist,enableCrossFade,drawDist,drawFadeRange,shadowDrawDist,shadowFadeRange,motionBlur_BorderDist,isPointLightShadowSrc,isDirLightShadowSrc,isShadowDst,isShadowOnly,drawByReflectCam,drawOnlyReflectCam,IncludeLodMapLv,isNoFarClipDraw,lodType,shadowDrawLodOffset,isTraceCameraXZ,isSkydomeDrawPhase,DistantViewModel_BorderDist,DistantViewModel_PlayDist,LimtedActivate_BorderDist_forGrid,LimtedActivate_PlayDist_forGrid,zSortOffsetForNoFarClipDraw,shadowDrawAlphaTestDist,fowardDrawEnvmapBlendType,LBDrawDistScaleParamID\n");
+    fwprintf(f, L"ID,lv01_BorderDist,lv01_PlayDist,lv12_BorderDist,lv12_PlayDist,lv23_BorderDist,lv23_PlayDist,lv34_BorderDist,lv34_PlayDist,lv45_BorderDist,lv45_PlayDist,tex_lv01_BorderDist,tex_lv01_PlayDist,enableCrossFade,drawDist,drawFadeRange");
+    fwprintf(f, L",shadowDrawDist,shadowFadeRange,motionBlur_BorderDist,isPointLightShadowSrc,isDirLightShadowSrc,isShadowDst,isShadowOnly,drawByReflectCam,drawOnlyReflectCam,IncludeLodMapLv,isNoFarClipDraw,lodType,shadowDrawLodOffset,isTraceCameraXZ,isSkydomeDrawPhase,DistantViewModel_BorderDist");
+    fwprintf(f, L",DistantViewModel_PlayDist,LimtedActivate_BorderDist_forGrid,LimtedActivate_PlayDist_forGrid,zSortOffsetForNoFarClipDraw,shadowDrawAlphaTestDist,fowardDrawEnvmapBlendType,LBDrawDistScaleParamID\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

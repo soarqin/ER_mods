@@ -70,7 +70,8 @@ void registerSwordArtsParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<SwordArtsParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,disableParam_NT,swordArtsType,artsSpeedType,refStatus,isRefRightArts,isGrayoutLeftHand,isGrayoutRightHand,isGrayoutBothHand,usePoint_L1,usePoint_L2,usePoint_R1,usePoint_R2,textId,useMagicPoint_L1,useMagicPoint_L2,useMagicPoint_R1,useMagicPoint_R2,swordArtsTypeNew,iconId,aiUsageId\n");
+    fwprintf(f, L"ID,disableParam_NT,swordArtsType,artsSpeedType,refStatus,isRefRightArts,isGrayoutLeftHand,isGrayoutRightHand,isGrayoutBothHand,usePoint_L1,usePoint_L2,usePoint_R1,usePoint_R2,textId,useMagicPoint_L1,useMagicPoint_L2");
+    fwprintf(f, L",useMagicPoint_R1,useMagicPoint_R2,swordArtsTypeNew,iconId,aiUsageId\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

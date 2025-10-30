@@ -84,7 +84,8 @@ void registerPostureControlParam_Gender(sol::state *state, sol::table &paramsTab
 
 template<> void ParamTableIndexer<PostureControlParam_Gender>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,a000_rightElbowIO,a000_leftElbowIO,a000_bothLegsIO,a002_rightElbowIO,a002_leftElbowIO,a002_bothLegsIO,a003_rightElbowIO,a003_leftElbowIO,a003_bothLegsIO,a010_rightElbowIO,a010_leftElbowIO,a010_bothLegsIO,a012_rightElbowIO,a012_leftElbowIO,a012_bothLegsIO,a013_rightElbowIO,a013_leftElbowIO,a013_bothLegsIO,a014_rightElbowIO,a014_leftElbowIO,a014_bothLegsIO,a015_rightElbowIO,a015_leftElbowIO,a015_bothLegsIO,a016_rightElbowIO,a016_leftElbowIO,a016_bothLegsIO\n");
+    fwprintf(f, L"ID,a000_rightElbowIO,a000_leftElbowIO,a000_bothLegsIO,a002_rightElbowIO,a002_leftElbowIO,a002_bothLegsIO,a003_rightElbowIO,a003_leftElbowIO,a003_bothLegsIO,a010_rightElbowIO,a010_leftElbowIO,a010_bothLegsIO,a012_rightElbowIO,a012_leftElbowIO,a012_bothLegsIO");
+    fwprintf(f, L",a013_rightElbowIO,a013_leftElbowIO,a013_bothLegsIO,a014_rightElbowIO,a014_leftElbowIO,a014_bothLegsIO,a015_rightElbowIO,a015_leftElbowIO,a015_bothLegsIO,a016_rightElbowIO,a016_leftElbowIO,a016_bothLegsIO\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

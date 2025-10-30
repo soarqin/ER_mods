@@ -71,7 +71,8 @@ void registerEstusFlaskRecoveryParam(sol::state *state, sol::table &paramsTable)
 
 template<> void ParamTableIndexer<EstusFlaskRecoveryParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,host,invadeOrb_None,invadeOrb_Umbasa,invadeOrb_Berserker,invadeOrb_Sinners,invadeSign_None,invadeSign_Umbasa,invadeSign_Berserker,invadeSign_Sinners,invadeRing_Sinners,invadeRing_Rosalia,invadeRing_Forest,coopSign_None,coopSign_Umbasa,coopSign_Berserker,coopSign_Sinners,coopRing_RedHunter,invadeRing_Anor,paramReplaceRate,paramReplaceId\n");
+    fwprintf(f, L"ID,host,invadeOrb_None,invadeOrb_Umbasa,invadeOrb_Berserker,invadeOrb_Sinners,invadeSign_None,invadeSign_Umbasa,invadeSign_Berserker,invadeSign_Sinners,invadeRing_Sinners,invadeRing_Rosalia,invadeRing_Forest,coopSign_None,coopSign_Umbasa,coopSign_Berserker");
+    fwprintf(f, L",coopSign_Sinners,coopRing_RedHunter,invadeRing_Anor,paramReplaceRate,paramReplaceId\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

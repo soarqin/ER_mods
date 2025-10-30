@@ -62,7 +62,8 @@ void registerEnvObjLotParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<EnvObjLotParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,AssetId_0,AssetId_1,AssetId_2,AssetId_3,AssetId_4,AssetId_5,AssetId_6,AssetId_7,CreateWeight_0,CreateWeight_1,CreateWeight_2,CreateWeight_3,CreateWeight_4,CreateWeight_5,CreateWeight_6,CreateWeight_7\n");
+    fwprintf(f, L"ID,AssetId_0,AssetId_1,AssetId_2,AssetId_3,AssetId_4,AssetId_5,AssetId_6,AssetId_7,CreateWeight_0,CreateWeight_1,CreateWeight_2,CreateWeight_3,CreateWeight_4,CreateWeight_5,CreateWeight_6");
+    fwprintf(f, L",CreateWeight_7\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);

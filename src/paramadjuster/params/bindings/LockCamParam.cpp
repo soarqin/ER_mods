@@ -70,7 +70,8 @@ void registerLockCamParam(sol::state *state, sol::table &paramsTable) {
 
 template<> void ParamTableIndexer<LockCamParam>::exportToCsvImpl(const std::wstring &csvPath) {
     FILE *f = _wfopen(csvPath.c_str(), L"wt");
-    fwprintf(f, L"ID,camDistTarget,rotRangeMinX,lockRotXShiftRatio,chrOrgOffset_Y,chrLockRangeMaxRadius,camFovY,chrLockRangeMaxRadius_forD,chrLockRangeMaxRadius_forPD,closeMaxHeight,closeMinHeight,closeAngRange,closeMaxRadius,closeMaxRadius_forD,closeMaxRadius_forPD,bulletMaxRadius,bulletMaxRadius_forD,bulletMaxRadius_forPD,bulletAngRange,lockTgtKeepTime,chrTransChaseRateForNormal\n");
+    fwprintf(f, L"ID,camDistTarget,rotRangeMinX,lockRotXShiftRatio,chrOrgOffset_Y,chrLockRangeMaxRadius,camFovY,chrLockRangeMaxRadius_forD,chrLockRangeMaxRadius_forPD,closeMaxHeight,closeMinHeight,closeAngRange,closeMaxRadius,closeMaxRadius_forD,closeMaxRadius_forPD,bulletMaxRadius");
+    fwprintf(f, L",bulletMaxRadius_forD,bulletMaxRadius_forPD,bulletAngRange,lockTgtKeepTime,chrTransChaseRateForNormal\n");
     auto cnt = this->count();
     for (int i = 0; i < cnt; i++) {
         auto *param = this->at(i);
